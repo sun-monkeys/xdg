@@ -1,0 +1,913 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="标准输入和输出 程序：指令+数据 读入数据：Input输出数据：Output   打开的文件都有一个fd:　file descriptor (文件描述符) Linux给程序提供三种I/O设备 标准输入（STDIN）－0 默认接受来自键盘的输入标准输出（STDOUT）－1 默认输出到终端窗口标准错误（STDERR）－2 默认输出到终端窗口   I/O重定向：改变默认位置   把输出和错误重新定向到文">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重定向和管道">
+<meta property="og:url" content="http://yoursite.com/2018/02/22/linux/重定向和管道/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="标准输入和输出 程序：指令+数据 读入数据：Input输出数据：Output   打开的文件都有一个fd:　file descriptor (文件描述符) Linux给程序提供三种I/O设备 标准输入（STDIN）－0 默认接受来自键盘的输入标准输出（STDOUT）－1 默认输出到终端窗口标准错误（STDERR）－2 默认输出到终端窗口   I/O重定向：改变默认位置   把输出和错误重新定向到文">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-02-23T09:39:17.154Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="重定向和管道">
+<meta name="twitter:description" content="标准输入和输出 程序：指令+数据 读入数据：Input输出数据：Output   打开的文件都有一个fd:　file descriptor (文件描述符) Linux给程序提供三种I/O设备 标准输入（STDIN）－0 默认接受来自键盘的输入标准输出（STDOUT）－1 默认输出到终端窗口标准错误（STDERR）－2 默认输出到终端窗口   I/O重定向：改变默认位置   把输出和错误重新定向到文">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/22/linux/重定向和管道/"/>
+
+
+
+
+
+  <title> 重定向和管道 | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/22/linux/重定向和管道/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                重定向和管道
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-22T00:00:00+08:00">
+                2018-02-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="标准输入和输出"><a href="#标准输入和输出" class="headerlink" title="标准输入和输出"></a>标准输入和输出</h1><ul>
+<li>程序：指令+数据<blockquote>
+<p>读入数据：Input<br>输出数据：Output</p>
+</blockquote>
+</li>
+<li>打开的文件都有一个fd:　file descriptor (文件描述符)</li>
+<li>Linux给程序提供三种I/O设备<blockquote>
+<p>标准输入（STDIN）－0 默认接受来自键盘的输入<br>标准输出（STDOUT）－1 默认输出到终端窗口<br>标准错误（STDERR）－2 默认输出到终端窗口</p>
+</blockquote>
+</li>
+<li>I/O重定向：改变默认位置</li>
+</ul>
+<hr>
+<h1 id="把输出和错误重新定向到文件"><a href="#把输出和错误重新定向到文件" class="headerlink" title="把输出和错误重新定向到文件"></a>把输出和错误重新定向到文件</h1><ul>
+<li>STDOUT和STDERR可以被重定向到文件：<blockquote>
+<p>命令　操作符号　文件名</p>
+</blockquote>
+</li>
+<li>支持的操作符号包括<blockquote>
+<p>>　把STDOUT重定向到文件<br>2>　把STDERR重定向到文件<br>&amp;>　把所有的输出重定向到文件</p>
+</blockquote>
+</li>
+<li>>　文件内容会被覆盖<blockquote>
+<p>set -C：禁止将内容覆盖已有文件，但可追加<br>>|　file：强制覆盖<br>set +C：允许覆盖</p>
+</blockquote>
+</li>
+<li>>>　原有内容基础上，追加内容</li>
+<li>2>　覆盖重定向错误输出数据流</li>
+<li>2>>　追加重定向错误输出数据流</li>
+<li>标准输出和错误输出各自定向至不同位置<blockquote>
+<p>COMMMAND　> /path/to/file.out　2&gt;　/path/to/error.out</p>
+</blockquote>
+</li>
+<li><p>合并标准输出和错误输出为同一个数据流进行重定向</p>
+<blockquote>
+<p>&amp;>　覆盖重定向<br>&amp;>>　追加重定向<br>COMMAND　&gt;　/path/to/file.out　2&gt;&amp;1　(注意顺序)<br>COMMAND　&gt;&gt;　/path/to/file.out　2&gt;&amp;1</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>&gt;&amp;<span class="number">2</span> 正确返回值传递给<span class="number">2</span>输出通道 &amp;<span class="number">2</span>表示<span class="number">2</span>输出通道</span><br><span class="line">   command &gt; file <span class="number">1</span>&gt;&amp;<span class="number">2</span> 这样输出为空，最后传递的都是<span class="number">2</span>错误输出，</span><br><span class="line">     而前面的是 &gt; 正确的输出，要想显示要把前面的写成 <span class="number">2</span>&gt; 才会显示。</span><br><span class="line">	</span><br><span class="line"><span class="number">2</span>&gt;&amp;<span class="number">1</span> 错误返回值传递给<span class="number">1</span>输出通道, 同样&amp;<span class="number">1</span>表示<span class="number">1</span>输出通道</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>()　合并多个程序的STDOUT</p>
+<blockquote>
+<p>(cal　2000;　cal　2008)　&gt;　all.txt</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h1 id="转换和删除字符-tr"><a href="#转换和删除字符-tr" class="headerlink" title="转换和删除字符　tr"></a>转换和删除字符　tr</h1><ul>
+<li>tr　[option]…　SET1　[SET2]</li>
+<li>选项<blockquote>
+<p>-c　–C　--complement：取字符集的补集<br>-d　--delete：删除所有属于第一字符集的字符<br>-s　--squeeze-repeats：把连续重复的字符以单独一个字符表示<br>-t　--truncate-set1：将第一个字符集对应字符转化为第二字符集对应的字符 </p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h1 id="从文件中导入STDIN"><a href="#从文件中导入STDIN" class="headerlink" title="从文件中导入STDIN"></a>从文件中导入STDIN</h1><ul>
+<li>使用　&lt; 来重定向标准输入 </li>
+<li>某些命令能够接受从文件中导入的STDIN <blockquote>
+<p>tr　‘a-z’　‘A-Z’　&lt;　/etc/issue　该命令会把/etc/issue中的小写字符都转换成大写字符 </p>
+</blockquote>
+</li>
+<li>tr　–d　abc　&lt;　/etc/fstab 删除fstab文件中的所有abc中任意字符</li>
+<li>cat　&gt;　file</li>
+<li>cat　&gt;　filea　&lt;　fileb</li>
+<li>使用　&lt;&lt;　终止词命令从键盘把多行重导向给STDIN<blockquote>
+<p>直到 终止词 位置的所有文本都发送给STDIN<br>有时被称为就地文件（heretext）</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h1 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h1><ul>
+<li>管道（使用符号“|”表示）用来连接命令<blockquote>
+<p>命令1 | 命令2 | 命令3 | …<br>将命令1的STDOUT发送给命令2的STDIN，命令2的 STDOUT发送到命令3的STDIN<br>STDERR默认不能通过管道转发，可利用2&gt;&amp;1 或 |&amp; 实现<br>最后一个命令会在当前shell进程的子shell进程中执行用来</p>
+</blockquote>
+</li>
+<li>组合多种工具的功能<blockquote>
+<p>ls　|　tr　‘a-z’　‘A-Z’</p>
+</blockquote>
+</li>
+<li>less　一页一页地查看输入<blockquote>
+<p>ls　-l　/etc　|　less</p>
+</blockquote>
+</li>
+<li>mail　通过电子邮件发送输入<blockquote>
+<p>echo 　“test email”　|　mail　-s　“test” 　admin@admin.com</p>
+</blockquote>
+</li>
+<li>lpr　把输入发送给打印机<blockquote>
+<p>echo　“test print”　|　lpr　-P　printer_name</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="管道中-符号"><a href="#管道中-符号" class="headerlink" title="管道中　-　符号"></a>管道中　-　符号</h2><ul>
+<li>示例：将/home 里面的文件打包，但打包的数据不是记录到文件，而是传送到 stdout，经过管道后，将tar　-cvf　-　/home 传送给后面的 tar　-xvf　- , 后面的这个　-　则是取前一个命令的 stdout，因此，就不需要使用临时file了</li>
+<li>tar　-cvf　-　/home　|　tar　-xvf</li>
+</ul>
+<h2 id="重定向到多个目标-tee"><a href="#重定向到多个目标-tee" class="headerlink" title="重定向到多个目标　tee"></a>重定向到多个目标　tee</h2><ul>
+<li>命令1 | tee　[-a ]　文件名 | 命令2<blockquote>
+<p>把命令1的STDOUT保存在文件中，做为命令2的输入<br>-a　追加</p>
+</blockquote>
+</li>
+<li>使用：<blockquote>
+<p>保存不同阶段的输出<br>复杂管道的故障排除<br>同时查看和记录输出</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><ul>
+<li><p>1、将/etc/issue文件中的内容转换为大写后保存至/tmp/issue.out文件中</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat <span class="regexp">/etc/</span>issue | tr  <span class="string">'a-z'</span> <span class="string">'A-Z'</span> &gt; <span class="regexp">/tmp/</span>issue.out </span><br><span class="line">cat <span class="regexp">/etc/</span>issue | tr  [:<span class="string">lower:</span>] [:<span class="string">upper:</span>] &gt; <span class="regexp">/tmp/</span>issue.out</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>2、将当前系统登录用户的信息转换为大写后保存至/tmp/who.out文件中</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">who | tr <span class="symbol">'a</span>-z<span class="string">' '</span>A-Z' &gt; /tmp/who.<span class="keyword">out</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>3、一个linux用户给root发邮件，要求邮件标题为”help”，邮件正文如下：</p>
+<blockquote>
+<p>Hello, I am 用户名,The system version is here,please help me to  check it ,thanks! 操作系统版本信息</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>.新建一个f1.txt把要发送的信息存在文件中</span><br><span class="line"><span class="number">2</span><span class="selector-class">.uname</span> -r &gt;&gt; f1.txt</span><br><span class="line"><span class="number">3</span><span class="selector-class">.mail</span> -s help  root &lt; f1.txt</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>4、将/root/下文件列表，显示成一行，并文件名之间用空格隔开</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ls</span> /root/ | <span class="keyword">tr</span> <span class="string">'\n'</span> <span class="string">' '</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>5、计算1+2+3+..+99+100的总和</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> &#123;<span class="number">1</span>..<span class="number">100</span>&#125; | <span class="keyword">tr</span> <span class="string">' '</span> <span class="string">'+'</span> | bc</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>6、删除Windows文本文件中的‘^M’字符</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cat</span> <span class="keyword">file</span> | <span class="keyword">tr</span> -s <span class="string">"\r"</span> <span class="string">"\n"</span> &gt; new_file </span><br><span class="line"><span class="keyword">cat</span> <span class="keyword">file</span> | <span class="keyword">tr</span> -d <span class="string">"\r"</span> &gt; new_file</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>7、处理字符串“xt.,l 1 jr#!$mn 2 c*/fe 3 uz 4”，只保留其中的数字和空格</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"xt.,l 1 jr#!<span class="variable">$mn</span> 2 c*/fe 3 uz 4"</span> | tr -c -d <span class="string">"[:digit:] "</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>8、将PATH变量每个目录显示在独立的一行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$PATH</span>"</span> | tr <span class="string">':'</span> <span class="string">'\n'</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>9、将指定文件中0-9分别替代成a-j</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cat</span> xx.txt | <span class="keyword">tr</span>  <span class="string">'0-9'</span> <span class="string">'a-j'</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>10、将文件中每个单词（由字母组成）显示在独立的一行，并无空行</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cat</span> zm | <span class="keyword">tr</span> -<span class="keyword">c</span> -s <span class="string">"[:alpha:]"</span> <span class="string">'\n'</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/12/linux/基础命令 -1/" rel="next" title="基础命令">
+                <i class="fa fa-chevron-left"></i> 基础命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/23/question/修改系统字符集/" rel="prev" title="修改系统字符集">
+                修改系统字符集 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#标准输入和输出"><span class="nav-number">1.</span> <span class="nav-text">标准输入和输出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#把输出和错误重新定向到文件"><span class="nav-number">2.</span> <span class="nav-text">把输出和错误重新定向到文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#转换和删除字符-tr"><span class="nav-number">3.</span> <span class="nav-text">转换和删除字符　tr</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#从文件中导入STDIN"><span class="nav-number">4.</span> <span class="nav-text">从文件中导入STDIN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#管道"><span class="nav-number">5.</span> <span class="nav-text">管道</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#管道中-符号"><span class="nav-number">5.1.</span> <span class="nav-text">管道中　-　符号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重定向到多个目标-tee"><span class="nav-number">5.2.</span> <span class="nav-text">重定向到多个目标　tee</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例"><span class="nav-number">6.</span> <span class="nav-text">示例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
