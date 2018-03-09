@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Linux,软件包管理,编译安装," />
+  <meta name="keywords" content="软件包管理,编译安装," />
 
 
 
@@ -88,14 +88,14 @@
 
 
 <meta name="description" content="本地搭建独立的yum源准备工作123456789101112131415161. 关闭防火墙   CentOS7:      systemctl stop firewalld.service  # 关闭防火墙服务   CentOS6:      service iptables stop  # 关闭防火墙服务2. 查看防火墙   iptables -vnL  # 列出当前路由表信息   iptab">
-<meta name="keywords" content="Linux,软件包管理,编译安装">
+<meta name="keywords" content="软件包管理,编译安装">
 <meta property="og:type" content="article">
 <meta property="og:title" content="软件包管理和编译安装实验">
 <meta property="og:url" content="http://yoursite.com/2018/03/06/linux/实验/软件包管理和编译安装实现/index.html">
 <meta property="og:site_name" content="Sun-monkey">
 <meta property="og:description" content="本地搭建独立的yum源准备工作123456789101112131415161. 关闭防火墙   CentOS7:      systemctl stop firewalld.service  # 关闭防火墙服务   CentOS6:      service iptables stop  # 关闭防火墙服务2. 查看防火墙   iptables -vnL  # 列出当前路由表信息   iptab">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-06T07:22:35.856Z">
+<meta property="og:updated_time" content="2018-03-08T09:45:07.949Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="软件包管理和编译安装实验">
 <meta name="twitter:description" content="本地搭建独立的yum源准备工作123456789101112131415161. 关闭防火墙   CentOS7:      systemctl stop firewalld.service  # 关闭防火墙服务   CentOS6:      service iptables stop  # 关闭防火墙服务2. 查看防火墙   iptables -vnL  # 列出当前路由表信息   iptab">
@@ -386,10 +386,10 @@
 
       
         <h1 id="本地搭建独立的yum源"><a href="#本地搭建独立的yum源" class="headerlink" title="本地搭建独立的yum源"></a>本地搭建独立的yum源</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">1. 关闭防火墙</span><br><span class="line">   CentOS7:</span><br><span class="line">      systemctl stop firewalld.service  # 关闭防火墙服务</span><br><span class="line">   CentOS6:</span><br><span class="line">     <span class="built_in"> service </span>iptables stop  # 关闭防火墙服务</span><br><span class="line"></span><br><span class="line">2. 查看防火墙</span><br><span class="line">   iptables -vnL  # 列出当前路由表信息</span><br><span class="line">   iptables -F  # 关闭防火墙</span><br><span class="line">	</span><br><span class="line">3. 关闭SELinux策略</span><br><span class="line">   vim /etc/selinux/config</span><br><span class="line">      更改 <span class="attribute">SELINUX</span>=Permissive  # 具体查看SELinux篇</span><br><span class="line"></span><br><span class="line">   setenforce 0  # 或者命令行修改更改为Permissive</span><br><span class="line">   getenforce  # 查看是否生效</span><br></pre></td></tr></table></figure>
-<h2 id="安装ftp服务及相关配置"><a href="#安装ftp服务及相关配置" class="headerlink" title="安装ftp服务及相关配置"></a>安装ftp服务及相关配置</h2><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum -y <span class="keyword">install</span> vsftpd  <span class="comment"># 安装</span></span><br><span class="line">systemctl start vsftpd  <span class="comment"># 启动服务</span></span><br><span class="line">ss -ntl  <span class="comment"># 查看21号端口是否打开 (vsftpd默认的端口21)</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装ftp服务及相关配置"><a href="#安装ftp服务及相关配置" class="headerlink" title="安装ftp服务及相关配置"></a>安装ftp服务及相关配置</h2><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum -y <span class="keyword">install</span> vsftpd  createrepo <span class="comment"># 安装vsftpd服务、createrepo命令</span></span><br><span class="line">systemctl start vsftpd  <span class="comment"># 启动服务</span></span><br><span class="line">ss -ntl  <span class="comment"># 查看21号端口是否打开 (vsftpd默认的端口21)</span></span><br></pre></td></tr></table></figure>
 <h2 id="创建独立的源"><a href="#创建独立的源" class="headerlink" title="创建独立的源"></a>创建独立的源</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 准备第三方的rpm相关包</span><br><span class="line"><span class="number">2.</span> mkdir <span class="meta-keyword">/var/</span>ftp<span class="meta-keyword">/pub/</span>package/  <span class="meta"># 相关rpm包存放的位置</span></span><br><span class="line"><span class="number">3.</span> createrepo <span class="meta-keyword">/var/</span>ftp<span class="meta-keyword">/pub/</span>package/  <span class="meta"># 创建出 repodate，安装时读出的信息都是repodate里的信息</span></span><br></pre></td></tr></table></figure>
 <h2 id="客户端配置到指定的独立源"><a href="#客户端配置到指定的独立源" class="headerlink" title="客户端配置到指定的独立源"></a>客户端配置到指定的独立源</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/yum.repos.d/<span class="keyword">base</span>.repo  <span class="meta"># 创建自定义的.repo，必须以.repo为结尾</span></span><br><span class="line">   [<span class="meta">base</span>]</span><br><span class="line">   name=<span class="keyword">base</span>  <span class="meta"># 名字</span></span><br><span class="line">   baseurl=ftp:<span class="comment">//ip/pub/package/  # 指向的必须是在repodata的同一个目录下</span></span><br><span class="line">   gpgcheck=<span class="number">0</span>  <span class="meta"># 不验证密钥信息，不建议使用。</span></span><br><span class="line">注: 如果不能获取，系统中会有历史的信息，需要清空一下，再重新获取yum源</span><br><span class="line">   yum clean all  <span class="meta"># 清空</span></span><br><span class="line">   yum repolist  <span class="meta"># 重新获取yum源</span></span><br></pre></td></tr></table></figure>
-<h2 id="服务端配置"><a href="#服务端配置" class="headerlink" title="服务端配置"></a>服务端配置</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 比如分别定制系统的yum源（有分别 <span class="number">6</span>、<span class="number">7</span>等）</span><br><span class="line">   mkdir -p <span class="regexp">/var/</span>ftp<span class="regexp">/pub/</span>CentOS/&#123;<span class="number">6</span>,<span class="number">7</span>&#125;</span><br><span class="line">	</span><br><span class="line"><span class="number">2.</span> 把各个版本的rpm包放在各自的目录当中</span><br><span class="line">   </span><br><span class="line"><span class="number">3.</span> 然后导出repodata的数据</span><br><span class="line">   createrepo <span class="regexp">/var/</span>ftp<span class="regexp">/pub/</span>CentOS/<span class="number">6</span> 和 <span class="number">7</span> 都要创建</span><br><span class="line">	</span><br><span class="line"><span class="number">4.</span> 客户端配置</span><br><span class="line">	baseurl=<span class="string">ftp:</span><span class="comment">//ip/pub/CentOS/$releasever/</span></span><br></pre></td></tr></table></figure>
+<h2 id="服务端配置"><a href="#服务端配置" class="headerlink" title="服务端配置"></a>服务端配置</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 如分别定制系统的yum源（有分别 <span class="number">6</span>、<span class="number">7</span>等）</span><br><span class="line">   mkdir -p <span class="regexp">/var/</span>ftp<span class="regexp">/pub/</span>CentOS/&#123;<span class="number">6</span>,<span class="number">7</span>&#125;</span><br><span class="line">	</span><br><span class="line"><span class="number">2.</span> 把各个版本的rpm包放在各自的目录当中</span><br><span class="line">   </span><br><span class="line"><span class="number">3.</span> 然后导出repodata的数据</span><br><span class="line">   createrepo <span class="regexp">/var/</span>ftp<span class="regexp">/pub/</span>CentOS/<span class="number">6</span> 和 <span class="number">7</span> 都要创建</span><br><span class="line">	</span><br><span class="line"><span class="number">4.</span> 客户端配置</span><br><span class="line">	baseurl=<span class="string">ftp:</span><span class="comment">//ip/pub/CentOS/$releasever/</span></span><br></pre></td></tr></table></figure>
 <hr>
 <h1 id="源码编译安装httpd"><a href="#源码编译安装httpd" class="headerlink" title="源码编译安装httpd"></a>源码编译安装httpd</h1><h2 id="准备工作-1"><a href="#准备工作-1" class="headerlink" title="准备工作"></a>准备工作</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1. </span>关闭防火墙</span><br><span class="line"></span><br><span class="line"><span class="bullet">2. </span>关闭SELinux策略</span><br><span class="line"></span><br><span class="line"><span class="bullet">3. </span>yum info httpd  # 查看该软件是否已经安装</span><br><span class="line"></span><br><span class="line"><span class="bullet">4. </span>安装开发包组（在源码编译的时候会有到一些相关的开发包组的软件）</span><br><span class="line">   yum groupinstall "development tools"</span><br><span class="line"></span><br><span class="line"><span class="bullet">5. </span>下载源码包，并解压</span><br><span class="line">   [<span class="string">Apache官方</span>](<span class="link">http://httpd.apache.org/download.cgi</span>)  # 下载相应的源码包</span><br><span class="line">   注: 如果CentOS6源码安装httpd2.4的版本依赖于 apr-1.4+, apr-util-1.4+</span><br><span class="line"><span class="code">	注: CentOS6 默认：apr-1.3.9, apr-util-1.3.9</span></span><br><span class="line"><span class="code">	注: 建议编译安装httpd2.2，具体的可以查看httpd服务篇</span></span><br><span class="line"><span class="code">	</span></span><br><span class="line"><span class="code">	tar -xvf httpd-2.2.34.tar.gz -C /app/httpd-2.2.34  # 解压到指定的目录当中</span></span><br></pre></td></tr></table></figure>
 <h2 id="生成Makefile、编译、安装"><a href="#生成Makefile、编译、安装" class="headerlink" title="生成Makefile、编译、安装"></a>生成Makefile、编译、安装</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1. 在包的子目录里查看相关说明</span><br><span class="line">   cat README</span><br><span class="line">   cat INSTALL</span><br><span class="line"></span><br><span class="line">2. 生成Makefile</span><br><span class="line">   <span class="keyword">cd</span> <span class="string">/app/httpd-2.2.34</span></span><br><span class="line">   <span class="string">./configure</span> <span class="params">--help</span>  <span class="comment"># 查看帮助</span></span><br><span class="line">   <span class="string">./configure</span>  <span class="params">--prefix=/app/httpd22/</span>  <span class="params">--sysconfdir=/etc/httpd22/</span>  <span class="params">--enable-ssl</span></span><br><span class="line">      <span class="comment"># --prefix 指定安装的目录</span></span><br><span class="line">      <span class="comment"># --sysconfdir 软件配置文件目录</span></span><br><span class="line">      <span class="comment"># --enable-ssl SSL/TLS support (mod_ssl)启用的功能</span></span><br><span class="line">注: 因为提供了一些指定的能力，所以在安装的时候可能会出错，提示少了什么包，安装就好了</span><br><span class="line">   比如: 上面指定了ssl</span><br><span class="line">      yum install openssl-devel  <span class="comment"># 建议在之前就安装完成，这样就必须重新再次编译</span></span><br><span class="line">		</span><br><span class="line">3. make  <span class="comment"># 编译</span></span><br><span class="line"></span><br><span class="line">4. make install  <span class="comment"># 安装</span></span><br></pre></td></tr></table></figure>
@@ -422,8 +422,6 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Linux/" rel="tag"># Linux</a>
-          
             <a href="/tags/软件包管理/" rel="tag"># 软件包管理</a>
           
             <a href="/tags/编译安装/" rel="tag"># 编译安装</a>
@@ -448,6 +446,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/07/linux/基本/磁盘管理/" rel="prev" title="磁盘管理">
+                磁盘管理 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -519,7 +521,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -541,7 +543,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

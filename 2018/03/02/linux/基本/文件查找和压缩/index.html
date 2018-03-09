@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Linux,查找,压缩," />
+  <meta name="keywords" content="查找,压缩," />
 
 
 
@@ -88,14 +88,14 @@
 
 
 <meta name="description" content="文件查找1234在文件系统上查找符合条件的文件文件查找: locate, find   非实时查找(数据库查找): locate   实时查找: find  locate12345678910111213141516171819202122查询系统上预建的文件索引数据库   /var/lib/mlocate/mlocate.db依赖于事先构建的索引   索引的构建是在系统较为空闲时自动进行(周期性">
-<meta name="keywords" content="Linux,查找,压缩">
+<meta name="keywords" content="查找,压缩">
 <meta property="og:type" content="article">
 <meta property="og:title" content="文件查找和压缩">
 <meta property="og:url" content="http://yoursite.com/2018/03/02/linux/基本/文件查找和压缩/index.html">
 <meta property="og:site_name" content="Sun-monkey">
 <meta property="og:description" content="文件查找1234在文件系统上查找符合条件的文件文件查找: locate, find   非实时查找(数据库查找): locate   实时查找: find  locate12345678910111213141516171819202122查询系统上预建的文件索引数据库   /var/lib/mlocate/mlocate.db依赖于事先构建的索引   索引的构建是在系统较为空闲时自动进行(周期性">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-02T03:47:26.330Z">
+<meta property="og:updated_time" content="2018-03-08T09:48:17.930Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="文件查找和压缩">
 <meta name="twitter:description" content="文件查找1234在文件系统上查找符合条件的文件文件查找: locate, find   非实时查找(数据库查找): locate   实时查找: find  locate12345678910111213141516171819202122查询系统上预建的文件索引数据库   /var/lib/mlocate/mlocate.db依赖于事先构建的索引   索引的构建是在系统较为空闲时自动进行(周期性">
@@ -411,7 +411,7 @@
 <p>2、查找/var目录下不属于root、lp、gdm的所有文件<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find  /var/  -not -user(root,lp,gdm)   <span class="comment"># 错误，不支持</span></span><br><span class="line">find /var/ -not \( -<span class="keyword">user</span> <span class="title">root</span> -o -<span class="keyword">user</span> <span class="title">lp</span> -o -<span class="keyword">user</span> <span class="title">gdm</span> \)</span><br></pre></td></tr></table></figure></p>
 <p>3、查找/var目录下最近一周内其内容修改过，同时属主不为 root，也不是postfix的文件<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /var/ -mtime -<span class="number">7</span>  -not \( -<span class="keyword">user</span> <span class="title">root</span> -o -<span class="keyword">user</span> <span class="title">postfix</span> \)</span><br></pre></td></tr></table></figure></p>
 <p>4、查找当前系统上没有属主或属组，且最近一个周内曾被访问过的文件<br><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find  /   <span class="string">\(</span> -nouser -o -nogroup <span class="string">\)</span> -a -atime -<span class="number">7</span></span><br></pre></td></tr></table></figure></p>
-<p>5、查找/etc目录下大于1M且类型为普通文件的所有文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find  /etc/  -<span class="built_in">type</span> f -a -size +1M   <span class="comment"># （默认的是且，不用写-a也可以）</span></span><br></pre></td></tr></table></figure></p>
+<p>5、查找/etc目录下大于1M且类型为普通文件的所有文件<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find  <span class="regexp">/etc/</span>  -type f -a -size +<span class="number">1</span>M   <span class="comment"># （默认的是且，不用写-a也可以）</span></span><br></pre></td></tr></table></figure></p>
 <p>6、查找/etc目录下所有用户都没有写权限的文件<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">find</span>   /etc/  -<span class="keyword">not</span> -perm /<span class="number">222</span></span><br></pre></td></tr></table></figure></p>
 <p>7、查找/etc目录下至少有一类用户没有执行权限的文件<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span><span class="built_in">find</span>  /etc/   -<span class="keyword">not</span> -perm <span class="number">-111</span></span><br><span class="line">   即: 把每一位都有的去掉，就变成了，至少有一位了</span><br><span class="line"><span class="number">1</span>	<span class="number">011</span> <span class="number">101</span> <span class="number">110</span>     <span class="number">0</span>:代表没有执行权限</span><br><span class="line"><span class="number">2</span>	<span class="number">001</span> <span class="number">010</span> <span class="number">100</span></span><br><span class="line"><span class="number">3</span>	<span class="number">000</span></span><br></pre></td></tr></table></figure></p>
 <p>8、查找/etc/init.d目录下，所有用户都有执行权限，且其它用户有写权限的文件<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find</span>  <span class="regexp">/etc/i</span>nit.d  -perm -<span class="number">113</span></span><br></pre></td></tr></table></figure></p>
@@ -444,8 +444,6 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Linux/" rel="tag"># Linux</a>
-          
             <a href="/tags/查找/" rel="tag"># 查找</a>
           
             <a href="/tags/压缩/" rel="tag"># 压缩</a>
@@ -461,8 +459,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/02/28/linux/基本/shell脚本编程基础 -2/" rel="next" title="shell脚本编程基础 -2">
-                <i class="fa fa-chevron-left"></i> shell脚本编程基础 -2
+              <a href="/2018/03/02/python/python/" rel="next" title="python">
+                <i class="fa fa-chevron-left"></i> python
               </a>
             
           </div>
@@ -471,8 +469,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/03/02/python/python/" rel="prev" title="python">
-                python <i class="fa fa-chevron-right"></i>
+              <a href="/2018/03/05/linux/基本/软件包管理/" rel="prev" title="软件包管理">
+                软件包管理 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -545,7 +543,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -567,7 +565,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
