@@ -411,7 +411,7 @@
 <p>2、查找/var目录下不属于root、lp、gdm的所有文件<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find  /var/  -not -user(root,lp,gdm)   <span class="comment"># 错误，不支持</span></span><br><span class="line">find /var/ -not \( -<span class="keyword">user</span> <span class="title">root</span> -o -<span class="keyword">user</span> <span class="title">lp</span> -o -<span class="keyword">user</span> <span class="title">gdm</span> \)</span><br></pre></td></tr></table></figure></p>
 <p>3、查找/var目录下最近一周内其内容修改过，同时属主不为 root，也不是postfix的文件<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /var/ -mtime -<span class="number">7</span>  -not \( -<span class="keyword">user</span> <span class="title">root</span> -o -<span class="keyword">user</span> <span class="title">postfix</span> \)</span><br></pre></td></tr></table></figure></p>
 <p>4、查找当前系统上没有属主或属组，且最近一个周内曾被访问过的文件<br><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find  /   <span class="string">\(</span> -nouser -o -nogroup <span class="string">\)</span> -a -atime -<span class="number">7</span></span><br></pre></td></tr></table></figure></p>
-<p>5、查找/etc目录下大于1M且类型为普通文件的所有文件<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find  <span class="regexp">/etc/</span>  -type f -a -size +<span class="number">1</span>M   <span class="comment"># （默认的是且，不用写-a也可以）</span></span><br></pre></td></tr></table></figure></p>
+<p>5、查找/etc目录下大于1M且类型为普通文件的所有文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find  /etc/  -<span class="built_in">type</span> f -a -size +1M   <span class="comment"># （默认的是且，不用写-a也可以）</span></span><br></pre></td></tr></table></figure></p>
 <p>6、查找/etc目录下所有用户都没有写权限的文件<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">find</span>   /etc/  -<span class="keyword">not</span> -perm /<span class="number">222</span></span><br></pre></td></tr></table></figure></p>
 <p>7、查找/etc目录下至少有一类用户没有执行权限的文件<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span><span class="built_in">find</span>  /etc/   -<span class="keyword">not</span> -perm <span class="number">-111</span></span><br><span class="line">   即: 把每一位都有的去掉，就变成了，至少有一位了</span><br><span class="line"><span class="number">1</span>	<span class="number">011</span> <span class="number">101</span> <span class="number">110</span>     <span class="number">0</span>:代表没有执行权限</span><br><span class="line"><span class="number">2</span>	<span class="number">001</span> <span class="number">010</span> <span class="number">100</span></span><br><span class="line"><span class="number">3</span>	<span class="number">000</span></span><br></pre></td></tr></table></figure></p>
 <p>8、查找/etc/init.d目录下，所有用户都有执行权限，且其它用户有写权限的文件<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find</span>  <span class="regexp">/etc/i</span>nit.d  -perm -<span class="number">113</span></span><br></pre></td></tr></table></figure></p>
@@ -543,7 +543,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -565,7 +565,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -1,0 +1,789 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="shell,shell脚本," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="if，case1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556条件选择if语句   单分支      if 判断条件;then         条件为真的分支代码      fi   双分支      if 判断条件; then">
+<meta name="keywords" content="shell,shell脚本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell脚本编程进阶 -1">
+<meta property="og:url" content="http://yoursite.com/2018/03/23/linux/基本/shell脚本编程进阶 -1/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="if，case1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556条件选择if语句   单分支      if 判断条件;then         条件为真的分支代码      fi   双分支      if 判断条件; then">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-23T10:02:46.031Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="shell脚本编程进阶 -1">
+<meta name="twitter:description" content="if，case1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556条件选择if语句   单分支      if 判断条件;then         条件为真的分支代码      fi   双分支      if 判断条件; then">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/23/linux/基本/shell脚本编程进阶 -1/"/>
+
+
+
+
+
+  <title> shell脚本编程进阶 -1 | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/23/linux/基本/shell脚本编程进阶 -1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                shell脚本编程进阶 -1
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-23T00:00:00+08:00">
+                2018-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="if，case"><a href="#if，case" class="headerlink" title="if，case"></a>if，case</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">条件选择<span class="keyword">if</span>语句</span><br><span class="line">   单分支</span><br><span class="line">      <span class="keyword">if</span> 判断条件;<span class="keyword">then</span></span><br><span class="line">         条件为真的分支代码</span><br><span class="line">      <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">   双分支</span><br><span class="line">      <span class="keyword">if</span> 判断条件; <span class="keyword">then</span></span><br><span class="line">         条件为真的分支代码</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">         条件为假的分支代码</span><br><span class="line">      <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">   多分支</span><br><span class="line">      <span class="keyword">if</span> 判断条件1; <span class="keyword">then</span></span><br><span class="line">         条件为真的分支代码</span><br><span class="line">      <span class="keyword">elif</span> 判断条件2; <span class="keyword">then</span></span><br><span class="line">         条件为真的分支代码</span><br><span class="line">      <span class="keyword">elif</span> 判断条件3; <span class="keyword">then</span></span><br><span class="line">         条件为真的分支代码</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">         以上条件都为假的分支代码</span><br><span class="line">      <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">注: 逐条件进行判断，第一次遇为 <span class="string">"真"</span> 条件时，执行其分支，而后结束整个<span class="keyword">if</span>语句</span><br><span class="line"></span><br><span class="line">例: 根据命令的退出状态来执行命令</span><br><span class="line">   <span class="keyword">if</span> ping -c1 -W2 station1 &amp;&gt; /dev/null; <span class="keyword">then</span></span><br><span class="line">      <span class="built_in">echo</span> <span class="string">'Station1 is UP'</span></span><br><span class="line">   <span class="keyword">elif</span> grep <span class="string">"station1"</span> ~/maintenance.txt &amp;&gt; /dev/null</span><br><span class="line">   <span class="keyword">then</span></span><br><span class="line">      <span class="built_in">echo</span> <span class="string">'Station1 is undergoing maintenance'</span></span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">      <span class="built_in">echo</span> <span class="string">'Station1 is unexpectedly DOWN!'</span></span><br><span class="line">      <span class="built_in">exit</span> 1</span><br><span class="line">   <span class="keyword">fi</span></span><br><span class="line">注: -c1 请求次数</span><br><span class="line">    -W1 请求延迟</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">条件判断</span><br><span class="line"><span class="keyword">case</span>语句:</span><br><span class="line">   <span class="keyword">case</span> 变量引用 <span class="keyword">in</span></span><br><span class="line">   PAT1)            <span class="keyword">case</span>支持glob风格的通配符</span><br><span class="line">      分支1            *: 任意长度任意字符</span><br><span class="line">      ;;               ?: 任意单个字符</span><br><span class="line">   PAT2)               []: 指定范围内的任意单个字符</span><br><span class="line">      分支2            a|b: a或b</span><br><span class="line">      ;;</span><br><span class="line"></span><br><span class="line">   ......</span><br><span class="line"></span><br><span class="line">   *)</span><br><span class="line">      默认分支</span><br><span class="line">      ;;</span><br><span class="line">   <span class="keyword">esac</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="for，while，until，shift"><a href="#for，while，until，shift" class="headerlink" title="for，while，until，shift"></a>for，while，until，shift</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">循环执行</span><br><span class="line">   将某代码段重复运行多次</span><br><span class="line">   重复运行多少次:</span><br><span class="line">      循环次数事先已知</span><br><span class="line">      循环次数事先未知</span><br><span class="line">      有进入条件和退出条件</span><br></pre></td></tr></table></figure>
+<h2 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">for</span> 变量名 <span class="keyword">in</span> 列表;<span class="keyword">do</span></span><br><span class="line">      循环体</span><br><span class="line">   done</span><br><span class="line"></span><br><span class="line">执行机制</span><br><span class="line">   依次将列表中的元素赋值给 <span class="string">"变量名"</span>; 每次赋值后即执行一次循环体;</span><br><span class="line">      直到列表中的元素耗尽，循环结束</span><br><span class="line">	列表生成方式:</span><br><span class="line">      (1)直接给出列表</span><br><span class="line">      (2)整数列表:</span><br><span class="line">         (a) &#123;start<span class="built_in">..</span>end&#125;</span><br><span class="line">            2<span class="built_in">..</span>10<span class="built_in">..</span>2  开始  结束  步长</span><br><span class="line">            2-10步长为2   步长是正数（系统都当做正数来处理）</span><br><span class="line">         (b) $(seq [start [<span class="keyword">step</span>]] end)</span><br><span class="line">            注: seq 2 2 10  开始  步长  结束</span><br><span class="line"></span><br><span class="line">         echo user&#123;1<span class="built_in">..</span>10&#125; | xargs -n 1 userdel -r</span><br><span class="line">            xargs 不加 -n 1 是放在一行输出   加了是一行输出一个</span><br><span class="line">      例:</span><br><span class="line">         <span class="attribute">k</span>=2</span><br><span class="line">         <span class="keyword">for</span> i <span class="keyword">in</span> $(seq 1 <span class="variable">$k</span> 10) ;<span class="keyword">do</span></span><br><span class="line">            echo <span class="variable">$i</span></span><br><span class="line">         done</span><br><span class="line">      输出  1 3 5 7 9</span><br><span class="line"></span><br><span class="line">      (3)返回列表的命令</span><br><span class="line">         $(COMMAND)</span><br><span class="line">      (4)使用glod</span><br><span class="line">         如: *.sh</span><br><span class="line">      (5)变量引用</span><br><span class="line">         <span class="variable">$@</span>, $*</span><br><span class="line">      例:</span><br><span class="line">         <span class="attribute">str</span>=<span class="string">"a b c e f j h"</span></span><br><span class="line">         <span class="keyword">for</span> i <span class="keyword">in</span> <span class="variable">$str</span> ;<span class="keyword">do</span></span><br><span class="line">            echo <span class="variable">$i</span></span><br><span class="line">         done</span><br><span class="line">      输出</span><br><span class="line">         a</span><br><span class="line">         b</span><br><span class="line">         c</span><br></pre></td></tr></table></figure>
+<h2 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> CONDITION; <span class="keyword">do</span></span><br><span class="line">   循环体</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">CONDITION:</span><br><span class="line">   循环控制条件: 进入循环之前，先做一次判断;每一次循环之后会再次做判断</span><br><span class="line">      条件为 <span class="string">"true"</span>，则执行一次循环；直到条件测试状态为 <span class="string">"false"</span>终止循环</span><br><span class="line">   因此: CONDTION一般应该有循环控制变量;而此变量的值 会在循环体不断地被修正</span><br><span class="line">   进入条件: CONDITION为<span class="literal">true</span></span><br><span class="line">   退出条件: CONDITION为<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<h2 id="until循环"><a href="#until循环" class="headerlink" title="until循环"></a>until循环</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">until CONDITION; <span class="keyword">do</span></span><br><span class="line">   循环体</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">进入条件:</span><br><span class="line">   CONDITION 为<span class="literal">false</span></span><br><span class="line">退出条件:</span><br><span class="line">   CONDITION 为<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h2 id="continue循环控制语句"><a href="#continue循环控制语句" class="headerlink" title="continue循环控制语句"></a>continue循环控制语句</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">用于循环体中</span><br><span class="line"><span class="built_in">continue</span> [N]：提前结束第N层的本轮循环，而直接进入下一轮判断；最内层为第1层</span><br><span class="line">   <span class="keyword">while</span> CONDTIITON1; <span class="keyword">do</span></span><br><span class="line">      CMD1</span><br><span class="line">      ...</span><br><span class="line">      <span class="keyword">if</span> CONDITION2; <span class="keyword">then</span></span><br><span class="line">         <span class="built_in">continue</span></span><br><span class="line">      <span class="keyword">fi</span></span><br><span class="line">      CMDn</span><br><span class="line">      ...</span><br><span class="line">   <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<h2 id="break循环控制语句"><a href="#break循环控制语句" class="headerlink" title="break循环控制语句"></a>break循环控制语句</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">break</span> [N]: 提前结束第N层循环，最内层为第1层</span><br><span class="line"><span class="keyword">while</span> CONDTIITON1; <span class="keyword">do</span></span><br><span class="line">   CMD1</span><br><span class="line">   ...</span><br><span class="line">   <span class="keyword">if</span> CONDITION2; <span class="keyword">then</span></span><br><span class="line">      <span class="built_in">break</span></span><br><span class="line">   <span class="keyword">fi</span></span><br><span class="line">   CMDn</span><br><span class="line">   ...</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<h2 id="shift循环控制命令"><a href="#shift循环控制命令" class="headerlink" title="shift循环控制命令"></a>shift循环控制命令</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">shift [n]  n代表这次移动的次数</span><br><span class="line">用于将参量列表 list 左移指定次数，缺省为左移一次 </span><br><span class="line">参量列表 list 一旦被移动，最左端的那个参数就从列表中删除</span><br><span class="line">   while 循环遍历位置参量列表时，常用到 shift</span><br><span class="line">./doit<span class="selector-class">.sh</span>   <span class="selector-tag">a</span> <span class="selector-tag">b</span> c d e f g h</span><br><span class="line">./shfit<span class="selector-class">.sh</span>  <span class="selector-tag">a</span> <span class="selector-tag">b</span> c d e f g h</span><br></pre></td></tr></table></figure>
+<h2 id="创建无限循环"><a href="#创建无限循环" class="headerlink" title="创建无限循环"></a>创建无限循环</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span></span><br><span class="line">   循环体</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">until <span class="literal">false</span>; <span class="keyword">do</span></span><br><span class="line">   循环体</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<h2 id="特殊用法"><a href="#特殊用法" class="headerlink" title="特殊用法"></a>特殊用法</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>循环的特殊用法（遍历文件的每一行）</span><br><span class="line">   <span class="keyword">while</span> <span class="built_in">read</span> line; <span class="keyword">do</span></span><br><span class="line">      循环体</span><br><span class="line">   <span class="keyword">done</span> &lt; /PATH/FROM/SOMEFILE</span><br><span class="line">注: 直接把文件里的内容  一行一行的传递给变量line</span><br><span class="line"></span><br><span class="line">   cat /path/file | <span class="keyword">while</span> <span class="built_in">read</span> line ;<span class="keyword">do</span></span><br><span class="line">      循环体</span><br><span class="line">   <span class="keyword">done</span></span><br><span class="line">注: cat某文件里的内容管道给<span class="keyword">while</span>  也可以先做些过滤，再传递给<span class="keyword">while</span></span><br><span class="line">   依次读取/PATH/FROM/SOMEFILE文件中的每一行，且将行赋值给变量line</span><br><span class="line"></span><br><span class="line">示例: 扫描/etc/passwd文件每一行，如发现GECOS字段为空，则填充用户名和单位电话为62985600，</span><br><span class="line">  并提示该用户的GECOS信息修改成功</span><br><span class="line">   <span class="keyword">while</span> <span class="built_in">read</span> line ;<span class="keyword">do</span></span><br><span class="line">      gecos=`<span class="built_in">echo</span> <span class="variable">$line</span> | cut -d: -f 5`</span><br><span class="line">      useruid=`<span class="built_in">echo</span> <span class="variable">$line</span> | cut -d: -f 3`</span><br><span class="line">      <span class="keyword">if</span> [ -z <span class="string">"<span class="variable">$gecos</span>"</span> ];<span class="keyword">then</span></span><br><span class="line">         chfn -p <span class="string">"62985600"</span> <span class="variable">$useruid</span> &amp;&gt; /dev/null</span><br><span class="line">         <span class="built_in">echo</span> <span class="string">"<span class="variable">$useruid</span> GECOS success"</span></span><br><span class="line">      <span class="keyword">fi</span></span><br><span class="line">   <span class="keyword">done</span> &lt; /etc/passwd</span><br><span class="line"></span><br><span class="line">双小括号方法，即((…))格式，也可以用于算术运算</span><br><span class="line">双小括号方法也可以使bash Shell实现C语言风格的变量操作</span><br><span class="line">   I=10 </span><br><span class="line">   ((I++))    ((a&gt;b))</span><br></pre></td></tr></table></figure>
+<h2 id="for循环的特殊格式"><a href="#for循环的特殊格式" class="headerlink" title="for循环的特殊格式"></a>for循环的特殊格式</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">for</span> ((控制变量初始化;条件判断表达式;控制变量的修正表达式))</span><br><span class="line">   <span class="keyword">do</span></span><br><span class="line">      循环体</span><br><span class="line">   <span class="keyword">done</span></span><br><span class="line">控制变量初始化: 仅在运行到循环代码段时执行一次</span><br><span class="line">控制变量的修正表达式：每轮循环结束会先进行控制变量修正运算，而后再做条件判断</span><br></pre></td></tr></table></figure>
+<h2 id="select循环与菜单"><a href="#select循环与菜单" class="headerlink" title="select循环与菜单"></a>select循环与菜单</h2><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">select</span> variable <span class="keyword">in</span> list </span><br><span class="line">		<span class="keyword">do</span> </span><br><span class="line">			循环体命令 </span><br><span class="line">		done </span><br><span class="line">	variable  --&gt; <span class="keyword">menu</span>  菜单</span><br><span class="line">	list  --&gt; lamian  tangmian  hulatang  yangroutang  列表</span><br><span class="line">		</span><br><span class="line"><span class="keyword">select</span> 循环主要用于创建菜单，按数字顺序排列的菜单项将显示在标准错误上，</span><br><span class="line">	并显示 PS3 提示符， 等待用户输入 (死循环)</span><br><span class="line">用户输入菜单列表中的某个数字，执行相应的命令 </span><br><span class="line">用户输入被保存在内置变量 REPLY 中</span><br><span class="line">	PS2  多行重定向的提示符</span><br><span class="line">	PS3  <span class="keyword">select</span>选择时候的提示符</span><br><span class="line"></span><br><span class="line">	例： </span><br><span class="line">	<span class="keyword">select</span> <span class="keyword">menu</span> <span class="keyword">in</span> lamian tangmian hulatang yangroutang ;<span class="keyword">do</span></span><br><span class="line">		<span class="keyword">case</span> $REPLY <span class="keyword">in</span>   #对应的列表分别对应<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span>存在在REPLY中</span><br><span class="line">		<span class="number">1</span>)</span><br><span class="line">			echo <span class="string">"lamian price: 10"</span></span><br><span class="line">			;;</span><br><span class="line">		<span class="number">2</span>)</span><br><span class="line">			echo <span class="string">"tangmian price: 20"</span></span><br><span class="line">			;;</span><br><span class="line">		<span class="number">3</span>)</span><br><span class="line">		<span class="number">4</span>)</span><br><span class="line">		*）</span><br><span class="line">			echo <span class="string">"go out"</span></span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">			;;</span><br><span class="line">		esac</span><br><span class="line">	done</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span>与<span class="keyword">case</span> </span><br><span class="line">	<span class="keyword">select</span> 是个无限循环，因此要记住用 <span class="keyword">break</span> 命令退出循环，</span><br><span class="line">		或用 exit 命令终止脚本。</span><br><span class="line">		也可以按 ctrl+c 退出循环 </span><br><span class="line">	<span class="keyword">select</span> 经常和 <span class="keyword">case</span> 联合使用 </span><br><span class="line">	与 <span class="keyword">for</span> 循环类似，可以省略 <span class="keyword">in</span> list，此时使用位置参量</span><br></pre></td></tr></table></figure>
+<hr>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/shell/" rel="tag"># shell</a>
+          
+            <a href="/tags/shell脚本/" rel="tag"># shell脚本</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/22/linux/基本/进程和计划任务 -2/" rel="next" title="计划任务">
+                <i class="fa fa-chevron-left"></i> 计划任务
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/25/linux/基本/shell脚本编程进阶 -2/" rel="prev" title="shell脚本编程进阶 -2">
+                shell脚本编程进阶 -2 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#if，case"><span class="nav-number">1.</span> <span class="nav-text">if，case</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#for，while，until，shift"><span class="nav-number">2.</span> <span class="nav-text">for，while，until，shift</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#for循环"><span class="nav-number">2.1.</span> <span class="nav-text">for循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#while循环"><span class="nav-number">2.2.</span> <span class="nav-text">while循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#until循环"><span class="nav-number">2.3.</span> <span class="nav-text">until循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#continue循环控制语句"><span class="nav-number">2.4.</span> <span class="nav-text">continue循环控制语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#break循环控制语句"><span class="nav-number">2.5.</span> <span class="nav-text">break循环控制语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shift循环控制命令"><span class="nav-number">2.6.</span> <span class="nav-text">shift循环控制命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建无限循环"><span class="nav-number">2.7.</span> <span class="nav-text">创建无限循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特殊用法"><span class="nav-number">2.8.</span> <span class="nav-text">特殊用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#for循环的特殊格式"><span class="nav-number">2.9.</span> <span class="nav-text">for循环的特殊格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#select循环与菜单"><span class="nav-number">2.10.</span> <span class="nav-text">select循环与菜单</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
