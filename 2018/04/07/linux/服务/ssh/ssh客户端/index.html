@@ -1,0 +1,782 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ssh," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="ssh客户端12345678910111213141516171819202122232425262728293031323334353637383940414243安全协议SSL: Secure Socket Layer  版本: v1(淘汰)  v2(现在使用的版本)功能: 机密性，认证，完整性，重放保护两阶段协议，分为握手阶段和应用阶段   握手阶段(协商阶段)      客户端和服务器端认">
+<meta name="keywords" content="ssh">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ssh客户端">
+<meta property="og:url" content="http://yoursite.com/2018/04/07/linux/服务/ssh/ssh客户端/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="ssh客户端12345678910111213141516171819202122232425262728293031323334353637383940414243安全协议SSL: Secure Socket Layer  版本: v1(淘汰)  v2(现在使用的版本)功能: 机密性，认证，完整性，重放保护两阶段协议，分为握手阶段和应用阶段   握手阶段(协商阶段)      客户端和服务器端认">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-04T08:18:29.868Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ssh客户端">
+<meta name="twitter:description" content="ssh客户端12345678910111213141516171819202122232425262728293031323334353637383940414243安全协议SSL: Secure Socket Layer  版本: v1(淘汰)  v2(现在使用的版本)功能: 机密性，认证，完整性，重放保护两阶段协议，分为握手阶段和应用阶段   握手阶段(协商阶段)      客户端和服务器端认">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/07/linux/服务/ssh/ssh客户端/"/>
+
+
+
+
+
+  <title> ssh客户端 | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/07/linux/服务/ssh/ssh客户端/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                ssh客户端
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-07T00:00:00+08:00">
+                2018-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="ssh客户端"><a href="#ssh客户端" class="headerlink" title="ssh客户端"></a>ssh客户端</h1><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">安全协议</span><br><span class="line"><span class="symbol">SSL:</span> Secure Socket Layer  版本: v1(淘汰)  v2(现在使用的版本)</span><br><span class="line">功能: 机密性，认证，完整性，重放保护</span><br><span class="line"></span><br><span class="line">两阶段协议，分为握手阶段和应用阶段</span><br><span class="line">   握手阶段(协商阶段)</span><br><span class="line">      客户端和服务器端认证对方身份（依赖于PKI体系，利用数字证书进行身份认证），并协商</span><br><span class="line">        通信中使用的安全参数、密码套件以及主密钥，后续通信使用的所有密钥都是</span><br><span class="line">        通过MasterSecret生成</span><br><span class="line">   应用阶段</span><br><span class="line">      在握手阶段完成后进入，在应用阶段通信双方使用握手阶段协商好的密钥进行安全通信</span><br><span class="line"></span><br><span class="line">SSL/TLS</span><br><span class="line">   Handshake协议</span><br><span class="line">      包括协商安全参数和密码套件、服务器身份认证（客户端身份认证可选）、密钥交换</span><br><span class="line">   ChangeCipherSpec协议</span><br><span class="line">      一条消息表明握手协议已经完成</span><br><span class="line">   Alert协议</span><br><span class="line">      对握手协议中一些异常的错误提醒，分为fatal和warning两个级别，fatal类型错误会</span><br><span class="line">        直接中断SSL链接，而warning级别的错误SSL链接仍可继续，只是会给出错误警告</span><br><span class="line">   Record协议</span><br><span class="line">      包括对消息的分段、压缩、消息认证和完整性保护、加密等</span><br><span class="line">   HTTPS协议</span><br><span class="line">      就是<span class="string">"HTTP 协议"</span>和<span class="string">"SSL/TLS 协议"</span>的组合，<span class="string">"HTTP over SSL"</span>或<span class="string">"HTTP over TLS"</span>，</span><br><span class="line">        对http协议的文本数据进行加密处理后，成为二进制形式传输</span><br><span class="line"></span><br><span class="line"><span class="symbol">ssh:</span> secure shell, protocol, <span class="number">22</span>/tcp, 安全的远程登录</span><br><span class="line">   具体的软件实现</span><br><span class="line"><span class="symbol">      OpenSSH:</span> ssh协议的开源实现，CentOS默认安装</span><br><span class="line"><span class="symbol">      dropbear:</span> 另一个开源实现</span><br><span class="line">   SSH协议版本</span><br><span class="line"><span class="symbol">      v1:</span> 基于CRC<span class="number">-32</span>做MAC，不安全，man-in-middle</span><br><span class="line"><span class="symbol">      v2:</span> 双方主机协议选择安全的MAC方式</span><br><span class="line">         基于DH算法做密钥交换</span><br><span class="line">         基于RSA或DSA实现身份认证</span><br><span class="line">      两种方式的用户登录认证</span><br><span class="line">         基于password</span><br><span class="line">         基于key</span><br><span class="line"></span><br><span class="line">例: 在连接的时候</span><br><span class="line">   如: ssh <span class="number">172.18</span><span class="number">.48</span><span class="number">.215</span>  <span class="meta"># 用户是xdg，没有指定其用名，</span></span><br><span class="line">     连接对面的用户名，默认的是跟自已同名的用户名，而不是root，</span><br><span class="line">     所以要连接跟自己不同的用户名的用户时，要指定其用户名的，不然会出错</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="ssh客户端-1"><a href="#ssh客户端-1" class="headerlink" title="ssh客户端"></a>ssh客户端</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">配置文件:</span> <span class="string">/etc/ssh/ssh_config</span></span><br><span class="line"><span class="string">例:</span></span><br><span class="line">   <span class="string">[root@xdg</span> <span class="string">ssh]#rpm</span> <span class="bullet">-qf</span> <span class="string">ssh_config</span></span><br><span class="line">   <span class="string">openssh-clients-6.6.1p1-31.el7.x86_64</span></span><br><span class="line">   <span class="string">[root@xdg</span> <span class="string">ssh]#rpm</span> <span class="bullet">-qf</span> <span class="string">sshd_config</span></span><br><span class="line">   <span class="string">openssh-server-6.6.1p1-31.el7.x86_64</span></span><br><span class="line">   <span class="string">注:</span> <span class="string">在客户端的配置文件中</span> <span class="string">StrictHostKeyChecking</span>  <span class="string">ask</span>  </span><br><span class="line">   <span class="string">注:</span> <span class="string">每次登录的时候提示</span> <span class="literal">yes</span><span class="string">/no</span> <span class="string">改为:</span> <span class="literal">no</span><span class="string">则不启动，警告的作用，提示是否信任该主机</span></span><br><span class="line"></span><br><span class="line"><span class="string">格式:</span> <span class="string">ssh</span> <span class="string">[user@]host</span> <span class="string">[COMMAND]</span></span><br><span class="line">   <span class="string">ssh</span> <span class="string">[-l</span> <span class="string">user]</span> <span class="string">host</span> <span class="string">[COMMAND]</span></span><br><span class="line"><span class="attr">      -l:</span> <span class="string">登录上去，执行一条命令，然后退出登录</span></span><br><span class="line">         <span class="comment"># ssh -l root 192.168.1.71 hostname</span></span><br><span class="line"><span class="attr">      -p:</span> <span class="string">远程服务器监听的端口</span></span><br><span class="line"><span class="attr">      -b:</span> <span class="string">指定连接的源IP</span></span><br><span class="line"><span class="attr">      -v:</span> <span class="string">调试模式，用来跟踪信息</span></span><br><span class="line">         <span class="comment"># ssh -v root@192.168.1.71</span></span><br><span class="line"><span class="attr">      -C:</span> <span class="string">压缩方式</span></span><br><span class="line"><span class="attr">      -X:</span> <span class="string">支持x11转发，图形界面的转发</span></span><br><span class="line">         <span class="string">注:</span> <span class="string">最小化安装没有图形，安装图形包:</span> <span class="string">yum</span> <span class="string">groupinstall</span> <span class="string">Desktop</span></span><br><span class="line"><span class="attr">      -Y:</span> <span class="string">支持信任x11转发</span></span><br><span class="line">         <span class="string">ForwardX11Trusted</span> <span class="literal">yes</span>  <span class="comment"># 默认是关闭</span></span><br><span class="line"><span class="attr">      -t:</span> <span class="string">强制伪tty分配</span></span><br><span class="line">         <span class="string">ssh</span> <span class="bullet">-t</span> <span class="string">remoteserver1</span> <span class="string">ssh</span> <span class="string">remoteserver2</span></span><br><span class="line">         <span class="string">注:</span> <span class="string">能过server1连接到server2的机器上</span></span><br><span class="line">         <span class="string">注:</span> <span class="string">先输入server1的登录密码，再输入server2的登录密码</span></span><br><span class="line"></span><br><span class="line"><span class="string">允许实现对远程系统经验证地加密安全访问</span></span><br><span class="line">   <span class="string">当用户远程连接ssh服务器时，会复制ssh服务器</span> <span class="string">/etc/ssh/ssh_host*key.pub</span></span><br><span class="line">     <span class="string">文件中的公钥到客户机的</span> <span class="string">~./ssh/know_hosts中，下次连接时，会自动匹配相应私钥，</span></span><br><span class="line">     <span class="string">不能匹配，将拒绝连接（清空原来已有的记录，重新记录）</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="ssh服务登录验证"><a href="#ssh服务登录验证" class="headerlink" title="ssh服务登录验证"></a>ssh服务登录验证</h1><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">ssh服务登录验证方式</span><br><span class="line">   用户/口令</span><br><span class="line">   基于密钥</span><br><span class="line"></span><br><span class="line">基于用户和口令登录验证</span><br><span class="line">   <span class="number">1</span>.客户端发起ssh请求，服务器会把自己的公钥发送给用户</span><br><span class="line">   <span class="number">2</span>.用户会根据服务器发来的公钥对密码进行加密</span><br><span class="line">   <span class="number">3</span>.加密后的信息回传给服务器，服务器用自己的私钥解密，如果密码正确，则用户登录成功</span><br><span class="line"></span><br><span class="line">基于密钥的登录方式（客户机的公钥上传到服务器）</span><br><span class="line">   <span class="number">1</span>.首先在客户端生成一对密钥（ssh-keygen）</span><br><span class="line">   <span class="number">2</span>.并将客户端的公钥ssh-<span class="keyword">copy</span><span class="bash">-id 拷贝到服务端</span></span><br><span class="line"><span class="bash">   3.当客户端再次发送一个连接请求，包括ip、用户名</span></span><br><span class="line"><span class="bash">   4.服务端得到客户端的请求后，会到authorized_keys中查找，如果有响应的IP和用户，</span></span><br><span class="line"><span class="bash">     就会随机生成一个字符串，如: acdf</span></span><br><span class="line"><span class="bash">   5.服务端将使用客户端拷贝过来的公钥进行加密，然后发送给客户端</span></span><br><span class="line"><span class="bash">   6.得到服务端发来消息后，客户端会使用私钥进行解密，然后将解密后的字符串发送给服务端</span></span><br><span class="line"><span class="bash">   7.服务端接受到客户端发来字符串后，跟之前的字符串对比，如果一致，就允许免密码登录</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">基于密钥的认证</span></span><br><span class="line"><span class="bash">   (1)在客户端生成密钥对</span></span><br><span class="line"><span class="bash">      ssh-keygen -t rsa [-P <span class="string">''</span>] [-f  ~/.ssh/id_rsa ]</span></span><br><span class="line"><span class="bash">      <span class="comment"># -f  # 文件目录不加引号，路径名最好写成 /root/.ssh/id_rsa</span></span></span><br><span class="line"><span class="bash">      <span class="comment"># id_rsa  # 这个名字是必须要相同的，不能出错</span></span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">   (2)把公钥文件传输至远程服务器对应用户的家目录</span></span><br><span class="line"><span class="bash">      ssh-copy-id [-i [identity_file]] [user@]host</span></span><br><span class="line"><span class="bash">      <span class="comment"># ssh-copy-id -i  ~/.ssh/id_rsa 172.18.48.215</span></span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">   (3)测试</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">   (4)在SecureCRT或Xshell实现基于key验证</span></span><br><span class="line"><span class="bash">      在SecureCRT工具 -—&gt; 创建公钥 -—&gt; 生成Identity.pub文件转化为openssh兼容格式</span></span><br><span class="line"><span class="bash">       （适合SecureCRT，Xshell不需要转化格式），并复制到需登录主机上相应文件</span></span><br><span class="line"><span class="bash">        authorized_keys中, 注意权限必须为600，在需登录的ssh主机上执行</span></span><br><span class="line"><span class="bash">      <span class="comment"># ssh-keygen -i -f Identity.pub &gt;&gt; .ssh/authorized_keys</span></span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">   (5)重设私钥口令: ssh-keygen –p</span></span><br><span class="line"><span class="bash">      注: 口令为空,空口令</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">   (6)验证代理（authentication agent）保密解密后的密钥</span></span><br><span class="line"><span class="bash">      这样口令就只需要输入一次</span></span><br><span class="line"><span class="bash">      在GNOME中，代理被自动提供给root用户</span></span><br><span class="line"><span class="bash">      否则运行ssh-agent bash</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">   (7)钥匙通过命令添加给代理  <span class="comment"># 退出登录远程主机后，之后则无法使用，需要在次开启</span></span></span><br><span class="line"><span class="bash">      ssh-add</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="SSH端口转发"><a href="#SSH端口转发" class="headerlink" title="SSH端口转发"></a>SSH端口转发</h1><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SSH会自动加密和解密所有SSH 客户端与服务端之间的网络数据，但是，SSH还能够将其他</span><br><span class="line">  TCP端口的网络数据通过SSH链接来转发，并且自动提供了相应的加密及解密服务，</span><br><span class="line">  这一过程也被叫做<span class="string">"隧道"</span>（tunneling），这是因为SSH 为其他TCP 链接提供了一个</span><br><span class="line">  安全的通道来进行传输而得名，如，Telnet，SMTP，LDAP 这些TCP 应用均能够从中得益，</span><br><span class="line">  避免了用户名，密码以及隐私信息的明文传输，而与此同时，如果工作环境中的防火墙</span><br><span class="line">  限制了一些网络端口的使用，但是允许SSH 的连接，也能够通过将TCP 端口转发来使用</span><br><span class="line">  SSH 进行通讯</span><br><span class="line"></span><br><span class="line">SSH 端口转发能够提供两大功能</span><br><span class="line">   加密SSH <span class="built_in">Client</span>端至SSH <span class="built_in">Server</span>端之间的通讯数据</span><br><span class="line">   突破防火墙的限制完成一些之前无法建立的TCP 连接</span><br></pre></td></tr></table></figure>
+<h2 id="本地转发"><a href="#本地转发" class="headerlink" title="本地转发"></a>本地转发</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">-L</span>  <span class="selector-tag">localport</span><span class="selector-pseudo">:remotehost</span><span class="selector-pseudo">:remotehostport</span> <span class="selector-tag">sshserver</span></span><br><span class="line">选项</span><br><span class="line">   <span class="selector-tag">-f</span> 后台启用</span><br><span class="line">   <span class="selector-tag">-N</span> 不打开远程<span class="selector-tag">shell</span>，处于等待状态</span><br><span class="line">   <span class="selector-tag">-g</span> 启用网关功能</span><br><span class="line"></span><br><span class="line">原理</span><br><span class="line">   <span class="selector-tag">ssh</span> –<span class="selector-tag">L</span> 9527<span class="selector-pseudo">:telnetsrv</span><span class="selector-pseudo">:23</span> <span class="selector-tag">-N</span>  <span class="selector-tag">sshsrv</span>  # <span class="selector-tag">-Nf</span> 一般一起使用，放到后台执行</span><br><span class="line">   <span class="selector-tag">telnet</span> 127<span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.1</span> 9527</span><br><span class="line"></span><br><span class="line">当访问本机的9527的端口时，被加密后转发到<span class="selector-tag">sshsrv</span>的<span class="selector-tag">ssh</span>服务，再解密被转发到<span class="selector-tag">telnetsrv</span><span class="selector-pseudo">:23</span></span><br><span class="line"><span class="selector-tag">data</span> &lt;<span class="selector-tag">--</span>&gt; <span class="selector-tag">localhost</span><span class="selector-pseudo">:9527</span> &lt;<span class="selector-tag">--</span>&gt; <span class="selector-tag">localhost</span><span class="selector-pseudo">:XXXXX</span> &lt;<span class="selector-tag">--</span>&gt; <span class="selector-tag">sshsrv</span><span class="selector-pseudo">:22</span> &lt;<span class="selector-tag">--</span>&gt; <span class="selector-tag">sshsrv</span><span class="selector-pseudo">:YYYYY</span> </span><br><span class="line">  &lt;<span class="selector-tag">--</span>&gt; <span class="selector-tag">telnetsrv</span><span class="selector-pseudo">:23</span></span><br><span class="line"></span><br><span class="line">注: 目的主机必须开启23号端口（<span class="selector-tag">telnet</span>）<span class="selector-tag">telnet</span>远程的时候是禁止<span class="selector-tag">root</span>用户登录的</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">centos6</span>如果开启23号端口</span><br><span class="line">   安装<span class="selector-tag">telnet</span>服务</span><br><span class="line">   <span class="selector-tag">chkconfig</span> <span class="selector-tag">telnet</span> <span class="selector-tag">on</span></span><br><span class="line">   <span class="selector-tag">service</span> <span class="selector-tag">xinted</span> <span class="selector-tag">restart</span></span><br><span class="line"></span><br><span class="line"><span class="selector-tag">centso7</span>如果开启23号端口</span><br><span class="line">   安装<span class="selector-tag">telnet</span>服务</span><br><span class="line">   <span class="selector-tag">systemctl</span> <span class="selector-tag">telnet</span><span class="selector-class">.socket</span> <span class="selector-tag">start</span></span><br><span class="line"></span><br><span class="line">例:（<span class="selector-tag">A</span><span class="selector-pseudo">:ssh</span>客户端   <span class="selector-tag">B</span><span class="selector-pseudo">:ssh</span>服务器   <span class="selector-tag">C</span>:目标主机）  # 实现<span class="selector-tag">A</span>到<span class="selector-tag">C</span>的数据访问</span><br><span class="line">1<span class="selector-class">.ssh</span> <span class="selector-tag">-L</span> 9527<span class="selector-pseudo">:172.18.48.200</span><span class="selector-pseudo">:23</span>  <span class="selector-tag">-Nf</span> 172<span class="selector-class">.18</span><span class="selector-class">.48</span><span class="selector-class">.220</span>  # 在<span class="selector-tag">B</span>上执行</span><br><span class="line">   9527  # <span class="selector-tag">ssh</span>客户机上打开端口</span><br><span class="line">   172<span class="selector-class">.18</span><span class="selector-class">.48</span><span class="selector-class">.200</span>  # 目标主机</span><br><span class="line">   172<span class="selector-class">.18</span><span class="selector-class">.48</span><span class="selector-class">.220</span>  # <span class="selector-tag">ssh</span>服务器</span><br><span class="line"></span><br><span class="line">2<span class="selector-class">.telnet</span> 127<span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.1</span> 9527 连接本地的9257端口  # 在<span class="selector-tag">A</span>上执行</span><br><span class="line">   本地的<span class="selector-tag">ssh</span>(充当服务器又充当客户机)，然后再从本地的<span class="selector-tag">ssh</span>连接出去</span><br></pre></td></tr></table></figure>
+<h2 id="远程转发"><a href="#远程转发" class="headerlink" title="远程转发"></a>远程转发</h2><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">-R sshserverport:remotehost:remotehostport sshserver</span><br><span class="line">原理</span><br><span class="line">   ssh –R <span class="number">9527</span>:telnetsrv:<span class="number">23</span> –N  sshsrv</span><br><span class="line"></span><br><span class="line">让sshsrv侦听<span class="number">9527</span>端口的访问，如有访问，就加密后通过ssh 服务转发请求到本机ssh客户端，</span><br><span class="line">  再由本机解密后转发到 telnetsrv:<span class="number">23</span></span><br><span class="line">Data &lt;--&gt; sshsrv:<span class="number">9527</span> &lt;--&gt; sshsrv:<span class="number">22</span> &lt;--&gt; localhost:XXXXX &lt;--&gt; localhost:YYYYY</span><br><span class="line">  &lt;--&gt; telnetsrv:<span class="number">23</span></span><br><span class="line"></span><br><span class="line">例: smtp做为转发数据（A:ssh客户端 B:ssh服务器 C:目标主机） # 实现A到C数据访问</span><br><span class="line"><span class="number">1.</span>查看本地端口(<span class="number">25</span>)是否打开 --&gt; ss -ntl</span><br><span class="line">   LISTEN     <span class="number">0</span>     <span class="number">10</span>       <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">25</span>          *:*</span><br><span class="line"></span><br><span class="line">   注: 默认打开了<span class="number">25</span>号端口中只是监听了本地的端口<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">25</span>所以这时要监听所有的端口</span><br><span class="line">   修改配置文件: vim /etc/postfix/main.cf</span><br><span class="line">      inet_interfaces = all  # all代表的是所有IP的意思</span><br><span class="line">      # inet_interfaces = localhost</span><br><span class="line">      把监听的所有的打开，把监听本地的注释掉</span><br><span class="line"></span><br><span class="line">      service postfix restart  # centos6 重起服务</span><br><span class="line">      systmectl restart postfix  # centos7 重起服务</span><br><span class="line"></span><br><span class="line">   这时，再去查看打开的端口</span><br><span class="line">      LISTEN    <span class="number">0</span>    <span class="number">10</span>     *:<span class="number">25</span>      *:*</span><br><span class="line"></span><br><span class="line">   设置防火墙  iptables -A INPUT -s <span class="number">172.18</span><span class="number">.48</span><span class="number">.225</span> -j REJECT</span><br><span class="line">   # 在C上做设置，禁止A机器的访问，确定A是通过B访问C的</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span>建立隧道</span><br><span class="line">   ssh -R <span class="number">9527</span>:<span class="number">172.18</span><span class="number">.48</span><span class="number">.215</span>:<span class="number">25</span>  -Nf <span class="number">172.18</span><span class="number">.48</span><span class="number">.225</span>  # 在B上执行</span><br><span class="line">      <span class="number">9527</span>  # 在服务器ssh上打开端口</span><br><span class="line">      <span class="number">172.18</span><span class="number">.48</span><span class="number">.215</span>  # 目标主机</span><br><span class="line">      <span class="number">172.18</span><span class="number">.48</span><span class="number">.225</span>  # ssh服务器</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span>telnet <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">9527</span></span><br><span class="line">   如何取消开启的隧道进程</span><br><span class="line">      killall ssh</span><br></pre></td></tr></table></figure>
+<h2 id="动态端口转发"><a href="#动态端口转发" class="headerlink" title="动态端口转发"></a>动态端口转发</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">动态端口转发（<span class="attribute">A</span>:ssh客户端   <span class="attribute">B</span>:ssh服务器   <span class="attribute">C</span>:目标主机）</span><br><span class="line"></span><br><span class="line">当用firefox访问internet时，本机的<span class="number">1080</span>端口做为代理服务器，firefox的访问请求</span><br><span class="line">  被转发到sshserver上，由sshserver替之访问internet</span><br><span class="line"></span><br><span class="line"><span class="number">1</span>.ssh -D <span class="number">1080</span> root<span class="variable">@sshserver</span>  # 在客户机ssh上执行</span><br><span class="line">   ssh -D <span class="number">1080</span>  -Nf root<span class="variable">@sshserver</span>  # ssh服务器的地址</span><br><span class="line"></span><br><span class="line"><span class="number">2</span>.	在图形界面上配置  # 在客户机ssh上的执行和相关的配置</span><br><span class="line">   在本机firefox浏览器上，打开设置，打开高级，打开连接，里面有个代理服务</span><br><span class="line">   再设置代理那一行 --&gt; Manual proxy configuration</span><br><span class="line">      SOCKS Host <span class="attribute">ip</span>:<span class="number">127.0</span>.<span class="number">0.1</span>   端口:<span class="number">1080</span>    SOCKS v5</span><br><span class="line"></span><br><span class="line">   在字符界面上配置</span><br><span class="line">      curl --socks5 <span class="number">127.0</span>.<span class="number">0.1</span> <span class="attribute">http</span>:<span class="comment">//172.18.48.215</span></span><br><span class="line">      # 这里的代理默认的端口是<span class="number">1080</span>  <span class="number">215</span>:C访问的主机地址</span><br><span class="line"></span><br><span class="line">X 协议转发</span><br><span class="line">   所有图形化应用程序都是X客户程序</span><br><span class="line">      能够通过tcp/ip连接远程X服务器</span><br><span class="line">      数据没有加密机，但是它通过ssh连接隧道安全进行</span><br><span class="line">   ssh -X user<span class="variable">@remotehost</span> gedit</span><br><span class="line">      remotehost主机上的gedit工具，将会显示在本机的X服务器上</span><br><span class="line">      传输的数据将通过ssh连接加密</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ssh/" rel="tag"># ssh</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/07/linux/服务/ssh/基本命令/" rel="next" title="ssh基本命令">
+                <i class="fa fa-chevron-left"></i> ssh基本命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/07/linux/服务/ssh/PAM/" rel="prev" title="PAM">
+                PAM <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">59</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ssh客户端"><span class="nav-number">1.</span> <span class="nav-text">ssh客户端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ssh客户端-1"><span class="nav-number">2.</span> <span class="nav-text">ssh客户端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ssh服务登录验证"><span class="nav-number">3.</span> <span class="nav-text">ssh服务登录验证</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SSH端口转发"><span class="nav-number">4.</span> <span class="nav-text">SSH端口转发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#本地转发"><span class="nav-number">4.1.</span> <span class="nav-text">本地转发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程转发"><span class="nav-number">4.2.</span> <span class="nav-text">远程转发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态端口转发"><span class="nav-number">4.3.</span> <span class="nav-text">动态端口转发</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

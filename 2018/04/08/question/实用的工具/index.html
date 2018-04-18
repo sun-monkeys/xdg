@@ -1,0 +1,783 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="实用工具," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="查看进程占用带宽情况（nethogs）1234567891011121314151617181920212223242526Nethogs 是一个终端下的网络流量监控工具可以直观的显示每个进程占用的带宽下载: wget -c https://github.com/raboof/nethogs/archive/v0.8.1.tar.gz[root@xdg ~]# yum  -y install li">
+<meta name="keywords" content="实用工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实用的工具">
+<meta property="og:url" content="http://yoursite.com/2018/04/08/question/实用的工具/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="查看进程占用带宽情况（nethogs）1234567891011121314151617181920212223242526Nethogs 是一个终端下的网络流量监控工具可以直观的显示每个进程占用的带宽下载: wget -c https://github.com/raboof/nethogs/archive/v0.8.1.tar.gz[root@xdg ~]# yum  -y install li">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-03T03:09:45.391Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="实用的工具">
+<meta name="twitter:description" content="查看进程占用带宽情况（nethogs）1234567891011121314151617181920212223242526Nethogs 是一个终端下的网络流量监控工具可以直观的显示每个进程占用的带宽下载: wget -c https://github.com/raboof/nethogs/archive/v0.8.1.tar.gz[root@xdg ~]# yum  -y install li">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/08/question/实用的工具/"/>
+
+
+
+
+
+  <title> 实用的工具 | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/08/question/实用的工具/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                实用的工具
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-08T00:00:00+08:00">
+                2018-04-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Question/" itemprop="url" rel="index">
+                    <span itemprop="name">Question</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="查看进程占用带宽情况（nethogs）"><a href="#查看进程占用带宽情况（nethogs）" class="headerlink" title="查看进程占用带宽情况（nethogs）"></a>查看进程占用带宽情况（nethogs）</h1><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Nethogs 是一个终端下的网络流量监控工具可以直观的显示每个进程占用的带宽</span><br><span class="line">下载: wget -c https://github.com/raboof/nethogs/archive/v0<span class="number">.8</span><span class="number">.1</span>.tar.gz</span><br><span class="line"></span><br><span class="line">[root<span class="symbol">@xdg</span> ~]<span class="meta"># yum  -y install libpcap-devel  ncurses-devel  # 依赖的包</span></span><br><span class="line">[root<span class="symbol">@xdg</span> ~]<span class="meta"># tar -xvf v0.8.1.tar.gz</span></span><br><span class="line">[root<span class="symbol">@xdg</span> ~]<span class="meta"># cd nethogs-0.8.1</span></span><br><span class="line">[root<span class="symbol">@xdg</span> nethogs<span class="number">-0.8</span><span class="number">.1</span>]<span class="meta"># make &amp;&amp; make install</span></span><br><span class="line">[root<span class="symbol">@xdg</span> nethogs<span class="number">-0.8</span><span class="number">.1</span>]<span class="meta"># nethogs eth0</span></span><br><span class="line"></span><br><span class="line">m: Cycle between display modes (kb/s, kb, b, mb)  <span class="meta"># 切换网速显示单位</span></span><br><span class="line">r: Sort by received   <span class="meta"># 按接收流量排序</span></span><br><span class="line">s: Sort by sent   <span class="meta"># 按发送流量排序</span></span><br><span class="line">q: Quit <span class="literal">and</span> <span class="keyword">return</span> <span class="keyword">to</span> the shell prompt   <span class="meta"># 退出NetHogs命令工具</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta"># 5秒刷新一次数据</span></span><br><span class="line">nethogs -d <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># 监控网卡eth0数据</span></span><br><span class="line">nethogs eth0</span><br><span class="line"></span><br><span class="line"><span class="meta"># 同时监视eth0和eth1接口</span></span><br><span class="line">nethogs eth0 eth1</span><br><span class="line"></span><br><span class="line"><span class="meta"># 将监控日志写入日志文件</span></span><br><span class="line">nethogs &gt;&gt; test.<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="硬盘读取性能测试（iozone）"><a href="#硬盘读取性能测试（iozone）" class="headerlink" title="硬盘读取性能测试（iozone）"></a>硬盘读取性能测试（iozone）</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">IOZone 是一款 Linux 文件系统性能测试工具 可以测试不同的操作系统中文件系统的读写性能</span><br><span class="line">下载: http://www.iozone.org/src/current/</span><br><span class="line"></span><br><span class="line">[root@xdg]# tar -xvf iozone3_471.tar</span><br><span class="line">[root@xdg ~]# cd iozone3_471/src/current/</span><br><span class="line">[root@xdg current]# make linux</span><br><span class="line">[root@xdg current]# ./iozone -a -n 512m -g 16g -i 0 -i 1 -i 5 -f /mnt/iozone -Rb ./iozone.xls</span><br><span class="line"></span><br><span class="line">-<span class="ruby">a 使用全自动模式</span></span><br><span class="line"><span class="ruby">-n 为自动模式设置最小文件大小 (Kbytes)</span></span><br><span class="line"><span class="ruby">-g 设置自动模式可使用的最大文件大小 Kbytes</span></span><br><span class="line"><span class="ruby">-i 用来指定运行哪个测试</span></span><br><span class="line"><span class="ruby">-f 指定测试文件的名字完成后自动删除</span></span><br><span class="line"><span class="ruby">-R 产生 Excel 到标准输出</span></span><br><span class="line"><span class="ruby">-b 指定输出到指定文件上</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="实时监控磁盘（iotop）"><a href="#实时监控磁盘（iotop）" class="headerlink" title="实时监控磁盘（iotop）"></a>实时监控磁盘（iotop）</h1><figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">IOTop 命令是专门显示硬盘 <span class="built_in">IO</span> 的命令，界面风格类似 top 命令</span><br><span class="line"></span><br><span class="line">[root<span class="meta">@xdgt</span> ~]<span class="comment"># yum -y install iotop</span></span><br><span class="line">[root<span class="meta">@xdgt</span> ~]<span class="comment"># iotop</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="网络流量监控（iftop）"><a href="#网络流量监控（iftop）" class="headerlink" title="网络流量监控（iftop）"></a>网络流量监控（iftop）</h1><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">iftop</span> 是类似于 linux 下面 top 的实时流量监控工具</span><br><span class="line">网址: http://www.ex-parrot.com/~pdw/iftop/</span><br><span class="line">下载: wget http://www.ex-parrot.com/~pdw/iftop/download/iftop-0.17.tar.gz</span><br><span class="line"></span><br><span class="line">[root<span class="variable">@xdg</span> ~]<span class="comment"># tar zxvf iftop-0.17.tar.gz</span></span><br><span class="line">[root<span class="variable">@xdg</span> ~]<span class="comment"># cd iftop-0.17</span></span><br><span class="line">[root<span class="variable">@xdg</span> ~]<span class="comment"># yum install flex byacc  libpcap ncurses ncurses-devel libpcap-devel  # 安装依赖包</span></span><br><span class="line">[root<span class="variable">@xdg</span> iftop-<span class="number">0</span>.<span class="number">17</span>]<span class="comment"># ./configure</span></span><br><span class="line">[root<span class="variable">@xdg</span> iftop-<span class="number">0</span>.<span class="number">17</span>]<span class="comment"># make &amp;&amp; make install</span></span><br><span class="line">[root<span class="variable">@xdg</span> iftop-<span class="number">0</span>.<span class="number">17</span>]<span class="comment"># iftop</span></span><br><span class="line">[root<span class="variable">@xdg</span> iftop-<span class="number">0</span>.<span class="number">17</span>]<span class="comment"># iftop -i eth0  # 指定监控网卡接口</span></span><br><span class="line"></span><br><span class="line">TX: 发送流量</span><br><span class="line">RX: 接收流量</span><br><span class="line">TOTAL: 总流量</span><br><span class="line">Cumm: 运行 iftop 到目前时间的总流量</span><br><span class="line">peak: 流量峰值</span><br><span class="line">rates: 分别表示过去 <span class="number">2s</span> <span class="number">10s</span> <span class="number">40s</span> 的平均流量</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="进程实时监控（htop）"><a href="#进程实时监控（htop）" class="headerlink" title="进程实时监控（htop）"></a>进程实时监控（htop）</h1><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">HTop</span> 是一个 Linux 下的交互式的进程浏览器可以用来替换 Linux 下的 top 命令</span><br><span class="line">（配置安装第三方 YUM 源即可）--&gt; epel源</span><br><span class="line"></span><br><span class="line">[root<span class="comment">@xdg ~]# yum -y install htop</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">Shortcut</span> Key   <span class="meta">Function</span> Key   Description          中文说明</span><br><span class="line">h, ?           <span class="built_in">F1</span>             Invoke htop Help     查看htop使用说明</span><br><span class="line">S              <span class="built_in">F2</span>             Htop Setup Menu      htop 设定</span><br><span class="line">/              <span class="built_in">F3</span>             Search for a Process	搜索进程</span><br><span class="line">\              <span class="built_in">F4</span>             Incremental process filtering   增量进程过滤器</span><br><span class="line">t              <span class="built_in">F5</span>             Tree View            显示树形结构</span><br><span class="line">&lt;, &gt;           <span class="built_in">F6</span>             Sort <span class="keyword">by </span>a column     选择排序方式</span><br><span class="line">[              <span class="built_in">F7</span>             Nice - (change priority)   可减少nice值，这样就可以提高对应进程的优先级</span><br><span class="line">]              F8             Nice + (change priority)   可增加nice值，这样就可以降低对应进程的优先级</span><br><span class="line">k              F9             Kill a Process       可对进程传递信号</span><br><span class="line">q              F10            Quit htop            结束htop</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="系统资源监控（nmon）"><a href="#系统资源监控（nmon）" class="headerlink" title="系统资源监控（nmon）"></a>系统资源监控（nmon）</h1><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NMON 是一种在 AIX 与各种 Linux 操作系统上广泛使用的监控与分析工具</span><br><span class="line">（配置安装第三方 YUM 源即可）--&gt; epel源</span><br><span class="line"></span><br><span class="line">[root<span class="variable">@xdg</span> ~]<span class="comment"># yum -y install nmon</span></span><br><span class="line">[root<span class="variable">@xdg</span> ~]<span class="comment"># nmon  # 进入有使用说明 h</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/实用工具/" rel="tag"># 实用工具</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/07/linux/服务/ssh/AIDE/" rel="next" title="AIDE">
+                <i class="fa fa-chevron-left"></i> AIDE
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/08/question/增加一个回收站/" rel="prev" title="增加一个回收站">
+                增加一个回收站 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">59</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#查看进程占用带宽情况（nethogs）"><span class="nav-number">1.</span> <span class="nav-text">查看进程占用带宽情况（nethogs）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#硬盘读取性能测试（iozone）"><span class="nav-number">2.</span> <span class="nav-text">硬盘读取性能测试（iozone）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实时监控磁盘（iotop）"><span class="nav-number">3.</span> <span class="nav-text">实时监控磁盘（iotop）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络流量监控（iftop）"><span class="nav-number">4.</span> <span class="nav-text">网络流量监控（iftop）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程实时监控（htop）"><span class="nav-number">5.</span> <span class="nav-text">进程实时监控（htop）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#系统资源监控（nmon）"><span class="nav-number">6.</span> <span class="nav-text">系统资源监控（nmon）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

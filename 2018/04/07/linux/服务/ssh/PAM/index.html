@@ -1,0 +1,787 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PAM," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="PAMPAM: Pluggable Authentication Modules 认证库: 文本文件，MySQL，NIS，LDAP等 Sun公司于1995 年开发的一种与认证相关的通用框架机制 PAM是关注如何为服务验证用户的API，通过提供一些动态链接库和一套统一的API，将系统提供的服务和该服务的认证方式分开 使得系统管理员可以灵活地根据需要给不同的服务配置不同的认证方式而无需更改服务程序一种">
+<meta name="keywords" content="PAM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PAM">
+<meta property="og:url" content="http://yoursite.com/2018/04/07/linux/服务/ssh/PAM/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="PAMPAM: Pluggable Authentication Modules 认证库: 文本文件，MySQL，NIS，LDAP等 Sun公司于1995 年开发的一种与认证相关的通用框架机制 PAM是关注如何为服务验证用户的API，通过提供一些动态链接库和一套统一的API，将系统提供的服务和该服务的认证方式分开 使得系统管理员可以灵活地根据需要给不同的服务配置不同的认证方式而无需更改服务程序一种">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-17T08:21:52.773Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PAM">
+<meta name="twitter:description" content="PAMPAM: Pluggable Authentication Modules 认证库: 文本文件，MySQL，NIS，LDAP等 Sun公司于1995 年开发的一种与认证相关的通用框架机制 PAM是关注如何为服务验证用户的API，通过提供一些动态链接库和一套统一的API，将系统提供的服务和该服务的认证方式分开 使得系统管理员可以灵活地根据需要给不同的服务配置不同的认证方式而无需更改服务程序一种">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/07/linux/服务/ssh/PAM/"/>
+
+
+
+
+
+  <title> PAM | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/07/linux/服务/ssh/PAM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                PAM
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-07T00:00:00+08:00">
+                2018-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="PAM"><a href="#PAM" class="headerlink" title="PAM"></a>PAM</h1><p>PAM: Pluggable Authentication Modules</p>
+<p>认证库: 文本文件，MySQL，NIS，LDAP等</p>
+<p>Sun公司于1995 年开发的一种与认证相关的通用框架机制</p>
+<p>PAM是关注如何为服务验证用户的API，通过提供一些动态链接库和一套统一的API，将系统提供的服务和该服务的认证方式分开</p>
+<p>使得系统管理员可以灵活地根据需要给不同的服务配置不同的认证方式而无需更改服务程序一种认证框架，自身不做认证</p>
+<h2 id="PAM认证机制"><a href="#PAM认证机制" class="headerlink" title="PAM认证机制"></a>PAM认证机制</h2><p>它提供了对所有服务进行认证的中央机制，适用于login，远程登录（telnet，rlogin，fsh，ftp，点对点协议（PPP）），su等应用程序中，系统管理员通过PAM配置文件来制定不同应用程序的不同认证策略；应用程序开发者通过在服务程序中使用PAM API( pam_xxxx( ) )来实现对认证方法的调用；而PAM服务模块的开发者则利用PAM SPI来编写模块（主要是引出一些函数pam_sm_xxxx( )供PAM接口库调用），将不同的认证机制加入到系统中；PAM接口库（libpam）则读取配置文件，将应用程序和相应的PAM服务模块联系起来。</p>
+<h2 id="PAM认证过程"><a href="#PAM认证过程" class="headerlink" title="PAM认证过程"></a>PAM认证过程</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span>使用者执行<span class="meta-keyword">/usr/</span>bin/passwd 程序，并输入密码</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span>passwd开始呼叫PAM模块，PAM模块会搜寻passwd程序的PAM相关设定文件，</span><br><span class="line">  这个设定文件一般是在<span class="meta-keyword">/etc/</span>pam.d/里边的与程序同名的文件，</span><br><span class="line">  即PAM会搜寻<span class="meta-keyword">/etc/</span>pam.d/passed 这个设置文件</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span>经由<span class="meta-keyword">/etc/</span>pam.d/passwd设定文件的数据，取用PAM所提供的相关模块来进行验证</span><br><span class="line"></span><br><span class="line"><span class="number">4.</span>将验证结果回传给passwd这个程序，而passwd这个程序会根据PAM回传的结果决定下一个动作</span><br><span class="line">  （重新输入密码或者通过验证）</span><br></pre></td></tr></table></figure>
+<h2 id="pam认证原理"><a href="#pam认证原理" class="headerlink" title="pam认证原理"></a>pam认证原理</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">PAM认证一般遵循这样的顺序</span>: Service(服务) --&gt; PAM(配置文件) --&gt; pam_*.so</span><br><span class="line"></span><br><span class="line"><span class="attribute">PAM认证首先要确定那一项服务，然后加载相应的PAM的配置文件(位于/etc/pam.d下)，</span></span><br><span class="line">  最后调用认证文件（位于/lib/security下）进行安全认证</span><br></pre></td></tr></table></figure>
+<h2 id="PAM相关文件"><a href="#PAM相关文件" class="headerlink" title="PAM相关文件"></a>PAM相关文件</h2><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">模块文件目录: <span class="regexp">/lib64/security</span><span class="regexp">/*.so</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">环境相关的设置: /etc</span><span class="regexp">/security/</span></span><br><span class="line"></span><br><span class="line">主配置文件: <span class="regexp">/etc/pam</span>.conf，默认不存在</span><br><span class="line"></span><br><span class="line">为每种应用模块提供一个专用的配置文件</span><br><span class="line">   /etc/pam.d/APP_NAME</span><br><span class="line">   注: 如/etc/pam.d存在，/etc/pam.conf将失效</span><br><span class="line"></span><br><span class="line">通用配置文件/etc/pam.conf 格式</span><br><span class="line">   application  <span class="keyword">type</span>  control  <span class="class"><span class="keyword">module</span>-<span class="title">path</span>  <span class="title">arguments</span></span></span><br><span class="line"></span><br><span class="line">专用配置文件/etc/pam.d/* 格式</span><br><span class="line">   <span class="keyword">type</span>  control  <span class="class"><span class="keyword">module</span>-<span class="title">path</span>  <span class="title">arguments</span></span></span><br><span class="line"></span><br><span class="line">说明:</span><br><span class="line">   服务名（application）</span><br><span class="line">      telnet、login、ftp等，服务名字<span class="string">"OTHER"</span>代表所有没有在该文件中明确配置的其它服务</span><br><span class="line">   模块类型（<span class="class"><span class="keyword">module</span>-<span class="title">type</span>）</span></span><br><span class="line">      control</span><br><span class="line">         PAM库该如何处理与该服务相关的PAM模块的成功或失败情况</span><br><span class="line">      <span class="class"><span class="keyword">module</span>-<span class="title">path</span></span></span><br><span class="line">         用来指明本模块对应的程序文件的路径名</span><br><span class="line">      Arguments</span><br><span class="line">         用来传递给该模块的参数</span><br></pre></td></tr></table></figure>
+<h2 id="模块类型（module-type）"><a href="#模块类型（module-type）" class="headerlink" title="模块类型（module-type）"></a>模块类型（module-type）</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Auth</span>: 账号的认证和授权</span><br><span class="line"></span><br><span class="line"><span class="attribute">Account</span>: 与账号管理相关的非认证类的功能</span><br><span class="line">   如: 用来限制/允许用户对某个服务的访问时间,当前有效的系统资源（最多可有多少个用户），</span><br><span class="line">     限制用户的位置</span><br><span class="line">   例: root用户只能从控制台登录</span><br><span class="line">   注: 不是验证帐户的用户名和密码，而是验证帐户的有效性</span><br><span class="line">   例: 帐户的有效时间（有效期） 控制台登录：ps/2  ps/3等</span><br><span class="line"></span><br><span class="line"><span class="attribute">Password</span>: 用户修改密码时密码复杂度检查机制等功能</span><br><span class="line"></span><br><span class="line"><span class="attribute">Session</span>: 用户获取到服务之前或使用服务完成之后需要进行一些附加的操作</span><br><span class="line">   如: 记录打开/关闭数据的信息，监视目录等</span><br><span class="line">   -type: 表示因为缺失而不能加载的模块将不记录到系统日志，</span><br><span class="line">     对于那些不总是安装在系统上的模块有用</span><br><span class="line"></span><br><span class="line"><span class="attribute">Control:</span></span><br><span class="line">   PAM库如何处理与该服务相关的PAM模块成功或失败情况</span><br><span class="line">   两种方式实现:</span><br><span class="line">      简单和复杂</span><br><span class="line">   简单方式实现:</span><br><span class="line">      一个关健词实现</span><br><span class="line"></span><br><span class="line"><span class="attribute">required:</span></span><br><span class="line">   一票否决，表示本模块必须返回成功才能通过认证，但是如果该模块返回失败，</span><br><span class="line">     失败结果也不会立即通知用户，而是要等到同一type中的所有模块全部执行完毕</span><br><span class="line">     再将失败结果返回给应用程序，即为必要条件</span><br><span class="line"><span class="attribute">requisite:</span></span><br><span class="line">   一票否决，该模块必须返回成功才能通过认证，但是一旦该模块返回失败，将不再执行</span><br><span class="line">     同一type内的任何模块，而是直接将控制权返回给应用程序，是一个必要条件</span><br><span class="line"><span class="attribute">sufficient:</span></span><br><span class="line">   一票通过，表明本模块返回成功则通过身份认证的要求，不必再执行同一type内的其它模块，</span><br><span class="line">     但如果本模块返回失败可忽略，即为充分条件</span><br><span class="line"><span class="attribute">optional:</span></span><br><span class="line">   表明本模块是可选的，它的成功与否不会对身份认证起关键作用，其返回值一般被忽略</span><br><span class="line"><span class="attribute">include:</span></span><br><span class="line">   调用其他的配置文件中定义的配置信息</span><br><span class="line"></span><br><span class="line">复杂详细实现: 使用一个或多个"status=action"</span><br><span class="line">   [status1=action1 status2=action ...]</span><br><span class="line">      <span class="attribute">Status</span>: 检查结果的返回状态</span><br><span class="line">      <span class="attribute">Action</span>: 采取行为 ok，done，die，bad，ignore，reset</span><br><span class="line">   ok 模块通过，继续检查</span><br><span class="line">   done 模块通过，返回最后结果给应用</span><br><span class="line">   bad 结果失败，继续检查</span><br><span class="line">   die 结果失败，返回失败结果给应用</span><br><span class="line">   ignore 结果忽略，不影响最后结果</span><br><span class="line"></span><br><span class="line"><span class="attribute">module-path</span>: 模块路径</span><br><span class="line">   相对路径:</span><br><span class="line">      /lib64/security目录下的模块可使用相对路径</span><br><span class="line">      如: pam_shells.so、pam_limits.so </span><br><span class="line">   绝对路径:</span><br><span class="line"></span><br><span class="line">模块通过读取配置文件完成用户对系统资源的使用控制</span><br><span class="line">   /etc/security/*.conf</span><br><span class="line">注: 修改PAM配置文件将马上生效</span><br><span class="line">建议: 编辑pam规则时，保持至少打开一个root会话，以防止root身份验证错误</span><br><span class="line">Arguments  用来传递给该模块的参数</span><br></pre></td></tr></table></figure>
+<h2 id="pam文档说明"><a href="#pam文档说明" class="headerlink" title="pam文档说明"></a>pam文档说明</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/user/share/doc/pam-*</span><br><span class="line"></span><br><span class="line">rpm -qd pam</span><br><span class="line"></span><br><span class="line"><span class="keyword">man</span> –k pam_  # 查看某个模块在哪个文档中</span><br><span class="line">   注: pam_time (8) - PAM module <span class="keyword">for</span> time control access</span><br><span class="line">   再执行: <span class="keyword">man</span> 8 pam_time</span><br><span class="line"></span><br><span class="line"><span class="keyword">man</span> 模块名  如: <span class="keyword">man</span> rootok</span><br><span class="line">《The Linux-PAM System  Administrators' Guide》</span><br></pre></td></tr></table></figure>
+<h1 id="PAM模块示例"><a href="#PAM模块示例" class="headerlink" title="PAM模块示例"></a>PAM模块示例</h1><h2 id="模块-pam-shells-so"><a href="#模块-pam-shells-so" class="headerlink" title="模块: pam_shells.so"></a>模块: pam_shells.so</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">功能: 检查有效shell</span><br><span class="line">例: 不允许使用<span class="meta-keyword">/bin/</span>csh的用户本地登录</span><br><span class="line">   vim <span class="meta-keyword">/etc/</span>pam.d/login</span><br><span class="line">      auth required pam_shells.so</span><br><span class="line">   vim <span class="meta-keyword">/etc/</span>shells  <span class="meta"># 检查</span></span><br><span class="line">      去掉 <span class="meta-keyword">/bin/</span>csh</span><br><span class="line">   useradd –s <span class="meta-keyword">/bin/</span>csh testuser</span><br><span class="line">   testuser将不可登录</span><br><span class="line">   tail <span class="meta-keyword">/var/</span>log/secure  <span class="meta"># 查看日志存放的记录</span></span><br></pre></td></tr></table></figure>
+<h2 id="模块-pam-securetty-so"><a href="#模块-pam-securetty-so" class="headerlink" title="模块: pam_securetty.so"></a>模块: pam_securetty.so</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">功能: 只允许root用户在/etc/securetty列出的安全终端上登陆  # 里面存放的是终端殐信息</span><br><span class="line">例: 允许root在telnet登陆</span><br><span class="line">   <span class="keyword">vi</span> /etc/pam.d/login</span><br><span class="line">      #auth required pam_securetty.<span class="keyword">so</span>  # 将这一行加上注释</span><br><span class="line">      或者: /etc/securetty文件中加入 <span class="keyword">pts</span>/<span class="number">0</span>,<span class="keyword">pts</span>/<span class="number">1</span> ... <span class="keyword">pts</span>/n</span><br><span class="line"></span><br><span class="line">注: 查找在pam.d的目录下，哪些文件使用的了pam_securettty.<span class="keyword">so</span></span><br><span class="line"><span class="keyword">grep</span> pam_securetty  *  # <span class="keyword">cd</span> /etc/pam.d的目录下执行</span><br><span class="line"></span><br><span class="line">login:auth [user_unknown=ignore success=ok ignore=ignore default=<span class="keyword">bad</span>]</span><br><span class="line">  pam_securetty.<span class="keyword">so</span></span><br><span class="line"></span><br><span class="line">remote:auth    required    pam_securetty.<span class="keyword">so</span></span><br><span class="line">注: 可以看出来，login和remote的文件使用了</span><br></pre></td></tr></table></figure>
+<h2 id="模块-pam-nologin-so"><a href="#模块-pam-nologin-so" class="headerlink" title="模块: pam_nologin.so"></a>模块: pam_nologin.so</h2><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">功能: 如果<span class="regexp">/etc/</span>nologin文件存在,将导致非root用户不能登陆</span><br><span class="line"></span><br><span class="line">注: 有要文件存在就可以，如果里面有内容，则在显示的时候显示内容</span><br><span class="line">  如果不在<span class="regexp">/etc/</span>的目录，也可以指定的文件位置</span><br><span class="line"></span><br><span class="line">account    required     pam_nologin.so  <span class="keyword">file</span>=<span class="regexp">/app/</span>nologin</span><br><span class="line"></span><br><span class="line">如果用户shell是<span class="regexp">/sbin/</span>nologin 时，当该用户登陆时，会显示<span class="regexp">/etc/</span>nologin.txt文件内容，并拒绝登陆</span><br><span class="line"></span><br><span class="line">注: shell是指定的，目录文件名，位置都是指定的</span><br></pre></td></tr></table></figure>
+<h2 id="模块-pam-limits-so"><a href="#模块-pam-limits-so" class="headerlink" title="模块: pam_limits.so"></a>模块: pam_limits.so</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">功能: 在用户级别实现对其可使用的资源的限制</span><br><span class="line">例: 可打开的文件数量，可运行的进程数量，可用内存空间</span><br><span class="line">修改限制的实现方式:</span><br><span class="line">(<span class="number">1</span>) ulimit命令，立即生效，但无法保存</span><br><span class="line">   -<span class="keyword">a</span>  查看哪些可以设置的参数</span><br><span class="line">   -n   最多的打开的文件描述符个数</span><br><span class="line">   -<span class="keyword">u</span>   最大用户进程数</span><br><span class="line">   -S   使用 soft（软）资源限制</span><br><span class="line">   -H   使用 hard（硬）资源限制</span><br><span class="line">(<span class="number">2</span>) 配置文件</span><br><span class="line">   /etc/security/limits.<span class="keyword">conf</span>, /etc/security/limits.d/*.<span class="keyword">conf</span></span><br><span class="line"></span><br><span class="line">配置文件</span><br><span class="line">   每行一个定义: <span class="symbol">&lt;domain&gt;</span>   <span class="symbol">&lt;type&gt;</span>   <span class="symbol">&lt;item&gt;</span>  <span class="symbol">&lt;value&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">&lt;domain&gt;</span> 应用于哪些对象</span><br><span class="line">   Username 单个用户</span><br><span class="line">   @group 组内所有用户</span><br><span class="line">   *  所有用户</span><br><span class="line"><span class="symbol">&lt;type&gt;</span> 限制的类型</span><br><span class="line">   Soft 软限制,普通用户自己可以修改</span><br><span class="line">   Hard 硬限制,由root用户设定，且通过kernel强制生效</span><br><span class="line">   -  二者同时限定</span><br><span class="line"><span class="symbol">&lt;item&gt;</span> 限制的资源</span><br><span class="line">   nofile 所能够同时打开的最大文件数量,默认为<span class="number">1024</span></span><br><span class="line">   nproc 所能够同时运行的进程的最大数量,默认为<span class="number">1024</span></span><br><span class="line"><span class="symbol">&lt;value&gt;</span> 指定具体值</span><br><span class="line"></span><br><span class="line">例: pam_limits.<span class="keyword">so</span></span><br><span class="line">   限制用户最多打开的文件数和运行进程数</span><br><span class="line">      /etc/pam.d/<span class="built_in">system</span>-auth</span><br><span class="line">         session   required   pam_limits.<span class="keyword">so</span></span><br><span class="line">      <span class="keyword">vim</span> /etc/security/limits.<span class="keyword">conf</span></span><br><span class="line">         apache – nofile <span class="number">10240</span>  # apache用户可打开<span class="number">10240</span>个文件</span><br><span class="line">         student  hard nproc <span class="number">20</span>  # 不能运行超过<span class="number">20</span>个进程</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PAM/" rel="tag"># PAM</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/07/linux/服务/ssh/ssh客户端/" rel="next" title="ssh客户端">
+                <i class="fa fa-chevron-left"></i> ssh客户端
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/07/linux/服务/ssh/openssl/" rel="prev" title="openssl">
+                openssl <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">59</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PAM"><span class="nav-number">1.</span> <span class="nav-text">PAM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#PAM认证机制"><span class="nav-number">1.1.</span> <span class="nav-text">PAM认证机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PAM认证过程"><span class="nav-number">1.2.</span> <span class="nav-text">PAM认证过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pam认证原理"><span class="nav-number">1.3.</span> <span class="nav-text">pam认证原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PAM相关文件"><span class="nav-number">1.4.</span> <span class="nav-text">PAM相关文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块类型（module-type）"><span class="nav-number">1.5.</span> <span class="nav-text">模块类型（module-type）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pam文档说明"><span class="nav-number">1.6.</span> <span class="nav-text">pam文档说明</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PAM模块示例"><span class="nav-number">2.</span> <span class="nav-text">PAM模块示例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#模块-pam-shells-so"><span class="nav-number">2.1.</span> <span class="nav-text">模块: pam_shells.so</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块-pam-securetty-so"><span class="nav-number">2.2.</span> <span class="nav-text">模块: pam_securetty.so</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块-pam-nologin-so"><span class="nav-number">2.3.</span> <span class="nav-text">模块: pam_nologin.so</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块-pam-limits-so"><span class="nav-number">2.4.</span> <span class="nav-text">模块: pam_limits.so</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

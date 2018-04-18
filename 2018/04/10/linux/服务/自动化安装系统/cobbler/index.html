@@ -1,0 +1,785 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Cobbler," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Cobbler12345678快速网络安装linux操作系统的服务，支持众多的Linux发行版: Red Hat、Fedora、  CentOS、Debian、Ubuntu和SuSE，也可以支持网络安装windows PXE的二次封装，将多种安装参数封装到一个菜单   Python编写   提供了 CLI 和 Web 的管理形式注: 该程序属于epel源 cobbler 工作流程    clien">
+<meta name="keywords" content="Cobbler">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cobbler">
+<meta property="og:url" content="http://yoursite.com/2018/04/10/linux/服务/自动化安装系统/cobbler/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="Cobbler12345678快速网络安装linux操作系统的服务，支持众多的Linux发行版: Red Hat、Fedora、  CentOS、Debian、Ubuntu和SuSE，也可以支持网络安装windows PXE的二次封装，将多种安装参数封装到一个菜单   Python编写   提供了 CLI 和 Web 的管理形式注: 该程序属于epel源 cobbler 工作流程    clien">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-17T15:02:11.390Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cobbler">
+<meta name="twitter:description" content="Cobbler12345678快速网络安装linux操作系统的服务，支持众多的Linux发行版: Red Hat、Fedora、  CentOS、Debian、Ubuntu和SuSE，也可以支持网络安装windows PXE的二次封装，将多种安装参数封装到一个菜单   Python编写   提供了 CLI 和 Web 的管理形式注: 该程序属于epel源 cobbler 工作流程    clien">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/10/linux/服务/自动化安装系统/cobbler/"/>
+
+
+
+
+
+  <title> Cobbler | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/10/linux/服务/自动化安装系统/cobbler/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Cobbler
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-10T00:00:00+08:00">
+                2018-04-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Cobbler"><a href="#Cobbler" class="headerlink" title="Cobbler"></a>Cobbler</h1><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">快速网络安装linux操作系统的服务，支持众多的Linux发行版: Red Hat、Fedora、</span></span><br><span class="line">  CentOS、Debian、Ubuntu和SuSE，也可以支持网络安装windows </span><br><span class="line"></span><br><span class="line">PXE的二次封装，将多种安装参数封装到一个菜单</span><br><span class="line">   Python编写</span><br><span class="line">   提供了 CLI 和 Web 的管理形式</span><br><span class="line"></span><br><span class="line"><span class="section">注: 该程序属于epel源</span></span><br></pre></td></tr></table></figure>
+<p>cobbler 工作流程<br>    client裸机配置了从网络启动后，开机后会广播包请求DHCP服务器（cobbler server）发送其分配好的一个IP<br>    DHCP服务器（cobbler server）收到请求后发送responese，包括其ip地址<br>    client裸机拿到ip后再向cobbler server发送请求OS引导文件的请求<br>    cobbler server告诉裸机OS引导文件的名字和TFTP server的ip和 port<br>    client裸机通过上面告知的TFTP server地址通信，下载引导文件<br>    client裸机执行执行该引导文件，确定加载信息，选择要安装的os，期间会再向cobbler server请求<br>        kickstart文件和os image<br>    cobbler server发送请求的kickstart和os image<br>    client裸机加载kickstart文件<br>    client裸机接收os image，安装该os image</p>
+<p>cobbler 介绍<br>    安装包<br>        cobbler<br>    cobbler 服务集成<br>        pxe 服务<br>        DHCP<br>        rsync<br>        Http<br>        DNS<br>        Kickstart<br>        PMI 电源管理<br>    检查cobbler环境<br>        cobbler check</p>
+<p>发行版：<br>    表示一个操作系统版本，它承载了内核和 initrd 的信息，以及内核参数等其他数据<br>配置文件：<br>    包含一个发行版、一个 kickstart 文件以及可能的存储库，还包含更多特定的内核参数等其他数据<br>系统：<br>    表示要配置的主机，它包含一个配置文件或一个镜像，还包含 IP 和 MAC 地址、电源管理（地址、凭据、类型）<br>        以及更为专业的数据等信息<br>存储库：<br>    保存一个 yum 或 rsync 存储库的镜像信息<br>镜像：<br>    可替换一个包含不属于此类别的文件的发行版对象（例如，无法分为内核和 initrd 的对象）</p>
+<p>cobbler 各种配置目录说明<br>    配置文件目录 /etc/cobbler<br>        /etc/cobbler/settings : cobbler 主配置文件   #主要<strong><em>*</em></strong><br>        /etc/cobbler/iso/: iso模板配置文件<br>        /etc/cobbler/pxe: pxe模板文件<br>        /etc/cobbler/power: 电源配置文件<br>        /etc/cobbler/user.conf: web服务授权配置文件<br>        /etc/cobbler/users.digest: web访问的用户名密码配置文件<br>        /etc/cobbler/dhcp.template : dhcp服务器的的配置末班<br>        /etc/cobbler/dnsmasq.template : dns服务器的配置模板<br>        /etc/cobbler/tftpd.template : tftp服务的配置模板<br>        /etc/cobbler/modules.conf : 模块的配置文件</p>
+<p>cobbler 目录介绍<br>    数据目录<br>        /var/lib/cobbler/config/: 用于存放distros，system，profiles 等信息配置文件<br>        /var/lib/cobbler/triggers/: 用于存放用户定义的cobbler命令<br>        /var/lib/cobbler/kickstart/: 默认存放kickstart文件<br>        /var/lib/cobbler/loaders/: 存放各种引导程序<br>            pxelinux.0  menu.c32<br>    镜像目录<br>        /var/www/cobbler/ks_mirror/: 导入的发行版系统的所有数据<br>        /var/www/cobbler/images/ : 导入发行版的kernel和initrd镜像用于<br>        远程网络启动<br>            /var/www/cobbler/repo_mirror/: yum 仓库存储目录<br>    日志目录<br>        /var/log/cobbler/installing: 客户端安装日志<br>        /var/log/cobbler/cobbler.log : cobbler日志</p>
+<p>cobbler 命令介绍<br>    cobbler commands介绍<br>        cobbler check 核对当前设置是否有问题<br>        cobbler list 列出所有的cobbler元素<br>        cobbler report 列出元素的详细信息<br>        cobbler sync 同步配置到数据目录,更改配置最好都要执行下 # 同步配置到dhcp/pxe和数据目录<br>        cobbler reposync 同步yum仓库<br>        cobbler distro 查看导入的发行版系统信息<br>        cobbler system 查看添加的系统信息<br>        cobbler profile 查看配置信息</p>
+<p>cobbler 重要的参数<br>    /etc/cobbler/settings中重要的参数设置<br>    default_password_crypted: “$1$gEc7ilpP$pg5iSOj/mlxTxEslhRvyp/“<br>    manage_dhcp：1   启动dhcp功能<br>    manage_tftpd：1  启动tftp功能<br>    pxe_just_once：1 只启动一次。<br>    next_server：&lt; tftp服务器的 IP 地址&gt;<br>    server：     <cobbler服务器的 ip="" 地址=""></cobbler服务器的></p>
+<p>cobbler 报错解决<br>    执行Cobbler check报错解决方式<br>        修改/etc/cobbler/settings文件中的server参数的值为提供cobbler服务的主机相应的IP地址或主机名<br>        修改/etc/cobbler/settings文件中的next_server参数的值为提供PXE服务的主机相应的IP地址<br>        如果当前节点可以访问互联网，执行“cobbler getloaders”命令即可；否则，需要安装syslinux程序包，<br>            而后复制/usr/share/syslinux/{pxelinux.0,memu.c32}等文件至/var/lib/cobbler/loaders/目录中<br>        执行“chkconfig rsync on”命令即可<br>        执行“openssl passwd -1 生成密码，并用其替换 /etc/cobbler/settings文件中default_password_crypted参数的值</p>
+<p>cobbler 相关管理<br>    下载启动菜单： cobbler get-loaders<br>    管理distro<br>        cobbler import –name=centos-6.9-x86_64 –path=/media/cdrom<br>    管理profile<br>        cobbler profile add –name=centos-6.9-x86_64-basic –distro=centos-6.9-x86_64<br>            –kickstart=/tmp/centos6.9-x86_64.cfg<br>    查看profiles<br>        cobbler profile list<br>    查看引导文件<br>        cat  /var/lib/tftpboot/pxelinux.cfg/default<br>    同步cobbler配置<br>        cobbler sync</p>
+<p>多系统引导方案<br>    cobbler import –name=CentOS-7-x86_64 –path=/media/cdrom<br>    cobbler distro list<br>    cobbler profile list<br>    cobbler sync </p>
+<p>cobbler 实现步骤  #具体查看相关实验步骤<br>    安装包，并设置服务<br>    检查配置<br>    根据上面提示修改配置<br>    下载启动相关文件菜单<br>    配置DHCP服务<br>    分别导入centos的安装源,并查看<br>    准备kickstart文件并导入cobbler<br>    测试</p>
+<p>cobbler的web管理实现<br>    cobbler-web<br>        提供cobbler的基于web管理界面，epel源<br>        yum install cobbler-web<br>    认证方式<br>        定义认证方法：/etc/cobbler/modules.conf<br>        使用authn_pam模块认证cobbler_web用户<br>            [authentication] 块中指定<br>                module = “authn_pam”<br>            创建cobbler用户：<br>                useradd “cobbler”<br>            修改文件 /etc/cobbler/users.conf<br>                [admins]<br>                admin = “cobbler”<br>    示例：<br>        使用authn_configfile模块认证cobbler_web用户<br>            [authentication]块中<br>                module=authn_configfile<br>            创建其认证文件/etc/cobbler/users.digest，并添加所需的用户<br>                htdigest -c /etc/cobbler/users.digest Cobbler xdg  #Cobbler中C是大写字母<br>                注意:添加第一个用户时,使用“-c”选项，后续添加其他用户时不要再使用，cobbler_web的realm只能为Cobbler<br>            Web访问cobbler<br>                重启cobblerd服务<br>                重启httpd服务  因为使用的443端口<br>                通过<a href="https://cobblerserver/cobbler_web访问即可" target="_blank" rel="noopener">https://cobblerserver/cobbler_web访问即可</a></p>
+<p>写完 ks 文件之后，先通过 validateks 测试一下有没有语法错误:</p>
+<h1 id="cobbler-validateks"><a href="#cobbler-validateks" class="headerlink" title="cobbler validateks"></a>cobbler validateks</h1><p>通过下面这个命令查看 ks 文件，发现一些逻辑上的问题:</p>
+<h1 id="cobbler-system-getks-–name-test"><a href="#cobbler-system-getks-–name-test" class="headerlink" title="cobbler system getks –name=test"></a>cobbler system getks –name=test</h1><p>注：1.在后来配置的时候<br>    cobbler import –path=/misc/cd –name=centos7.3 –arch=x86_64<br>    没有指定其 –arch<br>    2.在后来ks文件生成的时候，是直接指定的，并没有提前预览（系统自带的菜单信息default）</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Cobbler/" rel="tag"># Cobbler</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/09/linux/服务/自动化安装系统/自动化基本原理/" rel="next" title="自动化基本原理">
+                <i class="fa fa-chevron-left"></i> 自动化基本原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">59</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Cobbler"><span class="nav-number">1.</span> <span class="nav-text">Cobbler</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cobbler-validateks"><span class="nav-number">2.</span> <span class="nav-text">cobbler validateks</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cobbler-system-getks-–name-test"><span class="nav-number">3.</span> <span class="nav-text">cobbler system getks –name=test</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

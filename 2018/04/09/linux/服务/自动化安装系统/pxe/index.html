@@ -1,0 +1,779 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PXE," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="PXEPreboot Excution Environment 预启动执行环境 Intel公司研发基于Client/Server的网络模式，支持远程主机通过网络从远端服务器下载映像，并由此支持通过网络启动操作系统 PXE可以引导和安装Windows，linux等多种操作系统 PXE工作原理12345678910111213141516171819201. Client向PXE Server上的DH">
+<meta name="keywords" content="PXE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PXE">
+<meta property="og:url" content="http://yoursite.com/2018/04/09/linux/服务/自动化安装系统/pxe/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="PXEPreboot Excution Environment 预启动执行环境 Intel公司研发基于Client/Server的网络模式，支持远程主机通过网络从远端服务器下载映像，并由此支持通过网络启动操作系统 PXE可以引导和安装Windows，linux等多种操作系统 PXE工作原理12345678910111213141516171819201. Client向PXE Server上的DH">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-17T14:57:17.671Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PXE">
+<meta name="twitter:description" content="PXEPreboot Excution Environment 预启动执行环境 Intel公司研发基于Client/Server的网络模式，支持远程主机通过网络从远端服务器下载映像，并由此支持通过网络启动操作系统 PXE可以引导和安装Windows，linux等多种操作系统 PXE工作原理12345678910111213141516171819201. Client向PXE Server上的DH">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/09/linux/服务/自动化安装系统/pxe/"/>
+
+
+
+
+
+  <title> PXE | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/09/linux/服务/自动化安装系统/pxe/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                PXE
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-09T00:00:00+08:00">
+                2018-04-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="PXE"><a href="#PXE" class="headerlink" title="PXE"></a>PXE</h1><p>Preboot Excution Environment 预启动执行环境 Intel公司研发基于Client/Server的网络模式，支持远程主机通过网络从远端服务器下载映像，并由此支持通过网络启动操作系统</p>
+<p>PXE可以引导和安装Windows，linux等多种操作系统</p>
+<h1 id="PXE工作原理"><a href="#PXE工作原理" class="headerlink" title="PXE工作原理"></a>PXE工作原理</h1><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> <span class="built_in">Client</span>向PXE <span class="built_in">Server</span>上的DHCP发送IP地址请求消息，DHCP检测<span class="built_in">Client</span>是否合法，</span><br><span class="line">  （主要是检测<span class="built_in">Client</span>的网卡MAC地址），如果合法则返回<span class="built_in">Client</span>的IP地址，</span><br><span class="line">  同时将启动文件pxelinux<span class="number">.0</span>的位置信息一并传送给<span class="built_in">Client</span></span><br><span class="line"></span><br><span class="line"><span class="number">2.</span> <span class="built_in">Client</span>向PXE <span class="built_in">Server</span>上的TFTP发送获取pxelinux<span class="number">.0</span>请求消息，TFTP接收到消息之后</span><br><span class="line">  再向<span class="built_in">Client</span>发送pxelinux<span class="number">.0</span>大小信息，试探<span class="built_in">Client</span>是否满意，当TFTP收到<span class="built_in">Client</span></span><br><span class="line">  发回的同意大小信息之后，正式向<span class="built_in">Client</span>发送pxelinux<span class="number">.0</span></span><br><span class="line"> </span><br><span class="line"><span class="number">3.</span> <span class="built_in">Client</span>执行接收到的pxelinux<span class="number">.0</span>文件</span><br><span class="line"></span><br><span class="line"><span class="number">4.</span> <span class="built_in">Client</span>向TFTP <span class="built_in">Server</span>发送针对本机的配置信息文件（在TFTP服务的pxelinux.cfg目录下），</span><br><span class="line">  TFTP将配置文件发回<span class="built_in">Client</span>，继而<span class="built_in">Client</span>根据配置文件执行后续操作</span><br><span class="line"></span><br><span class="line"><span class="number">5.</span> <span class="built_in">Client</span>向TFTP发送Linux内核请求信息，TFTP接收到消息之后将内核文件发送给<span class="built_in">Client</span></span><br><span class="line"></span><br><span class="line"><span class="number">6.</span> <span class="built_in">Client</span>向TFTP发送根文件请求信息，TFTP接收到消息之后返回Linux根文件系统</span><br><span class="line"></span><br><span class="line"><span class="number">7.</span> <span class="built_in">Client</span>启动Linux内核</span><br><span class="line"></span><br><span class="line"><span class="number">8.</span> <span class="built_in">Client</span>下载安装源文件，读取自动化安装脚本</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="PXE自动化安装CentOS-7"><a href="#PXE自动化安装CentOS-7" class="headerlink" title="PXE自动化安装CentOS 7"></a>PXE自动化安装CentOS 7</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">1. 安装前准备: 关闭防火墙和SELINUX，DHCP服务器静态IP</span><br><span class="line"></span><br><span class="line">2. 安装软件包</span><br><span class="line">   httpd</span><br><span class="line">   tftp-server</span><br><span class="line">   dhcp</span><br><span class="line">   syslinux  # syslinux-nolinux</span><br><span class="line">   system-config-kickstart</span><br><span class="line"></span><br><span class="line">3. 配置文件共享服务</span><br><span class="line">   systemctl <span class="builtin-name">enable</span> httpd</span><br><span class="line">   systemctl start httpd</span><br><span class="line">   mkdir /var/www/html/centos/7</span><br><span class="line">   mount /dev/sr0 /var/www/html/centos/7</span><br><span class="line"></span><br><span class="line">4. 准备kickstart文件</span><br><span class="line">   /var/www/html/centos/7/centos7.cfg</span><br><span class="line">   注: 权限，有时候拷贝文件的时候，权限有时候会发生改变，导致文件无法读取</span><br><span class="line">      chmod 644 /var/www/html/centos/7/centos7.cfg</span><br><span class="line"></span><br><span class="line">vim  /var/www/html/centos/7/centos7.cfg</span><br><span class="line">   #<span class="attribute">version</span>=DEVEL</span><br><span class="line">   #<span class="built_in"> System </span>authorization information</span><br><span class="line">   auth --enableshadow <span class="attribute">--passalgo</span>=sha512</span><br><span class="line">   # Use CDROM installation media</span><br><span class="line">   url <span class="attribute">--url</span>=http://192.168.25.107/centos/7</span><br><span class="line">   <span class="built_in">..</span><span class="built_in">..</span><span class="built_in">..</span></span><br><span class="line">   注: 一系列要配置的参数</span><br><span class="line"></span><br><span class="line">5. 配置tftp服务</span><br><span class="line">   systemctl <span class="builtin-name">enable</span> tftp.socket ( centos6: chkconfig tftp on )</span><br><span class="line">   systemctl start tftp.socket ( centos6:<span class="built_in"> service </span>xinetd restart )</span><br><span class="line"></span><br><span class="line">6. 配置DHCP服务</span><br><span class="line">   systemctl <span class="builtin-name">enable</span> dhcpd</span><br><span class="line">   vim /etc/dhcp/dhcpd.conf</span><br><span class="line">      option domain-name <span class="string">"example.org"</span>;</span><br><span class="line">      default-lease-time 600;</span><br><span class="line">      max-lease-time 7200;</span><br><span class="line">      subnet 192.168.100.0 netmask 255.255.255.0 &#123;</span><br><span class="line">         range 192.168.100.1 192.168.100.200; </span><br><span class="line">         filename <span class="string">"pxelinux.0"</span>;</span><br><span class="line">         next-server 192.168.100.100;</span><br><span class="line">      &#125;</span><br><span class="line">   systemctl start dhcpd</span><br><span class="line"></span><br><span class="line">7. 准备相关文件</span><br><span class="line">   mkdir /var/lib/tftpboot/pxelinux.cfg/</span><br><span class="line">   cp /usr/share/syslinux/&#123;pxelinux.0,menu.c32&#125;  /var/lib/tftpboot/</span><br><span class="line">   cp /misc/cd/isolinux/&#123;vmlinuz,initrd.img&#125;  /var/lib/tftpboot/</span><br><span class="line">   cp /misc/cd/isolinux/isolinux.cfg  /var/lib/tftpboot/pxelinux.cfg/default</span><br><span class="line">   文件列表如下:</span><br><span class="line">      /var/lib/tftpboot/</span><br><span class="line">         ├── initrd.img</span><br><span class="line">         ├── menu.c32</span><br><span class="line">         ├── pxelinux.0</span><br><span class="line">         ├── pxelinux.cfg</span><br><span class="line">         │ └── default</span><br><span class="line">         └── vmlinuz</span><br><span class="line">      注: pxelinux.0  pxelinux.cfg  menu.c32  # 这三个必须要在tftpboot的根目录下</span><br><span class="line"></span><br><span class="line">8. 准备启动菜单</span><br><span class="line">   vim /var/lib/tftpboot/pxelinux.cfg/default</span><br><span class="line">     <span class="built_in"> default </span>menu.c32</span><br><span class="line">      timeout 600</span><br><span class="line">      menu title PXE INSTALL MENU</span><br><span class="line">      label desktop</span><br><span class="line">         menu label Auto Install CentOS 7 ^Desktop</span><br><span class="line">         kernel vmlinuz  # 相对的目录（相对于tftpboot）</span><br><span class="line">         append <span class="attribute">initrd</span>=initrd.img <span class="attribute">ks</span>=http://192.168.100.100/centos/7/centos7.cfg</span><br><span class="line">         注: 如果分为6和7要写成: 6/vmlinuz 和 6/initrd.img</span><br><span class="line">      label manual</span><br><span class="line">         menu label ^Manual Install CentOS 7</span><br><span class="line">         kernel vmlinuz</span><br><span class="line">         append <span class="attribute">initrd</span>=initrd.img inst.<span class="attribute">repo</span>=http://192.168.100.100/centos/7</span><br><span class="line">         注: inst.repo --&gt; 手动安装，要指定求yum源</span><br><span class="line">      label local</span><br><span class="line">         menu default</span><br><span class="line">         menu label ^Boot <span class="keyword">from</span> local drive</span><br><span class="line">         localboot 0xffff</span><br><span class="line"></span><br><span class="line">注: 在安装的时候，如果使用虚拟机安装的时候，指定虚拟内存必须要大于1G ，</span><br><span class="line">  可能会在安装的时候出现问题</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="PXE自动化安装CentOS-6和centos-7"><a href="#PXE自动化安装CentOS-6和centos-7" class="headerlink" title="PXE自动化安装CentOS 6和centos 7"></a>PXE自动化安装CentOS 6和centos 7</h1><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">注: 基本和上面的一样，主要不同的地方是要指出不同的镜像、启动文件、ks文件等</span><br><span class="line"></span><br><span class="line"><span class="number">1</span>. 分别准备centos7和centos6的yum源</span><br><span class="line">   mkdir -p /var/www/html/centos/&#123;<span class="number">6</span>,<span class="number">7</span>&#125;  <span class="comment"># 生成目录</span></span><br><span class="line">   mount /dev/sr0 /var/www/html/centos/<span class="number">6</span>  <span class="comment"># 把6的镜像挂载上去</span></span><br><span class="line">	mount /dev/sr1 /var/www/html/centos/<span class="number">7</span>  <span class="comment"># 把7的镜像挂载上去</span></span><br><span class="line">   systemctl start httpd</span><br><span class="line"></span><br><span class="line"><span class="number">2</span>. 准备centos6和<span class="number">7</span>的各个ks文件</span><br><span class="line">   ks6.cfg  ks7.cfg</span><br><span class="line"></span><br><span class="line"><span class="number">3</span>. 准备centos6,<span class="number">7</span>的各自的内核文件</span><br><span class="line">   mkdir /var/<span class="class"><span class="keyword">lib</span>/<span class="title">tftpboot</span>/<span class="title">centos</span>&#123;6,7&#125;</span></span><br><span class="line">   cp /var/www/html/centos/<span class="number">7</span>/isolinux/&#123;initrd.img,vmlinuz&#125;  /var/<span class="class"><span class="keyword">lib</span>/<span class="title">tftpboot</span>/<span class="title">centos7</span></span></span><br><span class="line">   cp /var/www/html/centos/<span class="number">6</span>/isolinux/&#123;initrd.img,vmlinuz&#125;  /var/<span class="class"><span class="keyword">lib</span>/<span class="title">tftpboot</span>/<span class="title">centos6</span></span></span><br><span class="line"></span><br><span class="line">tree /var/<span class="class"><span class="keyword">lib</span>/<span class="title">tftpboot</span></span></span><br><span class="line">/var/<span class="class"><span class="keyword">lib</span>/<span class="title">tftpboot</span></span></span><br><span class="line">   ├── centos6</span><br><span class="line">   │   ├── initrd.img</span><br><span class="line">   │   └── vmlinuz</span><br><span class="line">   ├── centos7</span><br><span class="line">   │   ├── initrd.img</span><br><span class="line">   │   └── vmlinuz</span><br><span class="line">   ├── menu.c32</span><br><span class="line">   ├── pxelinux.<span class="number">0</span></span><br><span class="line">   └── pxelinux.cfg</span><br><span class="line">      └── default</span><br><span class="line"></span><br><span class="line"><span class="number">4</span>. 准备启动菜单</span><br><span class="line">vim /var/<span class="class"><span class="keyword">lib</span>/<span class="title">tftpboot</span>/<span class="title">pxelinux</span>.<span class="title">cfg</span>/<span class="title">default</span></span></span><br><span class="line">   default menu.c32</span><br><span class="line">   timeout <span class="number">600</span></span><br><span class="line">   menu title CentOS Linux  PXE Install</span><br><span class="line"></span><br><span class="line">   label centos7</span><br><span class="line">      menu label Auto Install CentOS Linux ^<span class="number">7</span></span><br><span class="line">      kernel centos7/vmlinuz</span><br><span class="line">      append initrd=centos7/initrd.img ks=<span class="symbol">http:</span>/<span class="regexp">/192.168.25.107/centos</span>7/ks7.cfg</span><br><span class="line"></span><br><span class="line">   label centos6</span><br><span class="line">      menu label Auto Install CentOS Linux ^<span class="number">6</span></span><br><span class="line">      kernel centos6/vmlinuz</span><br><span class="line">      append initrd=centos6/initrd.img ks=<span class="symbol">http:</span>/<span class="regexp">/192.168.25.107/centos</span>6/ks6.cfg</span><br><span class="line"></span><br><span class="line">   label local</span><br><span class="line">      menu default</span><br><span class="line">      menu label Boot from ^local drive</span><br><span class="line">      localboot <span class="number">0xffff</span></span><br><span class="line">   menu <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">注: 指定虚拟内存大于<span class="number">1</span>G</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PXE/" rel="tag"># PXE</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/08/question/增加一个回收站/" rel="next" title="增加一个回收站">
+                <i class="fa fa-chevron-left"></i> 增加一个回收站
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/09/linux/服务/自动化安装系统/自动化基本原理/" rel="prev" title="自动化基本原理">
+                自动化基本原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">59</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PXE"><span class="nav-number">1.</span> <span class="nav-text">PXE</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PXE工作原理"><span class="nav-number">2.</span> <span class="nav-text">PXE工作原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PXE自动化安装CentOS-7"><span class="nav-number">3.</span> <span class="nav-text">PXE自动化安装CentOS 7</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PXE自动化安装CentOS-6和centos-7"><span class="nav-number">4.</span> <span class="nav-text">PXE自动化安装CentOS 6和centos 7</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,782 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="启动,内核," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Linux组成1234567891011121314kernel: 进程管理、内存管理、网络管理、驱动程序、文件系统、安全功能rootfs: 程序和glibc库: 函数集合, function, 调用接口（头文件负责描述）   过程调用: procedure，无返回值   函数调用: function程序: 二进制执行文件内核设计流派:   单内核(monolithic kernel)">
+<meta name="keywords" content="启动,内核">
+<meta property="og:type" content="article">
+<meta property="og:title" content="启动和内核管理">
+<meta property="og:url" content="http://yoursite.com/2018/03/27/linux/基本/启动和内核管理/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="Linux组成1234567891011121314kernel: 进程管理、内存管理、网络管理、驱动程序、文件系统、安全功能rootfs: 程序和glibc库: 函数集合, function, 调用接口（头文件负责描述）   过程调用: procedure，无返回值   函数调用: function程序: 二进制执行文件内核设计流派:   单内核(monolithic kernel)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-27T16:01:13.181Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="启动和内核管理">
+<meta name="twitter:description" content="Linux组成1234567891011121314kernel: 进程管理、内存管理、网络管理、驱动程序、文件系统、安全功能rootfs: 程序和glibc库: 函数集合, function, 调用接口（头文件负责描述）   过程调用: procedure，无返回值   函数调用: function程序: 二进制执行文件内核设计流派:   单内核(monolithic kernel)">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/27/linux/基本/启动和内核管理/"/>
+
+
+
+
+
+  <title> 启动和内核管理 | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/27/linux/基本/启动和内核管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                启动和内核管理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-27T00:00:00+08:00">
+                2018-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Linux组成"><a href="#Linux组成" class="headerlink" title="Linux组成"></a>Linux组成</h1><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">kernel</span>: 进程管理、内存管理、网络管理、驱动程序、文件系统、安全功能</span><br><span class="line"><span class="attribute">rootfs</span>: 程序和glibc</span><br><span class="line"></span><br><span class="line">库: 函数集合, function, 调用接口（头文件负责描述）</span><br><span class="line">   过程调用: procedure，无返回值</span><br><span class="line">   函数调用: function</span><br><span class="line"></span><br><span class="line">程序: 二进制执行文件</span><br><span class="line"></span><br><span class="line">内核设计流派:</span><br><span class="line">   单内核(monolithic kernel)</span><br><span class="line">      Linux 把所有功能集成于同一个程序</span><br><span class="line">   微内核(micro kernel): Windows, Solaris</span><br><span class="line">      每种功能使用一个单独子系统实现</span><br></pre></td></tr></table></figure>
+<h1 id="Linux内核特点"><a href="#Linux内核特点" class="headerlink" title="Linux内核特点"></a>Linux内核特点</h1><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">支持模块化：.ko（内核对象）</span><br><span class="line">   如: 文件系统，硬件驱动，网络协议等</span><br><span class="line">   [root@centos6 xdg]<span class="comment">#locate ext4.ko</span></span><br><span class="line">      /<span class="class"><span class="keyword">lib</span>/<span class="title">modules</span>/2.6.32-696.<span class="title">el6</span>.<span class="title">x86_64</span>/<span class="title">kernel</span>/<span class="title">fs</span>/<span class="title">ext4</span>/<span class="title">ext4</span>.<span class="title">ko</span></span></span><br><span class="line">   支持内核模块的动态装载和卸载</span><br><span class="line"></span><br><span class="line">组成部分:</span><br><span class="line">   核心文件: <span class="regexp">/boot/vmlinuz</span>-VERSION-release</span><br><span class="line">   <span class="symbol">ramdisk:</span> 辅助的伪根系统</span><br><span class="line">   CentOS <span class="number">5</span>: <span class="regexp">/boot/initrd</span>-VERSION-release.img</span><br><span class="line">   CentOS <span class="number">6</span>,<span class="number">7</span>: <span class="regexp">/boot/initramfs</span>-VERSION-release.img</span><br><span class="line">   模块文件: <span class="regexp">/lib/modules</span><span class="regexp">/VERSION-release</span></span><br></pre></td></tr></table></figure>
+<h1 id="CentOS6启动流程"><a href="#CentOS6启动流程" class="headerlink" title="CentOS6启动流程"></a>CentOS6启动流程</h1><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 加载BIOS的硬件信息，获取第一个启动设备</span><br><span class="line"><span class="number">2.</span> 读取第一个启动设备MBR的引导加载程序(grub)的启动信息</span><br><span class="line"><span class="number">3.</span> 加载核心操作系统的核心信息，核心开始解压缩，并尝试驱动所有的硬件设备</span><br><span class="line"><span class="number">4.</span> 核心执行init程序，并获取默认的运行信息</span><br><span class="line"><span class="number">5.</span> init程序执行<span class="meta-keyword">/etc/</span>rc.d/rc.sysinit文件</span><br><span class="line"><span class="number">6.</span> 启动核心的外挂模块</span><br><span class="line"><span class="number">7.</span> init执行运行的各个批处理文件(scripts)</span><br><span class="line"><span class="number">8.</span> init执行<span class="meta-keyword">/etc/</span>rc.d/rc.local</span><br><span class="line"><span class="number">9.</span> 执行<span class="meta-keyword">/bin/</span>login程序，等待用户登录</span><br><span class="line"><span class="number">10.</span> 登录之后开始以Shell控制主机</span><br><span class="line"></span><br><span class="line">启动流程</span><br><span class="line"><span class="symbol">   POST:</span> Power-On-Self-Test，加电自检，是BIOS功能的一个主要部分，负责完成对CPU、</span><br><span class="line">     主板、内存、硬盘子系统、显示子系统、串并行接 口、键盘、CD-ROM光驱等硬件情况的检测</span><br><span class="line"></span><br><span class="line"><span class="symbol">   ROM:</span> BIOS，保存着有关计算机系统最重要的基本输入输出程序，系统信息设置、</span><br><span class="line">     开机加电自检程序和 系统启动自举程序等</span><br><span class="line"></span><br><span class="line"><span class="symbol">   RAM:</span> CMOS互补金属氧化物半导体，保存各项参数的设定按次序查找引导设备，</span><br><span class="line">     第一个有引导程序的设备为本次启动设备</span><br><span class="line"></span><br><span class="line"><span class="symbol">   bootloader:</span> 引导加载器，引导程序</span><br><span class="line"><span class="symbol">      windows:</span> ntloader，仅是启动OS</span><br><span class="line"><span class="symbol">      Linux:</span> 功能丰富，提供菜单，允许用户选择要启动系统或不同的内核版本，把用户选定的</span><br><span class="line">        内核装载到内存中的特定空间中，解压、展开，并把系统控制权移交给内核</span><br><span class="line"><span class="symbol">         LILO:</span> LInux LOader</span><br><span class="line"><span class="symbol">         GRUB:</span> GRand Unified Bootloader</span><br><span class="line">         GRUB <span class="number">0.</span>X: GRUB Legacy， GRUB2</span><br><span class="line"></span><br><span class="line"><span class="symbol">   MBR:</span></span><br><span class="line">      <span class="number">446</span>: bootloader    <span class="number">64</span>: 分区表    <span class="number">2</span>: <span class="number">55</span>AA </span><br><span class="line"><span class="symbol">   GRUB:</span></span><br><span class="line">      primary boot loader: <span class="number">1</span>st stage，<span class="number">1.5</span> stage</span><br><span class="line">      secondary boot loader: <span class="number">2</span>nd stage，分区文件</span><br></pre></td></tr></table></figure>
+<h1 id="boot-grub-grub-conf"><a href="#boot-grub-grub-conf" class="headerlink" title="/boot/grub/grub.conf"></a>/boot/grub/grub.conf</h1><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">[root@redhat grub]<span class="comment"># ls</span></span><br><span class="line">device.map     ffs_stage1_5  menu.lst           splash.xpm.gz  vstafs_stage1_5</span><br><span class="line">e2fs_stage1_5  grub.conf     minix_stage1_5     stage1         xfs_stage1_5</span><br><span class="line">fat_stage1_5   jfs_stage1_5  reiserfs_stage1_5  stage2</span><br><span class="line"></span><br><span class="line">vim  /boot/grub/grub.conf</span><br><span class="line"></span><br><span class="line"><span class="keyword">default</span>=<span class="number">0</span>  <span class="comment"># 默认启动的title的编号</span></span><br><span class="line">timeout=<span class="number">5</span>  <span class="comment"># 在启动时，等待用户选择的时间5s</span></span><br><span class="line">splashimage=(hd0,<span class="number">0</span>)/grub/splash.xpm.gz  <span class="comment"># 启动时，加载的背景图</span></span><br><span class="line">      convert -resize <span class="number">640</span>*<span class="number">480</span> -colors <span class="number">14</span> win.jpg win.xpm （源 目标）</span><br><span class="line">      convert: 调整图片大小</span><br><span class="line">      colors: 颜色深度</span><br><span class="line">      gzip win.xpm<span class="function">  --&gt;</span> win.xpm.gz</span><br><span class="line"></span><br><span class="line">hiddenmenu  <span class="comment"># 隐藏菜单</span></span><br><span class="line"></span><br><span class="line">注: 进入grub时，需要密码,需要加密</span><br><span class="line">password centos  <span class="comment"># 明文</span></span><br><span class="line">password --md5   <span class="comment"># 生成加密后的密码   加密</span></span><br><span class="line">   grub-md5-crypt  <span class="comment"># 这个命令生成密码 --&gt; 提示输入明文，之后会生成加密后的密码</span></span><br><span class="line">passwork --encrypted  <span class="comment"># 生成加密后的密码   加密</span></span><br><span class="line">   grub-crypt  <span class="comment"># sha512加密</span></span><br><span class="line">注: 如果不知道密码了，进入救援模式当中，修改/etc/shadow把</span><br><span class="line">  第二个密码给删除了（就变成了空密码了）</span><br><span class="line"></span><br><span class="line">title CentOS <span class="number">6</span> (<span class="number">2.6</span>.<span class="number">32</span>-<span class="number">696.el</span>6.x86_64)  <span class="comment"># 内核标题，操作系统名称，可自由修改</span></span><br><span class="line">   root (hd0,<span class="number">0</span>)  <span class="comment"># 内核文件所在的设备，对grub而言，所有的类型硬盘一律都是hd的</span></span><br><span class="line">      <span class="comment"># 格式（hd#,N） hd#: #表示第几个磁盘  N: 对应的磁盘的分区</span></span><br><span class="line">   kernel /vmlinuz-<span class="number">2.6</span>.<span class="number">32</span>-<span class="number">696.el</span>6.x86_64 ro root=UUID=e7e411c7......  rhgb quiet</span><br><span class="line">      <span class="comment"># 内核文件路径  传递给内核的参数</span></span><br><span class="line">      注: cat /proc/cmdline  <span class="comment"># 参数相同</span></span><br><span class="line">      rhgb: 显示加载的一些服务状态</span><br><span class="line">         <span class="comment"># 默认的是显示一个圆圈转转（centso 6）,去掉就不显示了</span></span><br><span class="line">      quiet: 是否显示内核的启动过程</span><br><span class="line"></span><br><span class="line">   initrd /initramfs-<span class="number">2.6</span>.<span class="number">32</span>-<span class="number">696.el</span>6.x86_64.img</span><br><span class="line">      <span class="comment"># initramfs文件路径  虚拟文件系统</span></span><br><span class="line">   password  --md5  ****  <span class="comment"># 密码放在这里，表示启动内核时会提示输入密码否则无法进入</span></span><br><span class="line">   注: kernel 和 initrd  <span class="comment"># 这两个的顺序是有规定的</span></span><br><span class="line"></span><br><span class="line">stage2</span><br><span class="line">stage1</span><br><span class="line">其它</span><br><span class="line">注: 上面的上个都是在系统的 <span class="number">1</span> <span class="number">1.5</span> <span class="number">2</span> 阶段当中的配置文件</span><br><span class="line">   注: 如果系统没有出现修复过（grub-install  /dev/sda）这里命令</span><br><span class="line">     在<span class="regexp">/boot/grub/</span>* 里的文件只要保留 grub.conf这时配置文件即可，系统也可以正常运行</span><br><span class="line">     如果系统修复过，这时候，对文件stage2这人文件有依赖性，所以必须把stage2文件</span><br><span class="line">     拷贝进入才能运行</span><br><span class="line"></span><br><span class="line">kernel</span><br><span class="line">   自身初始化:</span><br><span class="line">      探测可识别到的所有硬件设备</span><br><span class="line">      加载硬件驱动程序（借助于ramdisk加载驱动）</span><br><span class="line">      以只读方式挂载根文件系统</span><br><span class="line">      运行用户空间的第一个应用程序: /sbin/init</span><br><span class="line"></span><br><span class="line">ramdisk</span><br><span class="line">   内核中的特性之一: 使用缓冲和缓存来加速对磁盘上的文件访问，并加载相应的硬件驱动</span><br><span class="line">      ramdisk<span class="function"> --&gt;</span> ramfs  <span class="comment"># 提高速度</span></span><br><span class="line">      CentOS <span class="number">5</span>: initrd   <span class="comment"># 虚拟磁盘</span></span><br><span class="line">         工具程序: mkinitrd</span><br><span class="line">      CentOS <span class="number">6</span>，<span class="number">7</span>: initramfs   <span class="comment"># 虚拟文件系统</span></span><br><span class="line">         工具程序: mkinitrd, dracut</span><br><span class="line"></span><br><span class="line">系统初始化 </span><br><span class="line">   POST<span class="function"> --&gt;</span> BootSequence <span class="function"><span class="params">(BIOS)</span> --&gt;</span> Bootloader<span class="function"><span class="params">(MBR)</span> --&gt;</span> kernel(ramdisk)</span><br><span class="line"><span class="function">      --&gt;</span> rootfs<span class="function"><span class="params">(只读)</span> -&gt;</span> init（systemd）</span><br></pre></td></tr></table></figure>
+<h1 id="ramdisk管理"><a href="#ramdisk管理" class="headerlink" title="ramdisk管理"></a>ramdisk管理</h1><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ramdisk文件的制作</span><br><span class="line">   (<span class="number">1</span>)mkinitrd命令  <span class="comment"># 为当前正在使用的内核重新制作ramdisk文件</span></span><br><span class="line">      mkinitrd /boot/initramfs-$(uname -r).img  $(uname -r)</span><br><span class="line">         注: mkinitrd initramfs-<span class="number">2.6</span>.<span class="number">32</span>-<span class="number">696</span>.el6.x86_64.img  <span class="number">2.6</span>.<span class="number">32</span>-<span class="number">696</span>.el6.x86_64</span><br><span class="line">         注: mkinitrd initramfs-<span class="string">`uname -r`</span>.img  <span class="string">`uname -r`</span>  <span class="comment"># 这种方式也是可以的</span></span><br><span class="line">         mkinitrd 这个命令就是调用dracut命令</span><br><span class="line"></span><br><span class="line">   (<span class="number">2</span>)dracut命令  <span class="comment"># 为当前正在使用的内核重新制作ramdisk文件</span></span><br><span class="line">      dracut /boot/initramfs-$(uname -r).img   $(uname -r)</span><br></pre></td></tr></table></figure>
+<h1 id="系统启动流程"><a href="#系统启动流程" class="headerlink" title="系统启动流程"></a>系统启动流程</h1><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">init程序的类型 </span><br><span class="line">   SysV: init, CentOS 5之前</span><br><span class="line">      配置文件: <span class="string">/etc/inittab</span></span><br><span class="line">   Upstart: init,CentOS 6</span><br><span class="line">      配置文件: <span class="string">/etc/inittab</span>, <span class="string">/etc/init/</span>*<span class="string">.conf</span></span><br><span class="line">   Systemd: systemd, CentOS 7</span><br><span class="line">      配置文件: <span class="string">/usr/lib/systemd/system</span></span><br><span class="line">      <span class="string">/etc/systemd/system</span></span><br><span class="line"></span><br><span class="line"><span class="string">/sbin/init</span> CentOS 6 之前</span><br><span class="line">   运行级别: 为系统运行或维护等目的而设定 0-6: 7个级别</span><br><span class="line">      0: 关机</span><br><span class="line">      1: 单用户模式<span class="params">(root自动登录)</span>，single，维护模式</span><br><span class="line">      2: 多用户模式，启动网络功能，但不会启动NFS，维护模式</span><br><span class="line">      3: 多用户模式，正常模式，文本界面</span><br><span class="line">      4: 预留级别，可同3级别</span><br><span class="line">      5: 多用户模式，正常模式，图形界面</span><br><span class="line">      6: 重启</span><br><span class="line">   默认级别: 3, 5</span><br><span class="line">   切换级别: init <span class="comment">#</span></span><br><span class="line">   查看级别: runlevel; who -r</span><br><span class="line"></span><br><span class="line">init初始化</span><br><span class="line">   init读取其初始化文件: <span class="string">/etc/inittab</span></span><br><span class="line">   初始运行级别<span class="params">(RUN LEVEL)</span></span><br><span class="line">   系统初始化脚本</span><br><span class="line">   对应运行级别的脚本目录</span><br><span class="line">   捕获某个关键字顺序</span><br><span class="line">   定义UPS电源终端/恢复脚本</span><br><span class="line">   在虚拟控制台生成getty</span><br><span class="line">   在运行级别5初始化X</span><br><span class="line"></span><br><span class="line"><span class="string">/etc/rc.d/rc.sysinit</span>: 系统初始化脚本</span><br><span class="line"><span class="params">(1)</span> 设置主机名</span><br><span class="line"><span class="params">(2)</span> 设置欢迎信息</span><br><span class="line"><span class="params">(3)</span> 激活udev和selinux</span><br><span class="line"><span class="params">(4)</span> 挂载<span class="string">/etc/fstab</span>文件中定义的文件系统</span><br><span class="line"><span class="params">(5)</span> 检测根文件系统，并以读写方式重新挂载根文件系统</span><br><span class="line"><span class="params">(6)</span> 设置系统时钟</span><br><span class="line"><span class="params">(7)</span> 激活swap设备</span><br><span class="line"><span class="params">(8)</span> 根据<span class="string">/etc/sysctl.conf</span>文件设置内核参数</span><br><span class="line"><span class="params">(9)</span> 激活lvm及software raid设备</span><br><span class="line"><span class="params">(10)</span> 加载额外设备的驱动程序</span><br><span class="line"><span class="params">(11)</span> 清理操作</span><br><span class="line"></span><br><span class="line">说明: rc N --&gt; 意味着读取<span class="string">/etc/rc.d/rcN.d/</span></span><br><span class="line">   K*: K<span class="comment">##*: ##运行次序，数字越小，越先运行，数字</span></span><br><span class="line"></span><br><span class="line">越小的服务，通常为依赖到别的服务</span><br><span class="line">   S*: S<span class="comment">##*: ##运行次序，数字越小，越先运行，数字</span></span><br><span class="line"></span><br><span class="line">越小的服务，通常为被依赖到的服务</span><br><span class="line">   for srv in <span class="string">/etc/rc.d/rcN.d/K</span>*; do</span><br><span class="line">      $srv stop</span><br><span class="line">   done</span><br><span class="line">   for srv in <span class="string">/etc/rc.d/rcN.d/S</span>*; do</span><br><span class="line">      $srv start</span><br><span class="line">   done</span><br><span class="line"></span><br><span class="line">注: 正常级别下，最后启动一个服务S99local没有链接至 <span class="string">/etc/rc.d/init.d</span>一个服务脚本，</span><br><span class="line">  而是指向了 <span class="string">/etc/rc.d/rc.local</span>脚本</span><br><span class="line">注: 不便或不需写为服务脚本放置于<span class="string">/etc/rc.d/init.d/</span>目录，且又想开机时自动运行的命令，</span><br><span class="line">  可直接放置于 <span class="string">/etc/rc.d/rc.local</span>文件中  </span><br><span class="line">注: centos 7 上这里文件没有开启，加上执行权限才能使用</span><br><span class="line"></span><br><span class="line">功能: <span class="string">/etc/rc.d/rc.local</span> <span class="comment"># 在指定运行级别脚本后运行，可以根据情况，进行自定义修改</span></span><br><span class="line">cat <span class="string">/etc/rc.d/rc.local</span></span><br><span class="line"></span><br><span class="line">touch <span class="string">/var/lock/subsys/local</span></span><br><span class="line">注：开机自动启动都会执行（23456都启动了--&gt;服务S99local），chkconfig控制不了</span><br></pre></td></tr></table></figure>
+<h1 id="chkconfig"><a href="#chkconfig" class="headerlink" title="chkconfig"></a>chkconfig</h1><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">chkconfig命令</span><br><span class="line">   查看服务在所有级别的启动或关闭设定情形</span><br><span class="line">      chkconfig [<span class="params">--list</span>] [name]</span><br><span class="line"></span><br><span class="line">   添加:</span><br><span class="line">      SysV的服务脚本放置于<span class="string">/etc/rc.d/init.d</span> <span class="params">(/etc/init.d)</span></span><br><span class="line">      chkconfig <span class="params">--add</span> name</span><br><span class="line">         <span class="comment">#!/bin/bash</span></span><br><span class="line">         <span class="comment">#LLLL 表示初始在哪个级别下启动，- 表示都不启动</span></span><br><span class="line">         <span class="comment"># chkconfig: LLLL nn nn</span></span><br><span class="line">   例:</span><br><span class="line">      <span class="comment"># chkconfig: 35 90 05</span></span><br><span class="line">         注: <span class="comment"># 空格 （要求的格式）   :空格  （要求的格式）</span></span><br><span class="line">         35  <span class="comment"># 3和5运行级别开启  或  -：表示所有的级别都是off状态</span></span><br><span class="line">         90  <span class="comment"># 运行的次序</span></span><br><span class="line">         05  <span class="comment"># 关闭的次序  注：必须是两位数的 （排序）</span></span><br><span class="line">         注: 有的时候还在指定 <span class="comment"># description: 描述系统 （比如在redhat5上必须有）</span></span><br><span class="line"></span><br><span class="line">   删除:</span><br><span class="line">      chkconfig <span class="params">--del</span> name</span><br><span class="line"></span><br><span class="line">   修改指定的链接类型</span><br><span class="line">      chkconfig [<span class="params">--level</span> levels] name &lt;on|off|reset&gt;</span><br><span class="line">         <span class="params">--level</span> LLLL: 指定要设置的级别</span><br><span class="line">         省略时表示: 2345</span><br><span class="line"></span><br><span class="line">ntsysv命令</span><br><span class="line">   修改的是当前模式下 --&gt; 是否开机启动</span><br><span class="line">   注: 如果要改其它模式下的  <span class="params">--level=2</span>  <span class="comment"># 指定要修改的级别</span></span><br></pre></td></tr></table></figure>
+<h1 id="xinetd"><a href="#xinetd" class="headerlink" title="xinetd"></a>xinetd</h1><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">service</span>: 手动管理服务  # start|stop|restart</span><br><span class="line"> </span><br><span class="line"><span class="attribute">xinetd</span>: 超级进程，管理非独立服务</span><br><span class="line"></span><br><span class="line">瞬态（Transient）服务被xinetd进程所管理，进入的请求首先被xinetd代理</span><br><span class="line"></span><br><span class="line">配置文件: /etc/xinetd.conf、/etc/xinetd.d/&lt;service&gt;</span><br><span class="line"></span><br><span class="line">在/etc/xinetd.d/** 里面管理的非独立服务的配置文件</span><br><span class="line">xinetd based services:</span><br><span class="line">   <span class="attribute">chargen-dgram</span>:  off   # off 是非代理状态  on 代理</span><br><span class="line">   <span class="attribute">chargen-stream</span>: off</span><br><span class="line">   <span class="attribute">daytime-dgram</span>:  off</span><br><span class="line">   <span class="attribute">daytime-stream</span>: off</span><br><span class="line">   <span class="attribute">discard-dgram</span>:  off</span><br><span class="line">   <span class="attribute">discard-stream</span>: off</span><br><span class="line">   <span class="attribute">echo-dgram</span>:     off</span><br><span class="line">   <span class="attribute">echo-stream</span>:    off</span><br><span class="line">      <span class="attribute">rsync</span>:          off</span><br><span class="line">      <span class="attribute">tcpmux-server</span>:  off</span><br><span class="line">      <span class="attribute">telnet</span>:         off</span><br><span class="line">      <span class="attribute">time-dgram</span>:     off</span><br><span class="line">      <span class="attribute">time-stream</span>:    off</span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">vim  /etc/xinetd.d/telnet   # telnet的配置文件</span><br><span class="line">   # default: on</span><br><span class="line">   # description: The telnet server serves telnet sessions; it uses</span><br><span class="line">   # unencrypted username/password pairs for authentication.</span><br><span class="line">   service telnet</span><br><span class="line">   &#123;</span><br><span class="line">      flags       = REUSE</span><br><span class="line">      socket_type = stream</span><br><span class="line">      wait        = no</span><br><span class="line">      user        = root</span><br><span class="line">      server      = /usr/sbin/in.telnetd</span><br><span class="line">      log_on_failure  += USERID</span><br><span class="line">      disable     = yes</span><br><span class="line">   &#125;		</span><br><span class="line">   注: 改为 no表示xinetd就开始兼管这个telnet这个服务了，如果有telnet请求，</span><br><span class="line">     就通知telnet启动服务</span><br><span class="line">   注: 修改后在重新启动服务 xinted这个服务，而不是telnet服务</span><br><span class="line">     这个xinetd 这个服务只在代替监听，该干活的还是telnet这个服务</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/启动/" rel="tag"># 启动</a>
+          
+            <a href="/tags/内核/" rel="tag"># 内核</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/26/linux/基本/shell脚本编程进阶 -3/" rel="next" title="shell脚本编程进阶 -3">
+                <i class="fa fa-chevron-left"></i> shell脚本编程进阶 -3
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/28/linux/基本/自制linux系统和内核编译/" rel="prev" title="自制linux系统和内核编译">
+                自制linux系统和内核编译 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">59</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux组成"><span class="nav-number">1.</span> <span class="nav-text">Linux组成</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux内核特点"><span class="nav-number">2.</span> <span class="nav-text">Linux内核特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CentOS6启动流程"><span class="nav-number">3.</span> <span class="nav-text">CentOS6启动流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#boot-grub-grub-conf"><span class="nav-number">4.</span> <span class="nav-text">/boot/grub/grub.conf</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ramdisk管理"><span class="nav-number">5.</span> <span class="nav-text">ramdisk管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#系统启动流程"><span class="nav-number">6.</span> <span class="nav-text">系统启动流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#chkconfig"><span class="nav-number">7.</span> <span class="nav-text">chkconfig</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#xinetd"><span class="nav-number">8.</span> <span class="nav-text">xinetd</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
