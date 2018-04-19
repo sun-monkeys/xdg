@@ -1,0 +1,781 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DNS," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="配置文件/etc/named.conf123456789101112131415161718192021222324252627282930313233343536373839options &amp;#123;   listen-on port 53 &amp;#123; 172.18.48.215; &amp;#125;;   # 定义了本监听班机的哪个地址，localhost: 本机的所有ip   listen-o">
+<meta name="keywords" content="DNS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DNS相关特性">
+<meta property="og:url" content="http://yoursite.com/2018/04/11/linux/服务/dns/DNS相关特性/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="配置文件/etc/named.conf123456789101112131415161718192021222324252627282930313233343536373839options &amp;#123;   listen-on port 53 &amp;#123; 172.18.48.215; &amp;#125;;   # 定义了本监听班机的哪个地址，localhost: 本机的所有ip   listen-o">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-18T09:43:27.917Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DNS相关特性">
+<meta name="twitter:description" content="配置文件/etc/named.conf123456789101112131415161718192021222324252627282930313233343536373839options &amp;#123;   listen-on port 53 &amp;#123; 172.18.48.215; &amp;#125;;   # 定义了本监听班机的哪个地址，localhost: 本机的所有ip   listen-o">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/11/linux/服务/dns/DNS相关特性/"/>
+
+
+
+
+
+  <title> DNS相关特性 | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/11/linux/服务/dns/DNS相关特性/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                DNS相关特性
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-11T00:00:00+08:00">
+                2018-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="配置文件-etc-named-conf"><a href="#配置文件-etc-named-conf" class="headerlink" title="配置文件/etc/named.conf"></a>配置文件/etc/named.conf</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">options &#123;</span><br><span class="line">   listen-on<span class="built_in"> port </span>53 &#123; 172.18.48.215; &#125;;</span><br><span class="line">   # 定义了本监听班机的哪个地址，localhost: 本机的所有ip</span><br><span class="line">   listen-on-v6<span class="built_in"> port </span>53 &#123; ::1; &#125;;  # ipv6的地址</span><br><span class="line">   directory       <span class="string">"/var/named"</span>;</span><br><span class="line">   dump-file       <span class="string">"/var/named/data/cache_dump.db"</span>;</span><br><span class="line">   statistics-file <span class="string">"/var/named/data/named_stats.txt"</span>;</span><br><span class="line">   memstatistics-file <span class="string">"/var/named/data/named_mem_stats.txt"</span>;</span><br><span class="line">   allow-query     &#123; localhost; &#125;;</span><br><span class="line">   # 允许本机查询，不允许外面查询: 可以指定ip段，或者any全面允许，</span><br><span class="line">   # localhost;172.18.48.0/24;  172.18.48这个网段的地址可查询，</span><br><span class="line">   # 也可以跟多个查询的条件</span><br><span class="line"></span><br><span class="line">   recursion <span class="literal">yes</span>;</span><br><span class="line">   # 是否递归查询，如查询DNS服务没有，是否到根上去递归（应用于企业内部）</span><br><span class="line">   allow-transfer &#123; &#125;  # 允许区域传送的主机，白名单</span><br><span class="line">   # 主服务器上设定只允许从服务器抓取</span><br><span class="line">   # 从服务器上设定禁止所有抓取 --&gt; allow-transfer &#123; none;&#125;;</span><br><span class="line"></span><br><span class="line">   dnssec-<span class="builtin-name">enable</span> <span class="literal">no</span>;</span><br><span class="line">   dnssec-validation <span class="literal">no</span>;</span><br><span class="line"></span><br><span class="line">   managed-keys-directory <span class="string">"/var/named/dynamic"</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">logging &#123;</span><br><span class="line">   channel default_debug &#123;</span><br><span class="line">      file <span class="string">"data/named.run"</span>;</span><br><span class="line">      severity dynamic;</span><br><span class="line">   &#125;;</span><br><span class="line">&#125;;	</span><br><span class="line"></span><br><span class="line">zone <span class="string">"."</span> <span class="keyword">IN</span> &#123;</span><br><span class="line">  <span class="built_in"> type </span>hint;</span><br><span class="line">   file <span class="string">"named.ca"</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">include <span class="string">"/etc/named.rfc1912.zones"</span>;</span><br><span class="line">include <span class="string">"/etc/named.root.key"</span>;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="允许动态更新"><a href="#允许动态更新" class="headerlink" title="允许动态更新"></a>允许动态更新</h1><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">指定的zone语句块中</span><br><span class="line">   Allow-<span class="keyword">update</span> &#123;any;&#125;;</span><br><span class="line">   chmod 770 /<span class="keyword">var</span>/named  # 文件必须要有相应的权限，才能使用</span><br><span class="line"></span><br><span class="line">另一个客客户端</span><br><span class="line">   setsebool -P named_write_master_zones <span class="keyword">on</span>  # 相对应的SElinux的策略</span><br><span class="line">   nsupdate</span><br><span class="line">      &gt;server 127.0.0.1</span><br><span class="line">      &gt;zone xdg.com</span><br><span class="line">      &gt;<span class="keyword">update</span> add ftp.xdg.com 88888 <span class="keyword">IN</span> A 8.8.8.8</span><br><span class="line">      &gt;send</span><br><span class="line">      &gt;<span class="keyword">update</span> delete www.xdg.com A</span><br><span class="line">      &gt;send</span><br><span class="line"></span><br><span class="line">测试: dig ftp.xdg.com @127.0.0.1 ll /<span class="keyword">var</span>/named/xdg.com.zone.jnl</span><br><span class="line">   <span class="keyword">cat</span> /<span class="keyword">var</span>/named/xdg.com.zone</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="主从DNS服务器"><a href="#主从DNS服务器" class="headerlink" title="主从DNS服务器"></a>主从DNS服务器</h1><h2 id="主DNS服务器"><a href="#主DNS服务器" class="headerlink" title="主DNS服务器"></a>主DNS服务器</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">主DNS名称服务器</span><br><span class="line">   (1)在主配置文件中定义区域</span><br><span class="line">      zone <span class="string">"ZONE_NAME"</span> <span class="keyword">IN</span> &#123;</span><br><span class="line">        <span class="built_in"> type </span>&#123; master|slave|hint|forward &#125;;</span><br><span class="line">         file <span class="string">"ZONE_NAME.zone"</span>;</span><br><span class="line">      &#125;;</span><br><span class="line">   (2)定义区域解析库文件</span><br><span class="line">      出现的内容</span><br><span class="line">      宏定义</span><br><span class="line">      资源记录</span><br><span class="line"></span><br><span class="line">主配置文件语法检查</span><br><span class="line">   named-checkconf</span><br><span class="line"></span><br><span class="line">解析库文件语法检查</span><br><span class="line">   named-checkzone  <span class="string">"xdg.com"</span>  /var/named/xdg.com.zone</span><br></pre></td></tr></table></figure>
+<h3 id="主区域示例"><a href="#主区域示例" class="headerlink" title="主区域示例"></a>主区域示例</h3><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$TTL</span> <span class="number">86400</span></span><br><span class="line"><span class="meta">$ORIGIN</span> xdg.com.</span><br><span class="line">   @ <span class="keyword">IN</span> <span class="keyword">SOA</span> ns1.xdg.com. admin.xdg.com (</span><br><span class="line">      <span class="number">2015042201</span></span><br><span class="line">      <span class="number">1</span>H</span><br><span class="line">      <span class="number">5</span>M</span><br><span class="line">      <span class="number">7</span>D</span><br><span class="line">      <span class="number">1</span>D</span><br><span class="line">   )</span><br><span class="line">    <span class="keyword">IN</span> <span class="keyword">NS</span> ns1</span><br><span class="line">    <span class="keyword">IN</span> <span class="keyword">NS</span> ns2</span><br><span class="line">    <span class="keyword">IN</span> <span class="keyword">MX</span> <span class="number">10</span> mx1</span><br><span class="line">    <span class="keyword">IN</span> <span class="keyword">MX</span> <span class="number">20</span> mx2</span><br><span class="line">ns1 <span class="keyword">IN</span> <span class="keyword">A</span> <span class="number">172.16.100.11</span></span><br><span class="line">ns2 <span class="keyword">IN</span> <span class="keyword">A</span> <span class="number">172.16.100.12</span></span><br><span class="line">mx1 <span class="keyword">IN</span> <span class="keyword">A</span> <span class="number">172.16.100.13</span></span><br><span class="line">mx2 <span class="keyword">IN</span> <span class="keyword">A</span> <span class="number">172.16.100.14</span></span><br><span class="line">websrv <span class="keyword">IN</span> <span class="keyword">A</span> <span class="number">172.16.100.11</span></span><br><span class="line">websrv <span class="keyword">IN</span> <span class="keyword">A</span> <span class="number">172.16.100.12</span></span><br><span class="line">www <span class="keyword">IN</span> <span class="keyword">CNAME</span> websrv</span><br></pre></td></tr></table></figure>
+<h2 id="从DNS服务器"><a href="#从DNS服务器" class="headerlink" title="从DNS服务器"></a>从DNS服务器</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">1. 应该为一台独立的名称服务器</span><br><span class="line"></span><br><span class="line">2. 主服务器的区域解析库文件中必须有一条NS记录指向从服务器</span><br><span class="line"></span><br><span class="line">3. 从服务器只需要定义区域，而无须提供解析库文件，解析库文件应该放置于</span><br><span class="line">  /var/named/slaves/目录中</span><br><span class="line"></span><br><span class="line">4. 主服务器得允许从服务器作区域传送</span><br><span class="line"></span><br><span class="line">5. 主从服务器时间应该同步，可通过ntp进行</span><br><span class="line"></span><br><span class="line">6. bind程序的版本应该保持一致，否则，应该从高，主低定义从区域的方法</span><br><span class="line">   zone <span class="string">"ZONE_NAME"</span> <span class="keyword">IN</span> &#123;</span><br><span class="line">     <span class="built_in"> type </span>slave;</span><br><span class="line">      masters &#123; MASTER_IP; &#125;;</span><br><span class="line">      file <span class="string">"slaves/ZONE_NAME.zone"</span>;</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">   zone <span class="string">"xdg.com"</span> &#123;</span><br><span class="line">     <span class="built_in"> type </span>slave;</span><br><span class="line">      masters &#123; 172.18.48.215; &#125;;</span><br><span class="line">      file <span class="string">"slaves/xdg.com.slave.zone"</span>;</span><br><span class="line">   &#125;;</span><br><span class="line">注: 在上面的服务器的时候，主和从，都要在父服务器上指定出来</span><br><span class="line">  如果主的DNS挂掉的话，从服务器无法使用，也提供不了负载均衡</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="转发服务器"><a href="#转发服务器" class="headerlink" title="转发服务器"></a>转发服务器</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">注: 被转发的服务器需要能够为请求者做递归，否则转发请求不予进行</span><br><span class="line">   (1) 全局转发: 对非本机所负责解析区域的请求，全转发给指定的服务器</span><br><span class="line">      Options &#123;</span><br><span class="line">         forward  first|only;</span><br><span class="line">         forwarders &#123; ip;&#125;;</span><br><span class="line">      &#125;;</span><br><span class="line">   注: 不管你来什么直接进行转发，不做解析</span><br><span class="line"></span><br><span class="line">   (2) 特定区域转发: 仅转发对特定的区域的请求，比全局转发优先级高</span><br><span class="line">      zone <span class="string">"ZONE_NAME"</span> <span class="keyword">IN</span> &#123;</span><br><span class="line">        <span class="built_in"> type </span>forward;</span><br><span class="line">         forward  first|only;</span><br><span class="line">         forwarders &#123; ip;&#125;;</span><br><span class="line">      &#125;;</span><br><span class="line">   注: first 信息传送给DNS_A后，转发到DNS_B，B的结果:</span><br><span class="line">     目标可达，则做递归，如果目标不可达，DNS_A会再去找根去做递归，</span><br><span class="line">     把信息( 正确 | 错误 )再传送给主机</span><br><span class="line"></span><br><span class="line">   注: only 信息传送给DNS_A后，转发到DNS_B，B的结果:</span><br><span class="line">     目标可达，则做递归，如果目标不可达，DNS_A会直接返回目标不可达</span><br><span class="line">     把错误的信息传送给主机</span><br><span class="line"></span><br><span class="line">注: 关闭dnssec功能 --&gt; DNS安全检测</span><br><span class="line">   dnssec-<span class="builtin-name">enable</span> <span class="literal">no</span>;</span><br><span class="line">   dnssec-validation <span class="literal">no</span>;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="bind中ACL"><a href="#bind中ACL" class="headerlink" title="bind中ACL"></a>bind中ACL</h1><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">bind中基础的安全相关的配置</span><br><span class="line"><span class="symbol">   acl:</span> 把一个或多个地址归并为一个集合，并通过一个统一的名称调用</span><br><span class="line">格式</span><br><span class="line">   acl <span class="class">acl_name </span>&#123;</span><br><span class="line">      ip;</span><br><span class="line">      net/prelen;</span><br><span class="line">      ......</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">   acl <span class="class">mynet </span>&#123;</span><br><span class="line">      <span class="number">172.16</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">16</span>;</span><br><span class="line">      <span class="number">10.10</span><span class="number">.10</span><span class="number">.10</span>;</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">   allow-query   &#123;  mynet; &#125;;</span><br><span class="line">   注: 这样就表示，只允许acl mynet中指定的地址访问，也可以使用到其它地址去</span><br><span class="line">     如: 下面四个控制的指令中</span><br><span class="line"></span><br><span class="line">bind有四个内置的acl</span><br><span class="line"><span class="symbol">   none:</span> 没有一个主机 </span><br><span class="line"><span class="symbol">   any:</span> 任意主机 </span><br><span class="line"><span class="symbol">   localhost:</span> 本机 </span><br><span class="line"><span class="symbol">   localnet:</span> 本机的IP同掩码运算后得到的网络地</span><br><span class="line">注: 只能先定义，后使用，因此一般定义在配置文件中，处于options的前面</span><br><span class="line"></span><br><span class="line">访问控制</span><br><span class="line">   访问控制的指令</span><br><span class="line">      allow-<span class="class">query </span>&#123;&#125;  <span class="meta"># 允许查询的主机，白名单</span></span><br><span class="line">      allow-<span class="class">transfer </span>&#123;&#125;  <span class="meta"># 允许区域传送的主机，白名单</span></span><br><span class="line">      allow-<span class="class">recursion </span>&#123;&#125;  <span class="meta"># 允许递归的主机，建议全局使用</span></span><br><span class="line">      allow-<span class="class">update </span>&#123;&#125;  <span class="meta"># 允许更新区域数据库中的内容</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="DNS视图"><a href="#DNS视图" class="headerlink" title="DNS视图"></a>DNS视图</h1><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">view</span>视图，一个bind服务器可定义多个<span class="keyword">view</span>，每个<span class="keyword">view</span>中可定义一个或多个zone</span><br><span class="line"></span><br><span class="line">每个<span class="keyword">view</span>用来匹配一组客户端</span><br><span class="line"></span><br><span class="line">多个<span class="keyword">view</span>内可能需要对同一个区域进行解析，但使用不同的区域解析库文件</span><br><span class="line"></span><br><span class="line">格式</span><br><span class="line">   <span class="keyword">view</span> VIEW_NAME &#123;</span><br><span class="line">      match-clients &#123; test_acl; &#125;;</span><br><span class="line">      zone <span class="string">"xdg.com"</span> &#123;</span><br><span class="line">         <span class="keyword">type</span> master;</span><br><span class="line">         <span class="keyword">file</span> <span class="string">"xdg.com.zone"</span>;</span><br><span class="line">      &#125;;</span><br><span class="line">      <span class="keyword">include</span> <span class="string">"/etc/named.rfc1912.zones"</span>;</span><br><span class="line">   &#125;;</span><br><span class="line">注:</span><br><span class="line">   (1) 一旦启用了<span class="keyword">view</span>，所有的zone都只能定义在<span class="keyword">view</span>中，否则失效</span><br><span class="line">   (2) 仅在允许递归请求的客户端所在<span class="keyword">view</span>中定义根区域</span><br><span class="line">   (3) 客户端请求到达时，是自上而下检查每个<span class="keyword">view</span>所服务的客户端列表</span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">   acl  beijing &#123;</span><br><span class="line">      172.18.0.0/16;</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line">   acl  henan &#123;</span><br><span class="line">      192.168.25.0/24;</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">view</span> bjview &#123;</span><br><span class="line">      match-clients &#123; beijing; &#125;;  # 匹配到的ACL</span><br><span class="line">      zone <span class="string">"wang.com"</span> &#123;</span><br><span class="line">         <span class="keyword">type</span> master;</span><br><span class="line">         <span class="keyword">file</span> <span class="string">"wang.com.zone"</span>;</span><br><span class="line">      &#125;;</span><br><span class="line">      <span class="keyword">include</span> <span class="string">"/etc/named.rfc1912.zones"</span>;</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">view</span>  hnview &#123;</span><br><span class="line">      match-clients &#123; henan; &#125;;</span><br><span class="line">      zone <span class="string">"xdg.com"</span> &#123;</span><br><span class="line">         <span class="keyword">type</span> master;</span><br><span class="line">         <span class="keyword">file</span> <span class="string">"xdg.com.zone"</span>;</span><br><span class="line">      &#125;;</span><br><span class="line">      <span class="keyword">include</span> <span class="string">"/etc/named.rfc1912.zones"</span>;</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line">注: 也可以把两个区域（全面的区域）的文件存放到两个不同的文件中，从而达到区分</span><br><span class="line">注: 把指向根的文件也要放到/etc/named.rfc1912.zones中去，不然无法找到根文件</span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">vim /etc/named.<span class="keyword">conf</span></span><br><span class="line">   acl beijing &#123;</span><br><span class="line">      172.18.48.225;</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line">   acl henan &#123;</span><br><span class="line">      172.18.48.100;</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">view</span> bjview &#123;</span><br><span class="line">      match-clients&#123; beijing; &#125;;</span><br><span class="line">      zone <span class="string">"xdg.com"</span>  &#123;</span><br><span class="line">         <span class="keyword">type</span> master;</span><br><span class="line">         <span class="keyword">file</span> <span class="string">"xdg.com.zone"</span>;</span><br><span class="line">      &#125;;</span><br><span class="line">      <span class="keyword">include</span> <span class="string">"/etc/named.rfc1912.zones"</span>;</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">view</span> hnview &#123;</span><br><span class="line">      match-clients&#123; henan; &#125;;</span><br><span class="line">      zone <span class="string">"wang.com"</span> &#123;</span><br><span class="line">         <span class="keyword">type</span> master;</span><br><span class="line">         <span class="keyword">file</span> <span class="string">"wang.com.zone"</span>;</span><br><span class="line">      &#125;;</span><br><span class="line">      <span class="keyword">include</span> <span class="string">"/etc/named.rfc1912.zones"</span>;</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line">vim /<span class="keyword">var</span>/named/xdg.com.zone</span><br><span class="line">vim /<span class="keyword">var</span>/named/wang.com.zone</span><br><span class="line"><span class="variable">$TTL</span> 1D</span><br><span class="line">@    <span class="keyword">IN</span>    SOA    sun    admin.xdg.com. (</span><br><span class="line">         2017091901; serial</span><br><span class="line">         2H      ; refresh</span><br><span class="line">         10M     ; retry</span><br><span class="line">         1H      ; expire</span><br><span class="line">         5H )    ; minimum</span><br><span class="line">      NS   sun</span><br><span class="line">sun   A    172.18.48.215</span><br><span class="line">ftp   A    1.1.1.1</span><br><span class="line"></span><br><span class="line"><span class="variable">$TTL</span> 1D</span><br><span class="line">@    <span class="keyword">IN</span>    SOA    sun    admin.xdg.com. (</span><br><span class="line">         2017091901; serial</span><br><span class="line">         2H      ; refresh</span><br><span class="line">         10M     ; retry</span><br><span class="line">         1H      ; expire</span><br><span class="line">         5H )    ; minimum</span><br><span class="line">      NS    sun</span><br><span class="line">sun   A    172.18.48.215</span><br><span class="line">ftp   A    3.3.3.3</span><br><span class="line"></span><br><span class="line">注: 然后再用相对的地址去访问相应的地址就可以了</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DNS/" rel="tag"># DNS</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/11/linux/服务/dns/DNS实验/" rel="next" title="DNS实验">
+                <i class="fa fa-chevron-left"></i> DNS实验
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">61</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#配置文件-etc-named-conf"><span class="nav-number">1.</span> <span class="nav-text">配置文件/etc/named.conf</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#允许动态更新"><span class="nav-number">2.</span> <span class="nav-text">允许动态更新</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#主从DNS服务器"><span class="nav-number">3.</span> <span class="nav-text">主从DNS服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主DNS服务器"><span class="nav-number">3.1.</span> <span class="nav-text">主DNS服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主区域示例"><span class="nav-number">3.1.1.</span> <span class="nav-text">主区域示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从DNS服务器"><span class="nav-number">3.2.</span> <span class="nav-text">从DNS服务器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#转发服务器"><span class="nav-number">4.</span> <span class="nav-text">转发服务器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bind中ACL"><span class="nav-number">5.</span> <span class="nav-text">bind中ACL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DNS视图"><span class="nav-number">6.</span> <span class="nav-text">DNS视图</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
