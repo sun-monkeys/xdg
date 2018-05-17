@@ -1,0 +1,778 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="https," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="https12345678910111213141516171819202122安装软件包: yum install mod_ssl查看: rpm -ql mod_ssl# 会生成一个/etc/httpd/conf.d/ssl.conf文件，里面会把相应的模块加载进去SSL会话的简化过程   (1) 客户端发送可供选择的加密方式，并向服务器请求证书   (2) 服务器端发送证书以及选定的加密方式给">
+<meta name="keywords" content="https">
+<meta property="og:type" content="article">
+<meta property="og:title" content="https">
+<meta property="og:url" content="http://yoursite.com/2018/04/15/linux/服务/http/https/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="https12345678910111213141516171819202122安装软件包: yum install mod_ssl查看: rpm -ql mod_ssl# 会生成一个/etc/httpd/conf.d/ssl.conf文件，里面会把相应的模块加载进去SSL会话的简化过程   (1) 客户端发送可供选择的加密方式，并向服务器请求证书   (2) 服务器端发送证书以及选定的加密方式给">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-24T08:34:17.316Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="https">
+<meta name="twitter:description" content="https12345678910111213141516171819202122安装软件包: yum install mod_ssl查看: rpm -ql mod_ssl# 会生成一个/etc/httpd/conf.d/ssl.conf文件，里面会把相应的模块加载进去SSL会话的简化过程   (1) 客户端发送可供选择的加密方式，并向服务器请求证书   (2) 服务器端发送证书以及选定的加密方式给">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/15/linux/服务/http/https/"/>
+
+
+
+
+
+  <title> https | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/15/linux/服务/http/https/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                https
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-15T00:00:00+08:00">
+                2018-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="https"><a href="#https" class="headerlink" title="https"></a>https</h1><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">安装软件包: yum install mod_ssl</span></span><br><span class="line"><span class="section">查看: rpm -ql mod_ssl</span></span><br><span class="line"><span class="comment"># 会生成一个/etc/httpd/conf.d/ssl.conf文件，里面会把相应的模块加载进去</span></span><br><span class="line"></span><br><span class="line">SSL会话的简化过程</span><br><span class="line">   (1) 客户端发送可供选择的加密方式，并向服务器请求证书</span><br><span class="line">   (2) 服务器端发送证书以及选定的加密方式给客户端</span><br><span class="line">   (3) 客户端取得证书并进行证书验证</span><br><span class="line">      如果信任给其发证书的CA</span><br><span class="line">      (a) 验证证书来源的合法性，用CA的公钥解密证书上数字签名</span><br><span class="line">      (b) 验证证书的内容的合法性: 完整性验证</span><br><span class="line">      (c) 检查证书的有效期限</span><br><span class="line">      (d) 检查证书是否被吊销</span><br><span class="line">      (e) 证书中拥有者的名字，与访问的目标主机要一致</span><br><span class="line">   (4) 客户端生成临时会话密钥（对称密钥），并使用服务器端的公钥加密此数据发送给服务器，</span><br><span class="line">     完成密钥交换</span><br><span class="line">   (5) 服务用此密钥加密用户请求的资源，响应给客户端</span><br><span class="line"></span><br><span class="line"><span class="section">注: SSL是基于IP地址实现，单IP的主机仅可以使用一个https虚拟主机</span></span><br><span class="line"><span class="section">注: 如果要实现对多个虚拟主机的话，要使用多个ip来使用</span></span><br><span class="line"></span><br><span class="line"><span class="section">注: 在配置文件当中 &lt;virtualhost _default_:443&gt;  # 把default改为具体的ip地址</span></span><br></pre></td></tr></table></figure>
+<h2 id="http重定向https"><a href="#http重定向https" class="headerlink" title="http重定向https"></a>http重定向https</h2><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">将<span class="keyword">http</span>请求转发至<span class="keyword">https</span>的<span class="built_in">URL</span></span><br><span class="line"></span><br><span class="line">重定向</span><br><span class="line">   Redirect [status] <span class="built_in">URL</span>-path <span class="built_in">URL</span></span><br><span class="line"></span><br><span class="line">status状态</span><br><span class="line">   Permanent:Returns <span class="keyword">a</span> permanent redirect status (<span class="number">301</span>)</span><br><span class="line">     indicating that <span class="keyword">the</span> resource has moved permanently</span><br><span class="line">   Temp: Returns <span class="keyword">a</span> temporary redirect status (<span class="number">302</span>)</span><br><span class="line">     This is <span class="keyword">the</span> default</span><br><span class="line"></span><br><span class="line">例: </span><br><span class="line">   Redirect temp  /  <span class="keyword">https</span>://www.<span class="keyword">a</span>.com/   <span class="comment"># 临时跳转 301</span></span><br><span class="line">   注: 访问根的时候，自动跳转到<span class="keyword">https</span>的网页页面</span><br><span class="line">   Redirect permanent /  <span class="keyword">https</span>://www.<span class="keyword">a</span>.com/  <span class="comment"># 永久跳转 302</span></span><br></pre></td></tr></table></figure>
+<h2 id="HSTS"><a href="#HSTS" class="headerlink" title="HSTS"></a>HSTS</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">HSTS</span>: HTTP Strict Transport Security</span><br><span class="line"></span><br><span class="line">服务器端配置支持HSTS后，会在给浏览器返回的HTTP首部中携带HSTS字段，浏览器获取</span><br><span class="line">  到该信息后，会将所有HTTP访问请求在内部做307跳转到HTTPS，而无需任何网络过程</span><br><span class="line"></span><br><span class="line">HSTS preload list  # 第一次就自动跳转</span><br><span class="line">   是Chrome浏览器中的HSTS预载入列表，在该列表中的网站，使用Chrome浏览器访问时，</span><br><span class="line">     会自动转换成HTTPS，Firefox、Safari、 Edge浏览器也会采用这个列表</span><br><span class="line"></span><br><span class="line">实现HSTS示例</span><br><span class="line">   vim /etc/httpd/conf/httpd.conf</span><br><span class="line">      Header always set Strict-Transport-Security "maxage=15768000"</span><br><span class="line">      RewriteEngine on</span><br><span class="line">      RewriteRule ^(/.*)$  https://%&#123;HTTP_HOST&#125;$1 [redirect=301]</span><br><span class="line"></span><br><span class="line">注: 一般是访问服务器，告诉访问主机，所访问的页面是一个跳转页面，把地址告诉访问主机，</span><br><span class="line">  然后访问主机拿到地址后，再访问语法加密的https的网页页面（要请求两次）</span><br><span class="line"></span><br><span class="line">注: 如果实现这个功能的区别</span><br><span class="line">第一次是要访问两次的，但是在下次访问的时候，在访问主机请求访问页面的时候，在访问主机，</span><br><span class="line">  自己内部，再使用浏览器访问的时候，自动转到https的页面的地址上访问</span><br></pre></td></tr></table></figure>
+<h2 id="httpd自带的工具程序"><a href="#httpd自带的工具程序" class="headerlink" title="httpd自带的工具程序"></a>httpd自带的工具程序</h2><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">htpasswd</span><br><span class="line">   basic认证基于文件实现时，用到的账号密码文件生成工具</span><br><span class="line"></span><br><span class="line">apachectl: httpd自带的服务控制脚本，支持start和<span class="keyword">stop</span></span><br><span class="line">   apxs: 由httpd-devel包提供，扩展httpd使用第三方模块的工具</span><br><span class="line">   rotatelogs: 日志滚动工具</span><br><span class="line">      <span class="keyword">access</span>.<span class="built_in">log</span> --&gt;</span><br><span class="line">         <span class="keyword">access</span>.<span class="built_in">log</span>, <span class="keyword">access</span><span class="number">.1.</span><span class="built_in">log</span> --&gt;</span><br><span class="line">            <span class="keyword">access</span>.<span class="built_in">log</span>, acccess<span class="number">.1.</span><span class="built_in">log</span>, <span class="keyword">access</span><span class="number">.2.</span><span class="built_in">log</span></span><br><span class="line">   suexec: 访问某些有特殊权限配置的资源时，临时切换至指定用户身份运行</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="实验搭建https"><a href="#实验搭建https" class="headerlink" title="实验搭建https"></a>实验搭建https</h1><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line">准备工作</span><br><span class="line">   四台虚拟机: 一台DNS服务器（172.18.48.215）、一台访问主机（220）、</span><br><span class="line">     一台http服务器（100）、一台<span class="keyword">CA</span>证书主机（225）</span><br><span class="line">   关闭防火墙，关闭SELinux</span><br><span class="line">   开启相应的服务</span><br><span class="line">	</span><br><span class="line">(1) <span class="keyword">CA</span></span><br><span class="line">   1.创建私钥证书</span><br><span class="line">      (umask=066;openssl genrsa -<span class="keyword">out</span> ./private/cakey.pem 2048)</span><br><span class="line">   2.创建自签<span class="keyword">CA</span>证书</span><br><span class="line">      openssl req -new -x509 -key ./private/cakey.pem -days 3650 -<span class="keyword">out</span> cacert.pem</span><br><span class="line">   3.创建http主机的私钥</span><br><span class="line">      (umask=066; openssl genrsa -<span class="keyword">out</span> key.pem 1024)</span><br><span class="line">   4.创建http主机的证书申请</span><br><span class="line">      openssl req -new -key key.pem -<span class="keyword">out</span> cert.pem</span><br><span class="line">   5.把证书申请交给<span class="keyword">CA</span>，<span class="keyword">CA</span>再颁发证书，再把证书文件传送给http主机</span><br><span class="line">      scp  cert.csr   <span class="keyword">CA</span>主机   （在http主机上执行）</span><br><span class="line">      openssl  <span class="keyword">ca</span> -<span class="keyword">in</span> cert.csr -<span class="keyword">out</span> text.crt -days 365</span><br><span class="line">      scp  text.crt   http主机 （在<span class="keyword">CA</span>主机上执行）</span><br><span class="line"></span><br><span class="line">(2) DNS</span><br><span class="line">   1.vim /etc/named.rfc1912.zones</span><br><span class="line">      zone <span class="string">"a.com"</span>  &#123;</span><br><span class="line">         <span class="keyword">type</span> master;</span><br><span class="line">         <span class="keyword">file</span> <span class="string">"xdg.com.zone"</span>;</span><br><span class="line">      &#125;;</span><br><span class="line">      zone <span class="string">"b.net"</span> &#123;</span><br><span class="line">         <span class="keyword">type</span> master;</span><br><span class="line">         <span class="keyword">file</span> <span class="string">"b.net.zone"</span>;</span><br><span class="line">      &#125;;</span><br><span class="line">      zone <span class="string">"c.org"</span> &#123;</span><br><span class="line">         <span class="keyword">type</span> master;</span><br><span class="line">         <span class="keyword">file</span> <span class="string">"c.org.zone"</span>;</span><br><span class="line">      &#125;;</span><br><span class="line"></span><br><span class="line">   2.vim  a.com.zone （另外两个类似）</span><br><span class="line">      <span class="variable">$TTL</span> 1D</span><br><span class="line">      @   <span class="keyword">IN</span>  SOA  acom   www.xdg.com.  (</span><br><span class="line">                  0     ; serial</span><br><span class="line">                  1D    ; refresh</span><br><span class="line">                  1H    ; retry</span><br><span class="line">                  1W    ; expire</span><br><span class="line">                  3H )  ; minimum</span><br><span class="line">              NS      acom</span><br><span class="line">      acom    A       172.18.48.225</span><br><span class="line">      websrv  A       172.18.48.100</span><br><span class="line">      www     CNAME   websrv</span><br><span class="line">      ftp     A       172.18.48.100</span><br><span class="line"></span><br><span class="line">(3) httpd</span><br><span class="line">在http的服务器上做相应的网站响应页面（在这里做的是虚拟主机响应页面）</span><br><span class="line"></span><br><span class="line">1.在使用虚拟机之前要在/etc/httpd/<span class="keyword">conf</span>/httpd.<span class="keyword">conf</span>的文件中做配置</span><br><span class="line">  在虚拟主机当中把虚拟主机的响应的域名给启动不然，无法用域名访问</span><br><span class="line">   NameVirtualHost *:80  # 默认是关闭的（centos7上是不用的）</span><br><span class="line"></span><br><span class="line">2.这里我是单独的创建一个配置文件来管理我的虚拟主机的站点</span><br><span class="line">   vim /etc/httpd/<span class="keyword">conf</span>.<span class="keyword">d</span>/vhost.<span class="keyword">conf</span></span><br><span class="line">   # 这里目录下，存放配置文件，且文件后缀必须为.<span class="keyword">conf</span></span><br><span class="line">      &lt;virtualhost *:80&gt;</span><br><span class="line">         servername www.a.com</span><br><span class="line">         documentroot <span class="string">"/var/www/html/a/"</span></span><br><span class="line">      &lt;/virtualhost&gt;</span><br><span class="line"></span><br><span class="line">      &lt;virtualhost *:80&gt;</span><br><span class="line">         servername www.b.<span class="keyword">net</span></span><br><span class="line">         documentroot <span class="string">"/var/www/html/b/"</span></span><br><span class="line">      &lt;/virtualhost&gt;</span><br><span class="line"></span><br><span class="line">      &lt;virtualhost *:80&gt;</span><br><span class="line">         servername www.c.org</span><br><span class="line">         documentroot <span class="string">"/var/www/html/c/"</span></span><br><span class="line">      &lt;/virtualhost&gt;</span><br><span class="line"></span><br><span class="line">(4) https</span><br><span class="line">yum install mod_ssl  # 安装模块</span><br><span class="line"></span><br><span class="line">vim /etc/httpd/<span class="keyword">conf</span>.<span class="keyword">d</span>/ssl.<span class="keyword">conf</span>  # 编辑配置文件</span><br><span class="line">   SSLCertificateFile /etc/httpd/<span class="keyword">conf</span>.<span class="keyword">d</span>/ssl/httpd.crt</span><br><span class="line">      # *.a.com的证书，如果有多个不同的域名的话要另外创建，申请</span><br><span class="line">   SSLCertificateKeyFile /etc/httpd/<span class="keyword">conf</span>.<span class="keyword">d</span>/ssl/httpd.key</span><br><span class="line">      # 主机的私钥文件</span><br><span class="line">   SSLCACertificateFile /etc/httpd/<span class="keyword">conf</span>.<span class="keyword">d</span>/ssl/cacert.pem</span><br><span class="line">      # <span class="keyword">ca</span>的证书文件</span><br><span class="line"></span><br><span class="line">   &lt;VirtualHost _default_:443&gt;  # 如果指定其它ip在这里修改</span><br><span class="line">   servername www.a.com  # 所在访问的域名</span><br><span class="line">   documentRoot <span class="string">"/var/www/html/a/"</span>  # 所在的目录</span><br><span class="line"></span><br><span class="line">(5) 测试</span><br><span class="line">1.在访问主机上，DNS指向的是DNS服务器的主机</span><br><span class="line"></span><br><span class="line">2.在测试的时候，有的服务的目录必须要有相应的权限才可以访问（会报403的错误信息）</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/https/" rel="tag"># https</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/15/linux/服务/http/http2.4/" rel="next" title="http2.4功能和相关特性">
+                <i class="fa fa-chevron-left"></i> http2.4功能和相关特性
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/18/linux/服务/LAMP/LAMP相关实验6.9/" rel="prev" title="LAMP相关实验（6.9）">
+                LAMP相关实验（6.9） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">80</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#https"><span class="nav-number">1.</span> <span class="nav-text">https</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#http重定向https"><span class="nav-number">1.1.</span> <span class="nav-text">http重定向https</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HSTS"><span class="nav-number">1.2.</span> <span class="nav-text">HSTS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#httpd自带的工具程序"><span class="nav-number">1.3.</span> <span class="nav-text">httpd自带的工具程序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验搭建https"><span class="nav-number">2.</span> <span class="nav-text">实验搭建https</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

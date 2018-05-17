@@ -1,0 +1,777 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="http," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="http协议1234567891011http/0.9, http/1.0, http/1.1, http/2.0http协议: stateless 无状态   服务器无法持续追踪访问者来源解决http协议无状态方法   cookie 客户端存放   session 服务端存放http事务: 一次访问的过程   请求: request   响应: response 报文语法格式1234567891">
+<meta name="keywords" content="http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http2.2协议、报文等相关信息">
+<meta property="og:url" content="http://yoursite.com/2018/04/14/linux/服务/http/http2.2协议、报文等相关信息/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="http协议1234567891011http/0.9, http/1.0, http/1.1, http/2.0http协议: stateless 无状态   服务器无法持续追踪访问者来源解决http协议无状态方法   cookie 客户端存放   session 服务端存放http事务: 一次访问的过程   请求: request   响应: response 报文语法格式1234567891">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-23T06:35:27.967Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="http2.2协议、报文等相关信息">
+<meta name="twitter:description" content="http协议1234567891011http/0.9, http/1.0, http/1.1, http/2.0http协议: stateless 无状态   服务器无法持续追踪访问者来源解决http协议无状态方法   cookie 客户端存放   session 服务端存放http事务: 一次访问的过程   请求: request   响应: response 报文语法格式1234567891">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/14/linux/服务/http/http2.2协议、报文等相关信息/"/>
+
+
+
+
+
+  <title> http2.2协议、报文等相关信息 | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/14/linux/服务/http/http2.2协议、报文等相关信息/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                http2.2协议、报文等相关信息
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-14T00:00:00+08:00">
+                2018-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="http协议"><a href="#http协议" class="headerlink" title="http协议"></a>http协议</h1><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>/<span class="number">0.9</span>, <span class="keyword">http</span>/<span class="number">1.0</span>, <span class="keyword">http</span>/<span class="number">1.1</span>, <span class="keyword">http</span>/<span class="number">2.0</span></span><br><span class="line"><span class="keyword">http</span>协议: stateless 无状态</span><br><span class="line">   服务器无法持续追踪访问者来源</span><br><span class="line"></span><br><span class="line">解决<span class="keyword">http</span>协议无状态方法</span><br><span class="line">   cookie 客户端存放</span><br><span class="line">   session 服务端存放</span><br><span class="line"></span><br><span class="line"><span class="keyword">http</span>事务: 一次访问的过程</span><br><span class="line">   请求: request</span><br><span class="line">   响应: response</span><br></pre></td></tr></table></figure>
+<h1 id="报文语法格式"><a href="#报文语法格式" class="headerlink" title="报文语法格式"></a>报文语法格式</h1><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">request报文</span><br><span class="line">   <span class="params">&lt;method&gt;</span> <span class="params">&lt;request-URL&gt;</span> <span class="params">&lt;version&gt;</span></span><br><span class="line">   <span class="params">&lt;headers&gt;</span></span><br><span class="line">   <span class="params">&lt;entity-body&gt;</span></span><br><span class="line"></span><br><span class="line">response报文</span><br><span class="line">   <span class="params">&lt;version&gt;</span> <span class="params">&lt;status&gt;</span> <span class="params">&lt;reason-phrase&gt;</span></span><br><span class="line">   <span class="params">&lt;headers&gt;</span></span><br><span class="line">   <span class="params">&lt;entity-body&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">method:</span> 请求方法，标明客户端希望服务器对资源执行的动作</span><br><span class="line">   GET、HEAD、POST等</span><br><span class="line"></span><br><span class="line">version</span><br><span class="line">   HTTP/<span class="params">&lt;major&gt;</span>.<span class="params">&lt;minor&gt;</span></span><br><span class="line"></span><br><span class="line">status</span><br><span class="line">   三位数字，如<span class="number">200</span>，<span class="number">301</span>，<span class="number">302</span>，<span class="number">404</span>,，<span class="number">502</span>，标记请求处理过程中发生的情况</span><br><span class="line"></span><br><span class="line">reason-phrase</span><br><span class="line">   状态码所标记的状态的简要描述</span><br><span class="line"></span><br><span class="line">headers</span><br><span class="line">   每个请求或响应报文可包含任意个首部，每个首部都有首部名称，后面跟一个冒号，</span><br><span class="line">     而后跟一个可选空格，接着是一个值</span><br><span class="line"></span><br><span class="line">entity-body</span><br><span class="line">   请求时附加的数据或响应时附加的数据</span><br></pre></td></tr></table></figure>
+<h1 id="Method方法"><a href="#Method方法" class="headerlink" title="Method方法"></a>Method方法</h1><figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">GET  <span class="meta"># 从服务器获取一个资源</span></span><br><span class="line">HEAD  <span class="meta"># 只从服务器获取文档的响应首部</span></span><br><span class="line">POST  <span class="meta"># 向服务器输入数据，通常会再由网关程序继续处理</span></span><br><span class="line">PUT  <span class="meta"># 将请求的主体部分存储在服务器中，如上传文件</span></span><br><span class="line"><span class="keyword">DELETE</span>  <span class="meta"># 请求删除服务器上指定的文档</span></span><br><span class="line"><span class="keyword">TRACE</span>  <span class="meta"># 追踪请求到达服务器中间经过的代理服务器</span></span><br><span class="line">OPTIONS  <span class="meta"># 请求服务器返回对指定资源支持使用的请求方法</span></span><br></pre></td></tr></table></figure>
+<h1 id="http协议状态码分类"><a href="#http协议状态码分类" class="headerlink" title="http协议状态码分类"></a>http协议状态码分类</h1><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">status(状态码)</span><br><span class="line">   1xx  <span class="comment"># 100-101 信息提示</span></span><br><span class="line">   2xx  <span class="comment"># 200-206 成功</span></span><br><span class="line">   3xx  <span class="comment"># 300-305 重定向</span></span><br><span class="line">   4xx  <span class="comment"># 400-415 错误类信息，客户端错误</span></span><br><span class="line">   5xx  <span class="comment"># 500-505 错误类信息，服务器端错误</span></span><br><span class="line">	</span><br><span class="line"><span class="section">200: 成功，请求数据通过响应报文的entity-body部分发送，OK</span></span><br><span class="line"></span><br><span class="line"><span class="section">301: 请求的URL指向的资源已经被删除，但在响应报文中通过首部 Location指明了资源现在</span></span><br><span class="line">  所处的新位置，Moved Permanently</span><br><span class="line"></span><br><span class="line"><span class="section">302: 与301相似，但在响应报文中通过Location指明资源现在所处临时新位置</span></span><br><span class="line">  Moved Temporarily</span><br><span class="line"></span><br><span class="line"><span class="section">304: 客户端发出了条件式请求，但服务器上的资源未曾发生改变，</span></span><br><span class="line">  则通过响应此响应状态码通知客户端，Not Modified</span><br><span class="line"><span class="section">注: 会读取本地缓存的数据，可以强制刷新（shift+F5 或者 ctrl+F5）</span></span><br><span class="line"></span><br><span class="line"><span class="section">401: 需要输入账号和密码认证方能访问资源，Unauthorized</span></span><br><span class="line"></span><br><span class="line"><span class="section">403: 请求被禁止，Forbidden</span></span><br><span class="line"></span><br><span class="line"><span class="section">404: 服务器无法找到客户端请求的资源，Not Found</span></span><br><span class="line"></span><br><span class="line"><span class="section">500: 服务器内部错误，Internal Server Error</span></span><br><span class="line"></span><br><span class="line"><span class="section">502: 代理服务器从后端服务器收到了一条伪响应，如无法连接到父网关，Bad Gateway</span></span><br><span class="line"></span><br><span class="line"><span class="section">例:</span></span><br><span class="line">Request URL:http://www.magedu.com/</span><br><span class="line">Request Method:GET</span><br><span class="line">Status Code:200 OK</span><br><span class="line">Remote Address:101.200.188.230:80</span><br><span class="line"></span><br><span class="line">Response Headers</span><br><span class="line">view source</span><br><span class="line"><span class="section">Connection:keep-alive</span></span><br><span class="line"><span class="section">Content-Encoding:gzip</span></span><br><span class="line"><span class="section">Content-Type:text/html; charset=UTF-8</span></span><br><span class="line"><span class="section">Date:Sun, 29 Jan 2017 14:32:30 GMT</span></span><br><span class="line"><span class="section">Server:Tengine Transfer-Encoding:chunked</span></span><br><span class="line"><span class="section">Vary:Accept-Encoding</span></span><br><span class="line"><span class="section">X-Pingback:http://www.magedu.com/xmlrpc.php</span></span><br></pre></td></tr></table></figure>
+<h1 id="http协议首部"><a href="#http协议首部" class="headerlink" title="http协议首部"></a>http协议首部</h1><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">首部的分类</span><br><span class="line">   通用首部</span><br><span class="line">   请求首部</span><br><span class="line">   响应首部</span><br><span class="line">   实体首部</span><br><span class="line">   扩展首部</span><br><span class="line"></span><br><span class="line">通用首部</span><br><span class="line">   <span class="attribute">Date</span>: 报文的创建时间</span><br><span class="line">   <span class="attribute">Connection</span>: 连接状态，如keep-alive, close</span><br><span class="line">   <span class="attribute">Via</span>: 显示报文经过的中间节点（代理，网关）</span><br><span class="line">   <span class="attribute">Cache-Control</span>: 控制缓存，如缓存时长</span><br><span class="line">   <span class="attribute">MIME-Version</span>: 发送端使用的MIME版本</span><br><span class="line"></span><br><span class="line">请求首部</span><br><span class="line">   <span class="attribute">Accept</span>: 通知服务器自己可接受的媒体类型</span><br><span class="line">   <span class="attribute">Accept-Charset</span>: 客户端可接受的字符集</span><br><span class="line">   <span class="attribute">Accept-Encoding</span>: 客户端可接受编码格式，如gzip</span><br><span class="line">   <span class="attribute">Accept-Language</span>: 客户端可接受的语言</span><br><span class="line">   <span class="attribute">Client-IP</span>: 请求的客户端IP</span><br><span class="line">   <span class="attribute">Host</span>: 请求的服务器名称和端口号</span><br><span class="line">   <span class="attribute">Referer</span>: 跳转至当前URI的前一个URL</span><br><span class="line">   <span class="attribute">User-Agent</span>: 客户端代理，浏览器版本</span><br><span class="line"></span><br><span class="line">条件式请求首部</span><br><span class="line">   <span class="attribute">Expect</span>: 允许客户端列出某请求所要求的服务器行为</span><br><span class="line">   <span class="attribute">If-Modified-Since</span>: 自从指定的时间之后，请求的资源是否发生过修改</span><br><span class="line">   <span class="attribute">If-Unmodified-Since</span>: 与上面相反</span><br><span class="line">   <span class="attribute">If-None-Match</span>: 本地缓存中存储的文档的ETag标签是否与服务器文档的Etag不匹配</span><br><span class="line">   <span class="attribute">If-Match</span>: 与上面相反</span><br><span class="line">   </span><br><span class="line">安全请求首部</span><br><span class="line">   <span class="attribute">Authorization</span>: 向服务器发送认证信息，如账号和密码</span><br><span class="line">   <span class="attribute">Cookie</span>: 客户端向服务器发送cookie</span><br><span class="line">   <span class="attribute">Cookie2</span>: 用于说明请求端支持的cookie版本</span><br><span class="line"></span><br><span class="line">代理请求首部</span><br><span class="line">   <span class="attribute">Proxy-Authorization</span>: 向代理服务器认证</span><br><span class="line"></span><br><span class="line">响应首部</span><br><span class="line">   信息性</span><br><span class="line">      <span class="attribute">Age</span>: 从最初创建开始，响应持续时长</span><br><span class="line">      <span class="attribute">Server</span>: 服务器程序软件名称和版本</span><br><span class="line">   协商首部: 某资源有多种表示方法时使用</span><br><span class="line">      <span class="attribute">Accept-Ranges</span>: 服务器可接受的请求范围类型</span><br><span class="line">      <span class="attribute">Vary</span>: 服务器查看的其它首部列表</span><br><span class="line">   安全响应首部</span><br><span class="line">      <span class="attribute">Set-Cookie</span>: 向客户端设置cookie</span><br><span class="line">      <span class="attribute">Set-Cookie2</span>: 以上面相似</span><br><span class="line">      <span class="attribute">WWW-Authenticate</span>: 来自服务器对客户端的质询列表</span><br><span class="line"></span><br><span class="line">实体首部</span><br><span class="line">   <span class="attribute">Allow</span>: 列出对此资源实体可使用的请求方法</span><br><span class="line">   <span class="attribute">Location</span>: 告诉客户端真正的实体位于何处</span><br><span class="line">   <span class="attribute">Content-Encoding</span>: 对主体执行的编码</span><br><span class="line">   <span class="attribute">Content-Language</span>: 理解主体时最适合的语言</span><br><span class="line">   <span class="attribute">Content-Length</span>: 主体的长度</span><br><span class="line">   <span class="attribute">Content-Location</span>: 实体真正所处位置</span><br><span class="line">   <span class="attribute">Content-Type</span>: 主体的对象类型，如text</span><br><span class="line"></span><br><span class="line">缓存相关</span><br><span class="line">   <span class="attribute">ETag</span>: 实体的扩展标签</span><br><span class="line">   <span class="attribute">Expires</span>: 实体的过期时间</span><br><span class="line">   <span class="attribute">Last-Modified</span>: 最后一次修改的时间</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/http/" rel="tag"># http</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/14/linux/服务/http/http2.2/" rel="next" title="http2.2">
+                <i class="fa fa-chevron-left"></i> http2.2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/14/linux/服务/http/http2.2常见配置/" rel="prev" title="http2.2常见配置">
+                http2.2常见配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">80</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#http协议"><span class="nav-number">1.</span> <span class="nav-text">http协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#报文语法格式"><span class="nav-number">2.</span> <span class="nav-text">报文语法格式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Method方法"><span class="nav-number">3.</span> <span class="nav-text">Method方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#http协议状态码分类"><span class="nav-number">4.</span> <span class="nav-text">http协议状态码分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#http协议首部"><span class="nav-number">5.</span> <span class="nav-text">http协议首部</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,783 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="http," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="日志设定123456789101112131415161718192021222324252627日志类型   访问日志   错误日志错误日志   ErrorLog logs/error_log   LogLevel warn   loglevel 可选值:      debug, info, notice, warn,error crit, alert, emerg访问日志   定义日志格式:">
+<meta name="keywords" content="http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http2.2常见配置">
+<meta property="og:url" content="http://yoursite.com/2018/04/14/linux/服务/http/http2.2常见配置/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="日志设定123456789101112131415161718192021222324252627日志类型   访问日志   错误日志错误日志   ErrorLog logs/error_log   LogLevel warn   loglevel 可选值:      debug, info, notice, warn,error crit, alert, emerg访问日志   定义日志格式:">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-23T05:38:14.973Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="http2.2常见配置">
+<meta name="twitter:description" content="日志设定123456789101112131415161718192021222324252627日志类型   访问日志   错误日志错误日志   ErrorLog logs/error_log   LogLevel warn   loglevel 可选值:      debug, info, notice, warn,error crit, alert, emerg访问日志   定义日志格式:">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/14/linux/服务/http/http2.2常见配置/"/>
+
+
+
+
+
+  <title> http2.2常见配置 | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/14/linux/服务/http/http2.2常见配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                http2.2常见配置
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-14T00:00:00+08:00">
+                2018-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="日志设定"><a href="#日志设定" class="headerlink" title="日志设定"></a>日志设定</h1><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">日志类型</span><br><span class="line">   访问日志</span><br><span class="line">   错误日志</span><br><span class="line"></span><br><span class="line">错误日志</span><br><span class="line">   ErrorLog logs/error_log</span><br><span class="line">   LogLevel <span class="keyword">warn</span></span><br><span class="line">   loglevel 可选值:</span><br><span class="line">      debug, info, notice, <span class="keyword">warn</span>,error crit, alert, emerg</span><br><span class="line"></span><br><span class="line">访问日志</span><br><span class="line">   定义日志格式: LogFormat <span class="keyword">format</span> strings</span><br><span class="line">      LogFormat <span class="string">"%h %l %u %t \"%r\" %&gt;s %b \"%&#123;Referer&#125;i\" \"%&#123;User-Agent&#125;i\""</span> combined</span><br><span class="line">   使用日志格式</span><br><span class="line">      CustomLog logs/access_log combined</span><br><span class="line">参考帮助: http:<span class="regexp">//httpd</span>.apache.org/docs/<span class="number">2.2</span>/mod/mod_log_config .html<span class="comment">#formats</span></span><br><span class="line"></span><br><span class="line">   %h 客户端IP地址</span><br><span class="line">   %l 远程用户,启用mod_ident才有效，通常为减号 <span class="string">"-"</span></span><br><span class="line">   %u 验证（basic，digest）远程用户,非登录访问时，为一个减号 <span class="string">"-"</span></span><br><span class="line">   %t 服务器收到请求时的时间</span><br><span class="line">   %r First line of request，即表示请求报文的首行，记录了此次请求的<span class="string">"方法"</span>，<span class="string">"URL"</span>以及协议版本</span><br><span class="line">   %&gt;<span class="keyword">s</span> 响应状态码</span><br><span class="line">   %b 响应报文的大小，单位是字节；不包括响应报文http首部</span><br><span class="line">   %&#123;Referer&#125;i 请求报文中首部<span class="string">"referer"</span>的值</span><br><span class="line">      <span class="comment"># 即从哪个页面中的超链接跳转至当前页面的</span></span><br><span class="line">   %&#123;User-Agent&#125;i 请求报文中首部<span class="string">"User-Agent"</span>的值；即发出请求的应用程序</span><br></pre></td></tr></table></figure>
+<h1 id="设定默认字符集"><a href="#设定默认字符集" class="headerlink" title="设定默认字符集"></a>设定默认字符集</h1><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">AddDefaultCharset </span>UTF-<span class="number">8</span></span><br><span class="line">中文字符集: GBK, GB2312, GB18030</span><br></pre></td></tr></table></figure>
+<h1 id="定义路径别名"><a href="#定义路径别名" class="headerlink" title="定义路径别名"></a>定义路径别名</h1><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">格式: Alias  <span class="string">/URL/</span>  <span class="string">"/PATH/"</span></span><br><span class="line"></span><br><span class="line">Alias  <span class="string">/download/</span>  <span class="string">"/rpms/pub/"</span></span><br><span class="line">   http:<span class="string">//www.magedu.com/download/bash.rpm</span> --&gt; <span class="string">/rpms/pub/bash.rpm</span></span><br><span class="line">   http:<span class="string">//www.magedu.com/images/logo.png</span> --&gt; <span class="string">/www/htdocs/images/logo.png</span></span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">   注: 可以直接在<span class="string">/etc/httpd/conf.d/xdg.conf</span>  <span class="comment"># 文件是自定义的</span></span><br><span class="line">   注: 如果重定向的原目录不存在的话不会对访问产生影响</span><br><span class="line">   <span class="keyword">alias</span>  <span class="string">/xdg</span>  <span class="string">/etc/fstab</span></span><br><span class="line">      <span class="comment"># /xdg是相对上网站的根目录 /etc/fstab是相对于文件系统的目录</span></span><br><span class="line"></span><br><span class="line">   注: 要注意，比如指向的是在网站根目录的一个index.html文件</span><br><span class="line">   curl 172.18.48.215/mm</span><br><span class="line">      <span class="comment"># 这时候显示的是 301 Moved Permanently 已经被重定向了</span></span><br><span class="line">   curl 172.18.48.215/mm/</span><br><span class="line">      <span class="comment"># 这时候还是能正常显示 mm目录下的index.html里的内容</span></span><br><span class="line">注: 在浏览器当中会自动在尾端加上/，所以会显示出来</span><br></pre></td></tr></table></figure>
+<h1 id="基于用户的访问控制"><a href="#基于用户的访问控制" class="headerlink" title="基于用户的访问控制"></a>基于用户的访问控制</h1><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">认证质询: WWW-Authenticate</span></span><br><span class="line">   响应码为401，拒绝客户端请求，并说明要求客户端提供账号和密码</span><br><span class="line"></span><br><span class="line"><span class="section">认证: Authorization 客户端用户填入账号和密码后再次发送 </span></span><br><span class="line">   请求报文，认证通过时，则服务器发送响应的资源</span><br><span class="line"></span><br><span class="line">认证方式两种</span><br><span class="line">   basic: 明文 </span><br><span class="line">   digest: 消息摘要认证，兼容性差</span><br><span class="line"></span><br><span class="line"><span class="section">安全域: 需要用户认证后方能访问的路径，应该通过名称对其进行标识，</span></span><br><span class="line">  以便于告知用户认证的原因</span><br><span class="line"></span><br><span class="line">用户的账号和密码</span><br><span class="line">   虚拟账号: 仅用于访问某服务时用到的认证标识</span><br><span class="line">   存储: 文本文件，SQL数据库，ldap目录存储，nis等</span><br></pre></td></tr></table></figure>
+<h2 id="basic认证配置"><a href="#basic认证配置" class="headerlink" title="basic认证配置"></a>basic认证配置</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">注: 如果基于basic的认证的话，先查看相应的模块是否加载（才能使用）</span><br><span class="line">   httpd -M  <span class="comment"># 查看模块启用  auth_basic_module (shared)</span></span><br><span class="line">(<span class="number">1</span>) 定义安全域</span><br><span class="line">   <span class="tag">&lt;Directory "/path"&gt;</span></span><br><span class="line">      Options None</span><br><span class="line">      AllowOverride None</span><br><span class="line">      AuthType Basic</span><br><span class="line">      AuthName <span class="string">"String"</span>  <span class="comment"># 提示符作用，有的浏览器不支持显示</span></span><br><span class="line">      AuthUserFile  <span class="string">"/PATH/HTTPD_USER_PASSWD_FILE"</span></span><br><span class="line">      Require  <span class="keyword">user</span>  <span class="title">username1</span> username2</span><br><span class="line">      ...</span><br><span class="line">   <span class="tag">&lt;/Directory&gt;</span></span><br><span class="line">   </span><br><span class="line">   <span class="comment"># 允许账号文件中的所有用户登录访问</span></span><br><span class="line">   Require  valid-<span class="keyword">user</span>  <span class="title"># 代表所有用户</span></span><br><span class="line"><span class="title"></span></span><br><span class="line"><span class="title">(2</span>) 提供账号和密码存储（文本文件）</span><br><span class="line">使用专用命令完成此类文件的创建及用户管理</span><br><span class="line">   htpasswd [options]  /PATH/HTTPD_PASSWD_FILE  username</span><br><span class="line">   属于: httpd-tools包中</span><br><span class="line">      -c: 自动创建文件，仅应该在文件不存在时使用</span><br><span class="line">         <span class="comment"># 初始文件的时候要创建，之后就不用了</span></span><br><span class="line">      -m: md5格式加密</span><br><span class="line">      -s: sha格式加密</span><br><span class="line">      -D: 删除指定用户</span><br></pre></td></tr></table></figure>
+<h2 id="基于组账号进行认证"><a href="#基于组账号进行认证" class="headerlink" title="基于组账号进行认证"></a>基于组账号进行认证</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">1</span>) 定义安全域</span><br><span class="line">   <span class="params">&lt;Directory "/path"&gt;</span></span><br><span class="line">      AuthType Basic</span><br><span class="line">      AuthName <span class="string">"String"</span></span><br><span class="line">      AuthUserFile <span class="string">"/PATH/HTTPD_USER_PASSWD_FILE"</span></span><br><span class="line">      AuthGroupFile <span class="string">"/PATH/HTTPD_GROUP_FILE"</span></span><br><span class="line">      Require  group  grpname1  grpname2</span><br><span class="line">      ...</span><br><span class="line">   <span class="params">&lt;/Directory&gt;</span></span><br><span class="line"></span><br><span class="line">(<span class="number">2</span>) 创建用户账号和组账号文件</span><br><span class="line">组文件: 每一行定义一个组</span><br><span class="line"><span class="symbol">   GRP_NAME:</span> username1  username2</span><br><span class="line">   ...</span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">   <span class="params">&lt;Directory "/var/www/html/xdg"&gt;</span></span><br><span class="line">      Options None</span><br><span class="line">      AllowOverride None</span><br><span class="line">      <span class="meta"># 上面两行，可以单独的存放在配置文件当中去，从而达到控制的效果</span></span><br><span class="line">      <span class="meta"># 默认的是开启验证信息的</span></span><br><span class="line"></span><br><span class="line">      <span class="meta"># 配置如下: /etc/httpd/conf.d/xdg.conf</span></span><br><span class="line">      <span class="params">&lt;Directory "/var/www/html/xdg"&gt;</span></span><br><span class="line">         allowoverride anthconfig</span><br><span class="line">      <span class="params">&lt;/Directory&gt;</span></span><br><span class="line"></span><br><span class="line">      AuthType Basic</span><br><span class="line">      AuthName <span class="string">"haha xdg"</span></span><br><span class="line">      AuthUserFile <span class="string">"/etc/httpd/conf.d/.htpasswd"</span></span><br><span class="line">      AuthGroupFile <span class="string">"/etc/httpd/conf.d/.htgroup"</span></span><br><span class="line">      <span class="meta"># Require user  xiaoming  # 指定的用户和组，只能一个有效</span></span><br><span class="line">      Require group xdg</span><br><span class="line">   <span class="params">&lt;/Directory&gt;</span></span><br><span class="line"></span><br><span class="line">vim .htgroup</span><br><span class="line"><span class="symbol">   xdg:</span> xiaohong</span><br><span class="line"></span><br><span class="line">vim .htpasswd</span><br><span class="line"><span class="symbol">   xiaoming:</span>/SeCWFhBoq.Sk</span><br><span class="line"><span class="symbol">   xiaohong:</span>&#123;SHA&#125;zkWAD2Tr0SRfElB4CXGDGA/KnhU=</span><br><span class="line"><span class="symbol">   xiaoliang:</span>&#123;SHA&#125;zkWAD2Tr0SRfElB4CXGDGA/KnhU=</span><br><span class="line"></span><br><span class="line">远程客户端和用户验证的控制  <span class="meta"># 两种都要 || 两种选一个</span></span><br><span class="line">   Satisfy ALL | Any</span><br><span class="line"><span class="symbol">      ALL:</span> 客户机IP和用户验证都需要通过才可以</span><br><span class="line"><span class="symbol">      Any:</span> 客户机IP和用户验证，有一个满足即可</span><br><span class="line">例:</span><br><span class="line">   Require valid-user</span><br><span class="line">   Order allow,deny</span><br><span class="line">   Allow from <span class="number">192.168</span><span class="number">.1</span></span><br><span class="line">   Satisfy Any</span><br></pre></td></tr></table></figure>
+<h1 id="虚拟主机"><a href="#虚拟主机" class="headerlink" title="虚拟主机"></a>虚拟主机</h1><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">站点标识: socket</span><br><span class="line">   IP相同，但端口不同</span><br><span class="line">   IP不同，但端口均为默认端口</span><br><span class="line">   FQDN不同</span><br><span class="line">      请求报文中首部</span><br><span class="line"><span class="symbol">      Host:</span> www.magedu.com</span><br><span class="line"></span><br><span class="line">有三种实现方案</span><br><span class="line">   基于ip: 为每个虚拟主机准备至少一个ip地址</span><br><span class="line">   基于port: 为每个虚拟主机使用至少一个独立的port</span><br><span class="line">   基于FQDN: 为每个虚拟主机使用至少一个FQDN</span><br><span class="line">注: 一般虚拟机不要与main主机混用，因此，要使用虚拟主机，一般先禁用main主机</span><br><span class="line">注: 禁用方法 --&gt; 注释中心主机的DocumentRoot指令即可</span><br><span class="line"></span><br><span class="line">虚拟主机的配置方法</span><br><span class="line">   <span class="params">&lt;VirtualHost IP:PORT&gt;</span></span><br><span class="line">      ServerName FQDN</span><br><span class="line">      DocumentRoot <span class="string">"/path"</span></span><br><span class="line">   <span class="params">&lt;/VirtualHost&gt;</span></span><br><span class="line">   <span class="meta"># 建议: 上述配置存放在独立的配置文件中</span></span><br><span class="line"></span><br><span class="line">其它可用指令</span><br><span class="line">   ServerAlias  <span class="meta"># 虚拟主机的别名，可多次使用</span></span><br><span class="line">   ErrorLog  <span class="meta"># 错误日志</span></span><br><span class="line">   CustomLog  <span class="meta"># 访问日志</span></span><br><span class="line">   <span class="params">&lt;Directory "/path"&gt;</span></span><br><span class="line">   <span class="params">&lt;/Directory&gt;</span></span><br><span class="line">   Alias</span><br></pre></td></tr></table></figure>
+<h2 id="基于IP的虚拟主机"><a href="#基于IP的虚拟主机" class="headerlink" title="基于IP的虚拟主机"></a>基于IP的虚拟主机</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">注: 创建设备 ip <span class="selector-tag">a</span> <span class="selector-tag">a</span> <span class="number">172.18</span>.<span class="number">48.6</span>/<span class="number">24</span>  dev  eth0</span><br><span class="line">   &lt;VirtualHost <span class="number">172.16</span>.<span class="number">100.6</span>:<span class="number">80</span>&gt;</span><br><span class="line">      ServerName www<span class="selector-class">.a</span><span class="selector-class">.com</span></span><br><span class="line">      DocumentRoot <span class="string">"/www/a.com/htdocs"</span></span><br><span class="line">   &lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line">   &lt;VirtualHost <span class="number">172.16</span>.<span class="number">100.7</span>:<span class="number">80</span>&gt;</span><br><span class="line">      ServerName www<span class="selector-class">.b</span><span class="selector-class">.net</span></span><br><span class="line">      DocumentRoot <span class="string">"/www/b.net/htdocs"</span></span><br><span class="line">   &lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line">   &lt;VirtualHost <span class="number">172.16</span>.<span class="number">100.8</span>:<span class="number">80</span>&gt;</span><br><span class="line">      ServerName www<span class="selector-class">.c</span><span class="selector-class">.org</span></span><br><span class="line">      DocumentRoot <span class="string">"/www/c.org/htdocs"</span></span><br><span class="line">   &lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="基于端口的虚拟主机，可和基于IP的虚拟主机混和使用"><a href="#基于端口的虚拟主机，可和基于IP的虚拟主机混和使用" class="headerlink" title="基于端口的虚拟主机，可和基于IP的虚拟主机混和使用"></a>基于端口的虚拟主机，可和基于IP的虚拟主机混和使用</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute"><span class="nomarkup">listen</span></span> 808</span><br><span class="line"><span class="attribute"><span class="nomarkup">listen</span></span> 8080</span><br><span class="line"><span class="section">&lt;VirtualHost 172.16.100.6:80&gt;</span></span><br><span class="line">   <span class="attribute"><span class="nomarkup">ServerName</span></span> www.a.com</span><br><span class="line">   <span class="attribute"><span class="nomarkup">DocumentRoot</span></span> <span class="string">"/www/a.com/htdocs"</span></span><br><span class="line"><span class="section">&lt;/VirtualHost&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="section">&lt;VirtualHost 172.16.100.6:808&gt;</span></span><br><span class="line">   <span class="attribute"><span class="nomarkup">ServerName</span></span> www.b.net</span><br><span class="line">   <span class="attribute"><span class="nomarkup">DocumentRoot</span></span> <span class="string">"/www/b.net/htdocs"</span></span><br><span class="line"><span class="section">&lt;/VirtualHost&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="section">&lt;VirtualHost 172.16.100.6:8080&gt;</span></span><br><span class="line">   <span class="attribute"><span class="nomarkup">ServerName</span></span> www.c.org</span><br><span class="line">   <span class="attribute"><span class="nomarkup">DocumentRoot</span></span> <span class="string">"/www/c.org/htdocs"</span></span><br><span class="line"><span class="section">&lt;/VirtualHost&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="基于FQDN的虚拟主机"><a href="#基于FQDN的虚拟主机" class="headerlink" title="基于FQDN的虚拟主机"></a>基于FQDN的虚拟主机</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">注: 基于这种方式要在<span class="meta-keyword">/etc/</span>httpd<span class="meta-keyword">/conf/</span>httpd.conf这个配置文件当中开启</span><br><span class="line">注: 默认关闭 --&gt; NameVirtualHost *:<span class="number">80</span>  <span class="meta"># 把注释去掉，在httpd2.4不需要</span></span><br><span class="line"></span><br><span class="line"><span class="params">&lt;VirtualHost *:<span class="number">80</span>&gt;</span></span><br><span class="line">   ServerName www.a.com</span><br><span class="line">   DocumentRoot <span class="string">"/www/a.com/htdocs"</span></span><br><span class="line"><span class="params">&lt;/VirtualHost&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="params">&lt;VirtualHost *:<span class="number">80</span>&gt;</span></span><br><span class="line">   ServerName www.b.net</span><br><span class="line">   DocumentRoot <span class="string">"/www/b.net/htdocs"</span></span><br><span class="line"><span class="params">&lt;/VirtualHost&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="params">&lt;VirtualHost *:<span class="number">80</span>&gt;</span></span><br><span class="line">   ServerName www.c.org</span><br><span class="line">   DocumentRoot <span class="string">"/www/c.org/htdocs"</span></span><br><span class="line"><span class="params">&lt;/VirtualHost&gt;</span></span><br><span class="line"></span><br><span class="line">注: 测试的时候</span><br><span class="line"><span class="meta"># 在/etc/hosts的文件当中添加172.18.48.215 www.a.com  www.b.net  www.c.org</span></span><br><span class="line"><span class="meta"># 再使用curl工具来测试</span></span><br><span class="line"></span><br><span class="line">注: 在使用虚拟主机的时候，虚拟主机的端口要和虚拟主机的配置文件相对应</span><br></pre></td></tr></table></figure>
+<h1 id="status页面"><a href="#status页面" class="headerlink" title="status页面"></a>status页面</h1><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">LoadModule  status_module  modules/mod_status.so</span><br><span class="line"># 启用功能的时候，须要先加载所需要的模块才可以</span><br><span class="line">&lt;Location /server-status&gt;  # 这是可能自定义的名字 --&gt; server-status</span><br><span class="line">   SetHandler server-status  # 这是必须这样写 --&gt; 模块</span><br><span class="line">   Order allow,deny</span><br><span class="line">   Allow <span class="keyword">from</span> <span class="number">172.16</span></span><br><span class="line">&lt;/Location&gt;</span><br><span class="line">ExtendedStatus On  # 显示扩展信息</span><br><span class="line"></span><br><span class="line">注: 用于查看http服务器的使用状态信息 --&gt; http:<span class="comment">//ip/server-status</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/http/" rel="tag"># http</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/14/linux/服务/http/http2.2协议、报文等相关信息/" rel="next" title="http2.2协议、报文等相关信息">
+                <i class="fa fa-chevron-left"></i> http2.2协议、报文等相关信息
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/15/linux/服务/http/http2.4/" rel="prev" title="http2.4功能和相关特性">
+                http2.4功能和相关特性 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">80</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#日志设定"><span class="nav-number">1.</span> <span class="nav-text">日志设定</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设定默认字符集"><span class="nav-number">2.</span> <span class="nav-text">设定默认字符集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#定义路径别名"><span class="nav-number">3.</span> <span class="nav-text">定义路径别名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于用户的访问控制"><span class="nav-number">4.</span> <span class="nav-text">基于用户的访问控制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#basic认证配置"><span class="nav-number">4.1.</span> <span class="nav-text">basic认证配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于组账号进行认证"><span class="nav-number">4.2.</span> <span class="nav-text">基于组账号进行认证</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#虚拟主机"><span class="nav-number">5.</span> <span class="nav-text">虚拟主机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于IP的虚拟主机"><span class="nav-number">5.1.</span> <span class="nav-text">基于IP的虚拟主机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于端口的虚拟主机，可和基于IP的虚拟主机混和使用"><span class="nav-number">5.2.</span> <span class="nav-text">基于端口的虚拟主机，可和基于IP的虚拟主机混和使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于FQDN的虚拟主机"><span class="nav-number">5.3.</span> <span class="nav-text">基于FQDN的虚拟主机</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#status页面"><span class="nav-number">6.</span> <span class="nav-text">status页面</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

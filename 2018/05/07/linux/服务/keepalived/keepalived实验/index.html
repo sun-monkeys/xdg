@@ -1,0 +1,777 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="keepalived," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="单主配置123456789101112131415161718192021222324252627! Configuration File for keepalived   global_defs &amp;#123;      notification_email &amp;#123;         root@localhost      &amp;#125;      notification_email_from">
+<meta name="keywords" content="keepalived">
+<meta property="og:type" content="article">
+<meta property="og:title" content="keepalived实验">
+<meta property="og:url" content="http://yoursite.com/2018/05/07/linux/服务/keepalived/keepalived实验/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="单主配置123456789101112131415161718192021222324252627! Configuration File for keepalived   global_defs &amp;#123;      notification_email &amp;#123;         root@localhost      &amp;#125;      notification_email_from">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-17T03:52:24.044Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="keepalived实验">
+<meta name="twitter:description" content="单主配置123456789101112131415161718192021222324252627! Configuration File for keepalived   global_defs &amp;#123;      notification_email &amp;#123;         root@localhost      &amp;#125;      notification_email_from">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/07/linux/服务/keepalived/keepalived实验/"/>
+
+
+
+
+
+  <title> keepalived实验 | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/07/linux/服务/keepalived/keepalived实验/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                keepalived实验
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-07T00:00:00+08:00">
+                2018-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="单主配置"><a href="#单主配置" class="headerlink" title="单主配置"></a>单主配置</h1><figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">! Configuration File for keepalived</span><br><span class="line">   <span class="keyword">global_defs</span> &#123;</span><br><span class="line">      notification_email &#123;</span><br><span class="line">         <span class="literal">root</span>@localhost</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">notification_email_from</span> <span class="keyword">keepalived</span>@localhost</span><br><span class="line">      smtp_server 127.0.0.1</span><br><span class="line">      smtp_connect_timeout 30</span><br><span class="line">      router_id xdg1  <span class="comment"># 主机名，在另一结点为node2</span></span><br><span class="line">      vrrp_mcast_group4 224.100.100.48  <span class="comment"># 多播地址，第4版</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   vrrp_instance <span class="keyword">VI_1</span> &#123;</span><br><span class="line">      state MASTER  <span class="comment"># 在另一个结点上为BACKUP</span></span><br><span class="line">      interface eth<span class="number">0</span>  <span class="comment"># 这里网卡的名字</span></span><br><span class="line">      virtual_router_id <span class="number">88</span>  <span class="comment"># 多个节点必须相同，必须要在这个节点上，不然无法同步</span></span><br><span class="line">      <span class="literal">priority</span> <span class="number">100</span>  <span class="comment"># 在另一个节点上为90</span></span><br><span class="line">      advert_int <span class="number">1</span>  <span class="comment"># 通告间隔1s</span></span><br><span class="line">      authentication &#123;</span><br><span class="line">         <span class="literal">auth_type</span> PASS  <span class="comment"># 预共享密钥认证</span></span><br><span class="line">         auth_pass <span class="number">571</span>f97b2</span><br><span class="line">         <span class="comment"># 在不同的virtual_router_id里密码最好不一样，在广播的时候，会识别</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">virtual_ipaddress</span> &#123;</span><br><span class="line">         <span class="number">172.18</span>.<span class="number">100.66</span>/<span class="number">16</span> dev eth<span class="number">0</span> label eth<span class="number">0</span>:<span class="number">0</span></span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="双主模型"><a href="#双主模型" class="headerlink" title="双主模型"></a>双主模型</h1><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"># 也可以在两台不同的主机上运行</span><br><span class="line">! Configuration File for keepalived</span><br><span class="line">   global_defs &#123;</span><br><span class="line">      notification_email &#123;</span><br><span class="line">         root@localhost</span><br><span class="line">      &#125;</span><br><span class="line">      notification_email_from keepalived@localhost</span><br><span class="line">      smtp_server <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">      smtp_connect_timeout <span class="number">30</span></span><br><span class="line">      router_id node1</span><br><span class="line">      vrrp_mcast_group4 <span class="number">224.0</span><span class="number">.100</span><span class="number">.100</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   vrrp_instance VI_1 &#123;</span><br><span class="line">      <span class="section">state</span> MASTER</span><br><span class="line">      interface eth0</span><br><span class="line">      virtual_router_id <span class="number">6</span></span><br><span class="line">      priority <span class="number">100</span></span><br><span class="line">      advert_int <span class="number">1</span></span><br><span class="line">      authentication &#123;</span><br><span class="line">         auth_type PASS</span><br><span class="line">         auth_pass <span class="number">571</span>f97b2</span><br><span class="line">      &#125;</span><br><span class="line">      virtual_ipaddress &#123;</span><br><span class="line">         <span class="number">172.16</span><span class="number">.0</span><span class="number">.10</span>/<span class="number">16</span> dev eth0</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   vrrp_instance VI_2 &#123;</span><br><span class="line">      <span class="section">state</span> BACKUP</span><br><span class="line">      interface eth0</span><br><span class="line">      virtual_router_id <span class="number">88</span></span><br><span class="line">      priority <span class="number">90</span></span><br><span class="line">      advert_int <span class="number">1</span></span><br><span class="line">      authentication &#123;</span><br><span class="line">         auth_type PASS</span><br><span class="line">         auth_pass <span class="number">578</span>f07b2</span><br><span class="line">      &#125;</span><br><span class="line">      virtual_ipaddress &#123;</span><br><span class="line">         <span class="number">172.16</span><span class="number">.0</span><span class="number">.11</span>/<span class="number">16</span> dev eth0</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="keepalived实现ipvs"><a href="#keepalived实现ipvs" class="headerlink" title="keepalived实现ipvs"></a>keepalived实现ipvs</h1><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"># 高可用的ipvs集群</span><br><span class="line">! Configuration File for keepalived</span><br><span class="line">   global_defs &#123;</span><br><span class="line">      notification_email &#123;</span><br><span class="line">         root@localhost</span><br><span class="line">      &#125;</span><br><span class="line">      notification_email_from keepalived@localhost</span><br><span class="line">      smtp_server <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">      smtp_connect_timeout <span class="number">30</span></span><br><span class="line">      router_id node1</span><br><span class="line">      vrrp_mcast_group4 <span class="number">224.0</span><span class="number">.100</span><span class="number">.10</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   vrrp_instance VI_1 &#123;</span><br><span class="line">      <span class="section">state</span> MASTER</span><br><span class="line">      interface eth0</span><br><span class="line">      virtual_router_id <span class="number">6</span></span><br><span class="line">      priority <span class="number">100</span></span><br><span class="line">      advert_int <span class="number">1</span></span><br><span class="line">      authentication &#123;</span><br><span class="line">         auth_type PASS</span><br><span class="line">         auth_pass <span class="number">571</span>f97b2</span><br><span class="line">      &#125;</span><br><span class="line">      virtual_ipaddress &#123;</span><br><span class="line">         <span class="number">172.16</span><span class="number">.0</span><span class="number">.10</span>/<span class="number">16</span> dev eth0</span><br><span class="line">      &#125;</span><br><span class="line">      notify_master <span class="string">"/etc/keepalived/notify.sh master"</span></span><br><span class="line">      notify_backup <span class="string">"/etc/keepalived/notify.sh backup"</span></span><br><span class="line">      notify_fault <span class="string">"/etc/keepalived/notify.sh fault"</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   virtual_server <span class="number">172.16</span><span class="number">.0</span><span class="number">.10</span> <span class="number">80</span> &#123;  # vip的地址加端口</span><br><span class="line">      delay_loop <span class="number">3</span>  # 健康检查时间间隔</span><br><span class="line">      lb_algo rr</span><br><span class="line">      lb_kind DR</span><br><span class="line">      protocol TCP</span><br><span class="line">      sorry_server <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">80</span></span><br><span class="line">      real_server <span class="number">172.16</span><span class="number">.0</span><span class="number">.11</span> <span class="number">80</span> &#123;</span><br><span class="line">         weight <span class="number">1</span></span><br><span class="line">         HTTP_GET &#123;</span><br><span class="line">	         url &#123;</span><br><span class="line">               path /</span><br><span class="line">               status_code <span class="number">200</span></span><br><span class="line">            &#125;</span><br><span class="line">            connect_timeout <span class="number">1</span></span><br><span class="line">            nb_get_retry <span class="number">3</span></span><br><span class="line">            delay_before_retry <span class="number">1</span></span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      real_server <span class="number">172.16</span><span class="number">.0</span><span class="number">.12</span> <span class="number">80</span> &#123;</span><br><span class="line">         weight <span class="number">1</span></span><br><span class="line">         HTTP_GET &#123;</span><br><span class="line">            url &#123;</span><br><span class="line">               path /</span><br><span class="line">               status_code <span class="number">200</span></span><br><span class="line">            &#125;</span><br><span class="line">            connect_timeout <span class="number">1</span></span><br><span class="line">            nb_get_retry <span class="number">3</span></span><br><span class="line">            delay_before_retry <span class="number">1</span></span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="双主模式的lvs集群"><a href="#双主模式的lvs集群" class="headerlink" title="双主模式的lvs集群"></a>双主模式的lvs集群</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 双主模式的lvs集群，拓扑、实现过程，配置示例（一个节点）</span></span><br><span class="line">! Configuration File <span class="keyword">for</span> keepalived</span><br><span class="line">   global_defs &#123;</span><br><span class="line">      notification_email &#123;</span><br><span class="line">         root@localhost</span><br><span class="line">      &#125;</span><br><span class="line">      notification_email_from kaadmin@localhost</span><br><span class="line">      smtp_server 127.0.0.1</span><br><span class="line">      smtp_connect_timeout 30</span><br><span class="line">      router_id node1</span><br><span class="line">      vrrp_mcast_group4 224.0.100.100</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   vrrp_instance VI_1 &#123;</span><br><span class="line">      state MASTER</span><br><span class="line">     <span class="built_in"> interface </span>eth0</span><br><span class="line">      virtual_router_id 6</span><br><span class="line">      priority 100</span><br><span class="line">      advert_int 1</span><br><span class="line">      authentication &#123;</span><br><span class="line">         auth_type PASS</span><br><span class="line">         auth_pass f1bf7fde</span><br><span class="line">      &#125;</span><br><span class="line">      virtual_ipaddress &#123;</span><br><span class="line">         172.16.0.80/16 dev eth0 label eth0:0</span><br><span class="line">      &#125;</span><br><span class="line">      track_interface &#123;</span><br><span class="line">         eth0</span><br><span class="line">      &#125;</span><br><span class="line">      notify_master <span class="string">"/etc/keepalived/notify.sh master"</span></span><br><span class="line">      notify_backup <span class="string">"/etc/keepalived/notify.sh backup"</span></span><br><span class="line">      notify_fault <span class="string">"/etc/keepalived/notify.sh fault"</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   vrrp_instance VI_2 &#123;</span><br><span class="line">      state BACKUP</span><br><span class="line">     <span class="built_in"> interface </span>eth0</span><br><span class="line">      virtual_router_id 8</span><br><span class="line">      priority 98</span><br><span class="line">      advert_int 1</span><br><span class="line">      authentication &#123;</span><br><span class="line">         auth_type PASS</span><br><span class="line">         auth_pass f2bf7ade</span><br><span class="line">      &#125;</span><br><span class="line">      virtual_ipaddress &#123;</span><br><span class="line">         172.16.0.90/16 dev eth0 label eth0:1</span><br><span class="line">      &#125;</span><br><span class="line">      track_interface &#123;</span><br><span class="line">         eth0</span><br><span class="line">      &#125;</span><br><span class="line">      notify_master <span class="string">"/etc/keepalived/notify.sh master"</span></span><br><span class="line">      notify_backup <span class="string">"/etc/keepalived/notify.sh backup"</span></span><br><span class="line">      notify_fault  <span class="string">"/etc/keepalived/notify.sh fault"</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   virtual_server fwmark 3 &#123;</span><br><span class="line">      delay_loop 2</span><br><span class="line">      lb_algo rr</span><br><span class="line">      lb_kind DR</span><br><span class="line">      nat_mask 255.255.0.0</span><br><span class="line">      protocol TCP</span><br><span class="line">      sorry_server 127.0.0.1 80</span><br><span class="line">      real_server 172.16.0.11 80 &#123;</span><br><span class="line">         weight 1</span><br><span class="line">            HTTP_GET &#123;</span><br><span class="line">               url &#123;</span><br><span class="line">                  path /</span><br><span class="line">                  status_code 200</span><br><span class="line">               &#125;</span><br><span class="line">               connect_timeout 2</span><br><span class="line">               nb_get_retry 3</span><br><span class="line">               delay_before_retry 3</span><br><span class="line">            &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      real_server 172.16.0.12 80 &#123;</span><br><span class="line">         weight 1</span><br><span class="line">            HTTP_GET &#123;</span><br><span class="line">               url &#123;</span><br><span class="line">                  path /</span><br><span class="line">                  status_code 200</span><br><span class="line">               &#125;</span><br><span class="line">               connect_timeout 2</span><br><span class="line">               nb_get_retry 3</span><br><span class="line">               delay_before_retry 3</span><br><span class="line">            &#125;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="keepalived调用脚本进行资源监控"><a href="#keepalived调用脚本进行资源监控" class="headerlink" title="keepalived调用脚本进行资源监控"></a>keepalived调用脚本进行资源监控</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">keepalived: 调用外部的辅助脚本进行资源监控，并根据监控的结果状态能实现优先动态调整</span><br><span class="line">vrrp_script: 自定义资源监控脚本，vrrp实例根据脚本返回值，公共定义，</span><br><span class="line">  可被多个实例调用，定义在vrrp实例之外</span><br><span class="line">track_script: 调用vrrp_script定义的脚本去监控资源，定义在实例之内，</span><br><span class="line">  调用事先定义的vrrp_script分两步</span><br><span class="line">(1) 先定义一个脚本</span><br><span class="line">(2) 调用此脚本</span><br><span class="line">   vrrp_script &lt;SCRIPT_NAME&gt; &#123;</span><br><span class="line">     <span class="built_in"> script </span><span class="string">""</span> interval INT weight -INT</span><br><span class="line">   &#125;</span><br><span class="line">   track_script &#123;</span><br><span class="line">      SCRIPT_NAME_1 SCRIPT_NAME_2</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">例: 高可用nginx服务</span><br><span class="line">! Configuration File <span class="keyword">for</span> keepalived</span><br><span class="line">   global_defs &#123;</span><br><span class="line">      notification_email &#123;</span><br><span class="line">         root@localhost</span><br><span class="line">      &#125;</span><br><span class="line">      notification_email_from keepalived@localhost</span><br><span class="line">      smtp_server 127.0.0.1</span><br><span class="line">      smtp_connect_timeout 30</span><br><span class="line">      router_id node1</span><br><span class="line">      vrrp_mcast_group4 224.0.100.100</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   vrrp_script chk_down &#123;  # 脚本</span><br><span class="line">     <span class="built_in"> script </span><span class="string">"[[ -f /etc/keepalived/down ]] &amp;&amp; exit 1 || exit 0"</span></span><br><span class="line">      # 如果文件存在 --&gt; echo $? --&gt; 0</span><br><span class="line">      interval 1  # 间隔 1s</span><br><span class="line">      weight -20  # 减去权重</span><br><span class="line">      # 如果 /etc/keepalived/down，down文件存在的话，权重就减去20</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   vrrp_script chk_nginx &#123;  # 查看nginx服务是否启动，要先在之前定义好</span><br><span class="line">     <span class="built_in"> script </span><span class="string">"killall -0 nginx &amp;&gt; /dev/null &amp;&amp; exit 0 || exit 1"</span></span><br><span class="line">      # 如果nginx进程存在 --&gt; echo $?  0</span><br><span class="line">      interval 1</span><br><span class="line">      weight -20  # 如果nginx进程没有运行，权重就减去20</span><br><span class="line">      fall 2  # 2次检测失败为失败</span><br><span class="line">      rise 1  # 1次检测成功为成功</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">   vrrp_instance VI_1 &#123;</span><br><span class="line">      state MASTER</span><br><span class="line">     <span class="built_in"> interface </span>eth0</span><br><span class="line">      virtual_router_id 14</span><br><span class="line">      priority 100</span><br><span class="line">      advert_int 1</span><br><span class="line">      authentication &#123;</span><br><span class="line">         auth_type PASS</span><br><span class="line">         auth_pass 571f97b2</span><br><span class="line">      &#125;</span><br><span class="line">      virtual_ipaddress &#123;</span><br><span class="line">         172.18.0.93/16 dev eth0</span><br><span class="line">      &#125;</span><br><span class="line">      track_script &#123;  # 调用脚本</span><br><span class="line">         chk_down</span><br><span class="line">         chk_nginx</span><br><span class="line">      &#125;</span><br><span class="line">      notify_master <span class="string">"/etc/keepalived/notify.sh master"</span></span><br><span class="line">      notify_backup <span class="string">"/etc/keepalived/notify.sh backup"</span></span><br><span class="line">      notify_fault <span class="string">"/etc/keepalived/notify.sh fault"</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">例: 同步组</span><br><span class="line"><span class="comment"># 使用的是lvs-nat的模式（VIP 和 DIP）两个是一起实现的</span></span><br><span class="line">LVS NAT模型VIP和DIP需要同步，需要同步组</span><br><span class="line">   vrrp_sync_group VG_1 &#123;</span><br><span class="line">     <span class="built_in"> group </span>&#123;</span><br><span class="line">         VI_1  # name of vrrp_instance (below)</span><br><span class="line">         VI_2  # One <span class="keyword">for</span> each moveable IP.</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   vrrp_instance VI_1 &#123;</span><br><span class="line">      eth0 vip</span><br><span class="line">   &#125;</span><br><span class="line">   vrrp_instance VI_2 &#123;</span><br><span class="line">      eth1 dip</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/keepalived/" rel="tag"># keepalived</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/03/linux/服务/Nginx/Nginx编译安装/" rel="next" title="Nginx编译安装">
+                <i class="fa fa-chevron-left"></i> Nginx编译安装
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/07/linux/服务/keepalived/keepalived基础理论/" rel="prev" title="keepalived基础理论">
+                keepalived基础理论 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">80</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#单主配置"><span class="nav-number">1.</span> <span class="nav-text">单主配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#双主模型"><span class="nav-number">2.</span> <span class="nav-text">双主模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#keepalived实现ipvs"><span class="nav-number">3.</span> <span class="nav-text">keepalived实现ipvs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#双主模式的lvs集群"><span class="nav-number">4.</span> <span class="nav-text">双主模式的lvs集群</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#keepalived调用脚本进行资源监控"><span class="nav-number">5.</span> <span class="nav-text">keepalived调用脚本进行资源监控</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

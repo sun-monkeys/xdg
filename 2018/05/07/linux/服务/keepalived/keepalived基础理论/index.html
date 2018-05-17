@@ -1,0 +1,783 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="keepalived," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="基础理论123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051集群类型   LB lvs/nginx（http/upstream, stream/upstream）   HA 高可用性 SPoF: Single Point of Failure HPC系统可用性的公式">
+<meta name="keywords" content="keepalived">
+<meta property="og:type" content="article">
+<meta property="og:title" content="keepalived基础理论">
+<meta property="og:url" content="http://yoursite.com/2018/05/07/linux/服务/keepalived/keepalived基础理论/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="基础理论123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051集群类型   LB lvs/nginx（http/upstream, stream/upstream）   HA 高可用性 SPoF: Single Point of Failure HPC系统可用性的公式">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-17T03:51:36.357Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="keepalived基础理论">
+<meta name="twitter:description" content="基础理论123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051集群类型   LB lvs/nginx（http/upstream, stream/upstream）   HA 高可用性 SPoF: Single Point of Failure HPC系统可用性的公式">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/07/linux/服务/keepalived/keepalived基础理论/"/>
+
+
+
+
+
+  <title> keepalived基础理论 | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/07/linux/服务/keepalived/keepalived基础理论/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                keepalived基础理论
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-07T00:00:00+08:00">
+                2018-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="基础理论"><a href="#基础理论" class="headerlink" title="基础理论"></a>基础理论</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">集群类型</span><br><span class="line">   LB lvs/nginx（http/upstream, stream/upstream）</span><br><span class="line">   HA 高可用性 SPoF: Single Point of Failure HPC</span><br><span class="line"></span><br><span class="line">系统可用性的公式</span><br><span class="line">   <span class="attribute">A</span>=MTBF/（MTBF+MTTR）(0,1)，95% 几个9（指标）: 99%, <span class="built_in">..</span>.，99.999%，99.9999%</span><br><span class="line">   系统故障:</span><br><span class="line">      硬件故障: 设计缺陷、wear out（损耗）、自然灾害<span class="built_in">..</span>.</span><br><span class="line">      软件故障: 设计缺陷</span><br><span class="line"></span><br><span class="line">提升系统高用性的解决方案之降低MTTR</span><br><span class="line">   手段: 冗余redundant</span><br><span class="line">      active/passive  # 主备</span><br><span class="line">      active/active  # 双主</span><br><span class="line">      active --&gt; HEARTBEAT --&gt; passive</span><br><span class="line">      active &lt;--&gt; HEARTBEAT &lt;--&gt; active</span><br><span class="line"></span><br><span class="line">高可用的是<span class="string">"服务"</span></span><br><span class="line">   HA nginx service: vip/nginx process[/shared storage]</span><br><span class="line">   资源: 组成一个高可用服务的<span class="string">"组件"</span></span><br><span class="line">      (1)passive node的数量</span><br><span class="line">      (2)资源切换</span><br><span class="line"></span><br><span class="line">shared storage</span><br><span class="line">   NAS: 文件共享服务器</span><br><span class="line">   SAN: 存储区域网络，块级别的共享</span><br><span class="line"></span><br><span class="line">Network partition: 网络分区</span><br><span class="line">   quorum: 法定人数</span><br><span class="line">      with quorum: &gt; total/2</span><br><span class="line">      without quorum: &lt;= total/2</span><br><span class="line">   隔离设备</span><br><span class="line">      fence</span><br><span class="line">         node: STONITH = Shooting The Other Node <span class="keyword">In</span> The Head，断电重启</span><br><span class="line">         资源: 断开存储的连接</span><br><span class="line"></span><br><span class="line">TWO nodes Cluster</span><br><span class="line">   辅助设备:<span class="built_in"> ping </span>node，quorum disk</span><br><span class="line"></span><br><span class="line">Failover: 故障切换</span><br><span class="line">   # 即某资源的主节点故障时，将资源转移至其它节点的操作</span><br><span class="line">Failback: 故障移回</span><br><span class="line">   # 即某资源的主节点故障后重新修改上线后，将之前已转移至其它节点的资源重新切回的过程</span><br><span class="line"></span><br><span class="line">HA Cluster实现方案:</span><br><span class="line">   vrrp协议的实现</span><br><span class="line">      keepalived</span><br><span class="line">   ais: 应用接口规范 完备HA集群</span><br><span class="line">      RHCS: Red Hat Cluster Suite红帽集群套件</span><br><span class="line">      heartbeat</span><br><span class="line">      corosync</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="keepalived"><a href="#keepalived" class="headerlink" title="keepalived"></a>keepalived</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">vrrp协议: Virtual Router Redundancy Protocol</span><br><span class="line">术语</span><br><span class="line">   虚拟路由器: Virtual Router</span><br><span class="line">   虚拟路由器标识: VRID(0-255)，唯一标识虚拟路由器</span><br><span class="line">      物理路由器:</span><br><span class="line">         master  # 主设备</span><br><span class="line">         backup  # 备用设备</span><br><span class="line">         priority  # 优先级</span><br><span class="line">      VIP: Virtual IP</span><br><span class="line">      VMAC: Virutal MAC (00-00-5e-00-01-VRID)</span><br><span class="line">通告: 心跳，优先级等，周期性</span><br><span class="line">工作方式: 抢占式，非抢占式</span><br><span class="line">安全工作: </span><br><span class="line">   认证</span><br><span class="line">      无认证</span><br><span class="line">      简单字符认证: 预共享密钥</span><br><span class="line">      MD5</span><br><span class="line">工作模式</span><br><span class="line">   主/备: 单虚拟路径器</span><br><span class="line">   主/主: 主/备（虚拟路径器1），备/主（虚拟路径器2）</span><br><span class="line"></span><br><span class="line">keepalived: vrrp协议的软件实现，原生设计目的为了高可用ipvs服务</span><br><span class="line">功能</span><br><span class="line">   vrrp协议完成地址流动</span><br><span class="line">   为vip地址所在的节点生成ipvs规则(在配置文件中预先定义)</span><br><span class="line">   为ipvs集群的各RS做健康状态检测</span><br><span class="line">   基于脚本调用接口通过执行脚本完成脚本中定义的功能，进而影响集群事务，</span><br><span class="line">     以此支持nginx、haproxy等服务</span><br><span class="line">组件</span><br><span class="line">   核心组件</span><br><span class="line">     <span class="built_in"> vrrp </span>stack</span><br><span class="line">      ipvs wrapper</span><br><span class="line">      checkers</span><br><span class="line">   控制组件</span><br><span class="line">      配置文件分析器</span><br><span class="line">      IO复用器</span><br><span class="line">      内存管理组件</span><br><span class="line"></span><br><span class="line">HA Cluster 配置准备</span><br><span class="line">   (1) 各节点时间必须同步 ntp, chrony  # 时间必须要先同步，如: 记录日志</span><br><span class="line">   (2) 确保iptables及selinux不会成为阻碍</span><br><span class="line">   (3) 各节点之间可通过主机名互相通信（对KA并非必须）建议使用/etc/hosts文件实现</span><br><span class="line">   (4) 各节点之间的root用户可以基于密钥认证的ssh服务完成互相通信（对KA并非必须）</span><br></pre></td></tr></table></figure>
+<h1 id="keepalived安装配置"><a href="#keepalived安装配置" class="headerlink" title="keepalived安装配置"></a>keepalived安装配置</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">程序环境</span><br><span class="line">   主配置文件: /etc/keepalived/keepalived.conf</span><br><span class="line">   主程序文件: /usr/sbin/keepalived</span><br><span class="line">   Unit File：/usr/lib/systemd/system/keepalived.service</span><br><span class="line">   Unit File的环境配置文件</span><br><span class="line">      /etc/sysconfig/keepalived  # 可以定制日志（local）</span><br><span class="line">      # <span class="attribute">KEEPALIVED_OPTIONS</span>=<span class="string">"-D"</span>  # 系统自带信息，但没有指定日志级别、日志文件</span><br><span class="line">      # <span class="attribute">KEEPALIVED_OPTIONS</span>=<span class="string">"-D -S 2"</span>  # 指定日志是使用 local2 （0-7）</span><br><span class="line">   vim /etc/rsyslog.conf  # 修改日志的配置文件</span><br><span class="line">      local2.*  /var/log/keepalived.log  # 添加自定义</span><br><span class="line"></span><br><span class="line">配置文件组件部分</span><br><span class="line">   TOP HIERACHY</span><br><span class="line">      GLOBAL CONFIGURATION</span><br><span class="line">         Global definitions</span><br><span class="line">         Static routes/addresses</span><br><span class="line">      VRRPD CONFIGURATION</span><br><span class="line">        <span class="built_in"> VRRP </span>synchronization group(s)  # vrrp同步组</span><br><span class="line">        <span class="built_in"> VRRP </span>instance(s)  # 即一个vrrp虚拟路由器</span><br><span class="line">      LVS CONFIGURATION</span><br><span class="line">         Virtual<span class="built_in"> server </span>group(s)</span><br><span class="line">         Virtual server(s)  # ipvs集群的vs和rs</span><br><span class="line"></span><br><span class="line">配置语法</span><br><span class="line">   配置虚拟路由器</span><br><span class="line">      vrrp_instance &lt;STRING&gt; &#123;</span><br><span class="line">         <span class="built_in">..</span><span class="built_in">..</span></span><br><span class="line">      &#125;</span><br><span class="line">   专用参数</span><br><span class="line">      state MASTER|BACKUP</span><br><span class="line">      # 当前节点在此虚拟路由器上的初始状态，只能有一个是MASTER，余下的都应该为BACKUP</span><br><span class="line">     <span class="built_in"> interface </span>IFACE_NAME</span><br><span class="line">      # 绑定为当前虚拟路由器使用的物理接口</span><br><span class="line">      virtual_router_id VRID</span><br><span class="line">      # 当前虚拟路由器惟一标识，范围是0-255</span><br><span class="line">      priority 100</span><br><span class="line">      # 当前物理节点在此虚拟路由器中的优先级，范围1-254</span><br><span class="line">      advert_int 1</span><br><span class="line">      # vrrp通告的时间间隔，默认1s</span><br><span class="line"></span><br><span class="line">authentication &#123;  # 认证机制</span><br><span class="line">   auth_type AH|PASS</span><br><span class="line">   auth_pass &lt;PASSWORD&gt;  # 仅前8位有效</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">virtual_ipaddress &#123;  # 虚拟IP</span><br><span class="line">   &lt;IPADDR&gt;/&lt;MASK&gt; brd &lt;IPADDR&gt; dev &lt;STRING&gt; scope &lt;SCOPE&gt; label &lt;LABEL&gt;</span><br><span class="line">   192.168.200.17/24 dev eth1</span><br><span class="line">   192.168.200.18/24 dev eth2 label eth2:1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">track_interface &#123;</span><br><span class="line"><span class="comment"># 配置监控网络接口，一旦出现故障，则转为FAULT状态 实现地址转移</span></span><br><span class="line">   eth0</span><br><span class="line">   # 监控的是使用的网卡，没有使用的，不起作用</span><br><span class="line">   eth1</span><br><span class="line">   # 默认的是监控的正在使用的网卡，所以这段可以不用写</span><br><span class="line">   <span class="built_in">..</span>.</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">nopreempt: 定义工作模式为非抢占模式</span><br><span class="line"><span class="comment"># 默认是抢占式的，如果出现没有比我高的，就把控制权给抢过来</span></span><br><span class="line">preempt_delay 300: 抢占式模式</span><br><span class="line"><span class="comment"># 节点上线后触发新选举操作的延迟时长，默认模式</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="keepalived支持ipvs"><a href="#keepalived支持ipvs" class="headerlink" title="keepalived支持ipvs"></a>keepalived支持ipvs</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">虚拟服务器</span><br><span class="line">配置参数:</span><br><span class="line">   virtual_server<span class="built_in"> IP port </span> # 或基于ip和端口</span><br><span class="line">   virtual_server fwmark int &#123;</span><br><span class="line">   # 或基于mark，配合防火墙使用，int指的是标记的数字（16进制）</span><br><span class="line">      <span class="built_in">..</span>.</span><br><span class="line">      real_server &#123;</span><br><span class="line">         <span class="built_in">..</span>.</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">..</span>.</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="常用参数"><a href="#常用参数" class="headerlink" title="常用参数"></a>常用参数</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">delay_loop <span class="params">&lt;INT&gt;</span>  <span class="meta"># 服务轮询的时间间隔</span></span><br><span class="line">lb_algo rr|wrr|lc|wlc|lblc|sh|dh  <span class="meta"># 定义调度方法</span></span><br><span class="line">lb_kind NAT|DR|TUN  <span class="meta"># 集群的类型</span></span><br><span class="line">persistence_timeout <span class="params">&lt;INT&gt;</span>  <span class="meta"># 持久连接时长</span></span><br><span class="line">protocol TCP  <span class="meta"># 服务协议，仅支持TCP</span></span><br><span class="line">sorry_server <span class="params">&lt;IPADDR&gt;</span> <span class="params">&lt;PORT&gt;</span>  <span class="meta"># 所有RS故障时，备用服务器地址</span></span><br><span class="line">real_server <span class="params">&lt;IPADDR&gt;</span> <span class="params">&lt;PORT&gt;</span> &#123;</span><br><span class="line">   weight <span class="params">&lt;INT&gt;</span>  <span class="meta"># RS权重</span></span><br><span class="line">   notify_up <span class="params">&lt;STRING&gt;</span>|<span class="params">&lt;QUOTED-STRING&gt;</span>  <span class="meta"># RS上线通知脚本</span></span><br><span class="line">   notify_down <span class="params">&lt;STRING&gt;</span>|<span class="params">&lt;QUOTED-STRING&gt;</span>  <span class="meta"># RS下线通知脚本</span></span><br><span class="line">   HTTP_GET|SSL_GET|TCP_CHECK|SMTP_CHECK|MISC_CHEC</span><br><span class="line">      <span class="class">K </span>&#123; ... &#125;  <span class="meta"># 定义当前主机的健康状态检测方法</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="keepAlived配置检测"><a href="#keepAlived配置检测" class="headerlink" title="keepAlived配置检测"></a>keepAlived配置检测</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">HTTP_GET|SSL_GET  <span class="meta"># 应用层检测</span></span><br><span class="line">   HTTP_GET|<span class="class">SSL_GET </span>&#123;  <span class="meta"># 基于HTTP_GET的检测</span></span><br><span class="line">      <span class="class">url </span>&#123;</span><br><span class="line">         path <span class="params">&lt;URL_PATH&gt;</span>  <span class="meta"># 定义要监控的URL</span></span><br><span class="line">         status_code <span class="params">&lt;INT&gt;</span>  <span class="meta"># 判断上述检测机制为健康状态的响应码</span></span><br><span class="line">         digest <span class="params">&lt;STRING&gt;</span>  <span class="meta"># 判断为健康状态的响应的内容的校验码</span></span><br><span class="line">      &#125;</span><br><span class="line">      connect_timeout <span class="params">&lt;INTEGER&gt;</span>  <span class="meta"># 连接请求的超时时长</span></span><br><span class="line">      nb_get_retry <span class="params">&lt;INT&gt;</span>  <span class="meta"># 重试次数</span></span><br><span class="line">      delay_before_retry <span class="params">&lt;INT&gt;</span>  <span class="meta"># 重试之前的延迟时长</span></span><br><span class="line">      connect_ip <span class="params">&lt;IP ADDRESS&gt;</span>  <span class="meta"># 向当前RS哪个IP地址发起健康状态检测请求</span></span><br><span class="line">      connect_port <span class="params">&lt;PORT&gt;</span>  <span class="meta"># 向当前RS的哪个PORT发起健康状态检测请求</span></span><br><span class="line">      bindto <span class="params">&lt;IP ADDRESS&gt;</span>  <span class="meta"># 发出健康状态检测请求时使用的源地址</span></span><br><span class="line">      bind_port <span class="params">&lt;PORT&gt;</span>  <span class="meta"># 发出健康状态检测请求时使用的源端口</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="class">TCP_CHECK </span>&#123;  <span class="meta"># 基于TCP_CHECK的检测</span></span><br><span class="line">      connect_ip <span class="params">&lt;IP ADDRESS&gt;</span>  <span class="meta"># 向当前RS的哪个IP地址发起健康状态检测请求</span></span><br><span class="line">      connect_port <span class="params">&lt;PORT&gt;</span>  <span class="meta"># 向当前RS的哪个PORT发起健康状态检测请求</span></span><br><span class="line">      bindto <span class="params">&lt;IP ADDRESS&gt;</span>  <span class="meta"># 发出健康状态检测请求时使用的源地址</span></span><br><span class="line">      bind_port <span class="params">&lt;PORT&gt;</span>  <span class="meta"># 发出健康状态检测请求时使用的源端口</span></span><br><span class="line">      connect_timeout <span class="params">&lt;INTEGER&gt;</span>  <span class="meta"># 连接请求的超时时长</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="定义通知脚本"><a href="#定义通知脚本" class="headerlink" title="定义通知脚本"></a>定义通知脚本</h1><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">notify_master &lt;<span class="built_in">STRING</span>&gt;|&lt;QUOTED-<span class="built_in">STRING</span>&gt;  <span class="meta"># 当前节点成为主节点时触发的脚本</span></span><br><span class="line">notify_backup &lt;<span class="built_in">STRING</span>&gt;|&lt;QUOTED-<span class="built_in">STRING</span>&gt;  <span class="meta"># 当前节点转为备节点时触发的脚本</span></span><br><span class="line">notify_fault  &lt;<span class="built_in">STRING</span>&gt;|&lt;QUOTED-<span class="built_in">STRING</span>&gt;  <span class="meta"># 当前节点转为<span class="string">"失败"</span>状态时触发的脚本</span></span><br><span class="line">notify  &lt;<span class="built_in">STRING</span>&gt;|&lt;QUOTED-<span class="built_in">STRING</span>&gt;</span><br><span class="line"><span class="meta"># 通用格式的通知触发机制，一个脚本可完成以上三种状态的转换时的通知</span></span><br></pre></td></tr></table></figure>
+<h2 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">contact=<span class="string">'root@localhost'</span>  <span class="comment"># 定义的邮箱</span></span><br><span class="line"><span class="function"><span class="title">notify</span></span>() &#123;</span><br><span class="line">   mailsubject=<span class="string">"<span class="variable">$(hostname)</span> to be <span class="variable">$1</span>, vip floating"</span></span><br><span class="line">   mailbody=<span class="string">"<span class="variable">$(date +'%F %T')</span>: vrrp transition, <span class="variable">$(hostname)</span> changed to be <span class="variable">$1</span>"</span></span><br><span class="line">   <span class="built_in">echo</span> <span class="string">"<span class="variable">$mailbody</span>"</span> | mail -s <span class="string">"<span class="variable">$mailsubject</span>"</span> <span class="variable">$contact</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">case</span> <span class="variable">$1</span> <span class="keyword">in</span></span><br><span class="line">   master)</span><br><span class="line">      notify master</span><br><span class="line">      ;;</span><br><span class="line">   backup)</span><br><span class="line">      notify backup</span><br><span class="line">      ;;</span><br><span class="line">   fault)</span><br><span class="line">      notify fault</span><br><span class="line">      ;;</span><br><span class="line">   *)</span><br><span class="line">      <span class="built_in">echo</span> <span class="string">"Usage: <span class="variable">$(basename $0)</span> &#123;master|backup|fault&#125;"</span></span><br><span class="line">      <span class="built_in">exit</span> 1</span><br><span class="line">      ;;</span><br><span class="line"><span class="keyword">esac</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 结束之后查看 notify.sh 这个文件要给执行的权限</span></span><br><span class="line"><span class="comment"># 脚本的调用方法</span></span><br><span class="line">   notify_master <span class="string">"/etc/keepalived/notify.sh  master"</span></span><br><span class="line">   notify_backup <span class="string">"/etc/keepalived/notify.sh  backup"</span></span><br><span class="line">   notify_fault  <span class="string">"/etc/keepalived/notify.sh  fault"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制的时间有多个行</span></span><br><span class="line"><span class="comment"># 进入vim  :set noai  取消行</span></span><br><span class="line">   <span class="comment"># :nohl  取消高亮</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/keepalived/" rel="tag"># keepalived</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/07/linux/服务/keepalived/keepalived实验/" rel="next" title="keepalived实验">
+                <i class="fa fa-chevron-left"></i> keepalived实验
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/10/linux/服务/haproxy/haproxy基本理论/" rel="prev" title="haproxy基础理论">
+                haproxy基础理论 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">80</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础理论"><span class="nav-number">1.</span> <span class="nav-text">基础理论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#keepalived"><span class="nav-number">2.</span> <span class="nav-text">keepalived</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#keepalived安装配置"><span class="nav-number">3.</span> <span class="nav-text">keepalived安装配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#keepalived支持ipvs"><span class="nav-number">4.</span> <span class="nav-text">keepalived支持ipvs</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#常用参数"><span class="nav-number">4.1.</span> <span class="nav-text">常用参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#keepAlived配置检测"><span class="nav-number">4.2.</span> <span class="nav-text">keepAlived配置检测</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#定义通知脚本"><span class="nav-number">5.</span> <span class="nav-text">定义通知脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本"><span class="nav-number">5.1.</span> <span class="nav-text">脚本</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

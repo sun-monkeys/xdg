@@ -1,0 +1,796 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="LAMP," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="LAMP介绍123456LAM(M)P   L: linux   A: apache (httpd)   M: mysql, mariadb   M: memcached   P: php, perl, python WEB资源类型12静态资源: 原始形式与响应内容一致动态资源: 原始形式通常为程序文件，需要在服务器端执行之后，将执行结果返回给客户端 Web相关语言12客户端技术: javascr">
+<meta name="keywords" content="LAMP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LAMP基础理论">
+<meta property="og:url" content="http://yoursite.com/2018/04/18/linux/服务/LAMP/LAMP基本理论/index.html">
+<meta property="og:site_name" content="Sun-monkey">
+<meta property="og:description" content="LAMP介绍123456LAM(M)P   L: linux   A: apache (httpd)   M: mysql, mariadb   M: memcached   P: php, perl, python WEB资源类型12静态资源: 原始形式与响应内容一致动态资源: 原始形式通常为程序文件，需要在服务器端执行之后，将执行结果返回给客户端 Web相关语言12客户端技术: javascr">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-26T07:34:13.793Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LAMP基础理论">
+<meta name="twitter:description" content="LAMP介绍123456LAM(M)P   L: linux   A: apache (httpd)   M: mysql, mariadb   M: memcached   P: php, perl, python WEB资源类型12静态资源: 原始形式与响应内容一致动态资源: 原始形式通常为程序文件，需要在服务器端执行之后，将执行结果返回给客户端 Web相关语言12客户端技术: javascr">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/18/linux/服务/LAMP/LAMP基本理论/"/>
+
+
+
+
+
+  <title> LAMP基础理论 | Sun-monkey </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sun-monkey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/18/linux/服务/LAMP/LAMP基本理论/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sun-monkey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                LAMP基础理论
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-18T00:00:00+08:00">
+                2018-04-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="LAMP介绍"><a href="#LAMP介绍" class="headerlink" title="LAMP介绍"></a>LAMP介绍</h1><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">LAM(M)P</span><br><span class="line"><span class="symbol">   L:</span> linux</span><br><span class="line"><span class="symbol">   A:</span> apache (httpd)</span><br><span class="line"><span class="symbol">   M:</span> mysql, mariadb</span><br><span class="line"><span class="symbol">   M:</span> memcached</span><br><span class="line"><span class="symbol">   P:</span> php, perl, python</span><br></pre></td></tr></table></figure>
+<h2 id="WEB资源类型"><a href="#WEB资源类型" class="headerlink" title="WEB资源类型"></a>WEB资源类型</h2><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">静态资源: 原始形式与响应内容一致</span></span><br><span class="line"><span class="section">动态资源: 原始形式通常为程序文件，需要在服务器端执行之后，将执行结果返回给客户端</span></span><br></pre></td></tr></table></figure>
+<h2 id="Web相关语言"><a href="#Web相关语言" class="headerlink" title="Web相关语言"></a>Web相关语言</h2><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">客户端技术: javascript，html</span></span><br><span class="line"><span class="section">服务器端技术: php，jsp，python</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="CGI"><a href="#CGI" class="headerlink" title="CGI"></a>CGI</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">CGI: Common Gateway Interface</span><br><span class="line">可以让一个客户端，从网页浏览器通过http服务器向执行在网络服务器上的程序传输数据，</span><br><span class="line">  CGI描述了客户端和服务器程序之间传输的一种标准</span><br><span class="line"></span><br><span class="line">程序 = 指令 + 数据</span><br><span class="line">   指令: 代码文件</span><br><span class="line">   数据: 数据存储系统、文件</span><br><span class="line"></span><br><span class="line">请求流程</span><br><span class="line">  <span class="built_in"> Client </span>-- (httpd) --&gt; httpd -- (cgi) --&gt; application<span class="built_in"> server </span>(program file)</span><br><span class="line">     -- (mysql) --&gt; mysql</span><br><span class="line">	</span><br><span class="line">php: 脚本编程语言、嵌入到html中的嵌入式web程序语言基于zend编译成opcode</span><br><span class="line">  （二进制格式的字节码，重复运行，可省略编译环境）</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="PHP简介"><a href="#PHP简介" class="headerlink" title="PHP简介"></a>PHP简介</h1><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">PHP是通用服务器端脚本编程语言，主要用于web开发实现动态web页面，也是最早实现将脚本嵌入</span><br><span class="line">  HTML源码文档中的服务器端脚本语言之一。同时，php还提供了一个命令行接口，因此，</span><br><span class="line">  其也可以在大多数系统上作为一个独立的<span class="keyword">shell来使用</span></span><br><span class="line"><span class="keyword"></span></span><br><span class="line"><span class="keyword">PHP </span>Zend Engine</span><br><span class="line">   PHP脚本语言的解释器，由C语言开发且经过高度优化，并能够做为PHP的后端模块使用。</span><br><span class="line">     Zend Engine为PHP提供了内存和资源管理的功能以及其它的一些标准服务，其高性能、</span><br><span class="line">     可靠性和可扩展性在促进PHP成为一种流行的语言方面发挥了重要作用</span><br><span class="line">   将PHP代码的处理过程分成了两个阶段: 首先是分析PHP代码并将其转换为称作Zend opcode</span><br><span class="line">     的二进制格式（类似<span class="keyword">Java的字节码），并将其存储于内存中，第二阶段是使用Zend </span>Engine</span><br><span class="line">     去执行这些转换后的Opcode</span><br><span class="line"></span><br><span class="line">PHP的Opcode</span><br><span class="line">   Opcode是一种PHP脚本编译后的中间语言，类似于<span class="keyword">Java的ByteCode，或者.NET的MSL，</span></span><br><span class="line"><span class="keyword"> </span>    PHP执行PHP脚本代码一般会经过如下<span class="number">4</span>个步骤:（确切的来说，应该是PHP的语言引擎Zend）</span><br><span class="line">      <span class="number">1</span>、<span class="keyword">Scanning </span>词法分析，将PHP代码转换为语言片段(Tokens)</span><br><span class="line">      <span class="number">2</span>、Parsing 语义分析，将Tokens转换成简单而有意义的表达式</span><br><span class="line">      <span class="number">3</span>、Compilation 将表达式编译成Opocdes</span><br><span class="line">      <span class="number">4</span>、Execution 顺次执行Opcodes，每次一条，从而实现PHP脚本的功能</span><br><span class="line">   扫描 --&gt; 分析 --&gt; 编译 --&gt; 执行</span><br></pre></td></tr></table></figure>
+<h2 id="php配置"><a href="#php配置" class="headerlink" title="php配置"></a>php配置</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">php: 脚本语言解释器</span><br><span class="line">配置文件: <span class="string">/etc/php.ini</span>,  <span class="string">/etc/php.d/</span>*<span class="string">.ini</span></span><br><span class="line"></span><br><span class="line">配置文件在php解释器启动时被读取</span><br><span class="line">对配置文件的修改生效方法</span><br><span class="line">   Modules: 重启httpd服务</span><br><span class="line">   FastCGI: 重启php-fpm服务</span><br><span class="line"></span><br><span class="line"><span class="string">/etc/php.ini</span>配置文件格式:</span><br><span class="line">   [foo]: Section Header</span><br><span class="line">   directive = value</span><br><span class="line">   注释符: 较新的版本中，已经完全使用 ; 进行注释</span><br><span class="line">      <span class="comment">#: 纯粹的注释信息</span></span><br><span class="line">      ;: 用于注释可启用的directive</span><br></pre></td></tr></table></figure>
+<h2 id="php设置"><a href="#php设置" class="headerlink" title="php设置"></a>php设置</h2><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">max_execution_time = 30  <span class="comment"># 最长执行时间30s</span></span><br><span class="line">memory_limit 128M  <span class="comment"># 生产不够，可调大</span></span><br><span class="line">display_errors off  <span class="comment"># 调试使用，不要打开，否则可能暴露重要信息</span></span><br><span class="line">display_startup_errors off  <span class="comment"># 建议关闭</span></span><br><span class="line">post_max_size 8M  <span class="comment"># 最大上传数据大小，生产可能临时要调大，比下面项要大</span></span><br><span class="line">upload_max_filesize 2M  <span class="comment"># 最大上传文件，生产可能要调大</span></span><br><span class="line">max_file_uploads = 20  <span class="comment"># 同时上传最多文件数</span></span><br><span class="line">date.timezone = Asia/Shanghai  <span class="comment"># 指定时区</span></span><br><span class="line">short_open_tag = on  <span class="comment"># 开启短标签,如&lt;? phpinfo();?&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="php的加速器"><a href="#php的加速器" class="headerlink" title="php的加速器"></a>php的加速器</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">php的加速器: 基于PHP特殊扩展机制如opcode缓存扩展也可以将opcode缓存于php共享内存中，</span><br><span class="line">  从而可以让同一段代码的后续</span><br><span class="line">   重复执行时跳过编译阶段以提高性能，这些加速器并非真正提高了opcode的运行速度，</span><br><span class="line">     而仅是通过分析opcode后并将它们重新排列以达到快速执行的目的</span><br><span class="line"></span><br><span class="line">常见的php加速器</span><br><span class="line">   1、APC (Alternative PHP <span class="keyword">Cache</span>)</span><br><span class="line">   遵循PHP License的开源框架，PHP opcode缓存加速器，目前的版本不适用于PHP <span class="number">5.4</span>项目</span><br><span class="line">   项目地址: <span class="keyword">http</span>://pecl.php.net/<span class="keyword">package</span>/APC</span><br><span class="line"></span><br><span class="line">   <span class="number">2</span>、eAccelerator</span><br><span class="line">   源于Turck MMCache，早期的版本包含了一个PHP encoder和PHP loader，目前不在支持</span><br><span class="line">   项目地址: <span class="keyword">http</span>://eaccelerator.net/</span><br><span class="line"></span><br><span class="line">   <span class="number">3</span>、XCache</span><br><span class="line">   快速而且稳定的PHP opcode缓存，经过严格测试且被大量用于生产环境</span><br><span class="line">   项目地址: <span class="keyword">http</span>://xcache.lighttpd.net/，收录EPEL源</span><br><span class="line"></span><br><span class="line">   <span class="number">4</span>、Zend Optimizer和Zend <span class="keyword">Guard</span> Loader Zend</span><br><span class="line">   Optimizer并非一个opcode加速器，它是由Zend Technologies为PHP5<span class="number">.2</span>及以前的版本提供的</span><br><span class="line">     一个免费、闭源的PHP扩展，其能够运行由Zend <span class="keyword">Guard</span>生成的加密的PHP代码或模糊代码，</span><br><span class="line">     而Zend <span class="keyword">Guard</span> Loader则是专为PHP5<span class="number">.3</span>提供的类似于Zend Optimizer功能的扩展</span><br><span class="line">   项目地址: <span class="keyword">http</span>://www.zend.com/en/products/<span class="keyword">guard</span>/runtime-decoders</span><br><span class="line"></span><br><span class="line">   <span class="number">5</span>、NuSphere PhpExpress</span><br><span class="line">   NuSphere一款开源PHP加速器，它支持装载通过NuSphere PHP Encoder编码的PHP程序文件，</span><br><span class="line">     并能够实现对常规PHP文件的执行加速</span><br><span class="line">   项目地址: <span class="keyword">http</span>://www.nusphere.com/products/phpexpress.htm</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="LAMP应用"><a href="#LAMP应用" class="headerlink" title="LAMP应用"></a>LAMP应用</h1><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">httpd</span>: 接收用户的web请求；静态资源则直接响应；动态资源为php脚本，对此类资源的请求</span><br><span class="line">  将交由php来运行</span><br><span class="line"><span class="attribute">php</span>: 运行php程序</span><br><span class="line"><span class="attribute">MariaDB</span>: 数据管理系统</span><br><span class="line"></span><br><span class="line">http与php结合的方式</span><br><span class="line">   CGI</span><br><span class="line">   FastCGI</span><br><span class="line">   modules (将php编译成为httpd的模块,默认方式)</span><br><span class="line">      <span class="attribute">MPM</span>:</span><br><span class="line">      <span class="attribute">prefork</span>: libphp5.so</span><br><span class="line">      event, <span class="attribute">worker</span>: libphp5-zts.so</span><br></pre></td></tr></table></figure>
+<h2 id="快速部署LAMP"><a href="#快速部署LAMP" class="headerlink" title="快速部署LAMP"></a>快速部署LAMP</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">CentOS 7</span><br><span class="line">   Modules: httpd, php, php-mysql, mariadb-server</span><br><span class="line">   FastCGI: httpd, php-fpm, php-mysql, mariadbserver</span><br><span class="line"></span><br><span class="line">CentOS 6</span><br><span class="line">   Modules: httpd, php, php-mysql, mysql-server</span><br><span class="line">   FastCGI: 默认不支持</span><br><span class="line"></span><br><span class="line">安装LAMP</span><br><span class="line">   CentOS 6:</span><br><span class="line">      yum install httpd, php, mysql-server, php-mysql</span><br><span class="line">      service httpd start</span><br><span class="line">      service mysqld start</span><br><span class="line"></span><br><span class="line">   CentOS 7:</span><br><span class="line">      yum install httpd, php, php-mysql, mariadb-server</span><br><span class="line">      systemctl start  httpd.service</span><br><span class="line">      systemctl start  mariadb.service</span><br><span class="line">   注: 要使用prefork模型</span><br><span class="line">	</span><br><span class="line">php代码:</span><br><span class="line">格式1</span><br><span class="line">   <span class="tag">&lt;<span class="name">h1</span>&gt;</span></span><br><span class="line">      <span class="php"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="string">"Hello world!"</span> <span class="meta">?&gt;</span></span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line">格式2</span><br><span class="line">   <span class="php"><span class="meta">&lt;?php</span></span></span><br><span class="line"><span class="php">      <span class="keyword">echo</span> <span class="string">"&lt;h1&gt;Hello world!&lt;/h1&gt;"</span></span></span><br><span class="line"><span class="php">   <span class="meta">?&gt;</span></span></span><br><span class="line"></span><br><span class="line">php测试代码</span><br><span class="line">   <span class="php"><span class="meta">&lt;?php</span></span></span><br><span class="line"><span class="php">      <span class="keyword">echo</span> date(<span class="string">"Y/m/d"</span>);</span></span><br><span class="line"><span class="php">      phpinfo();</span></span><br><span class="line"><span class="php">   <span class="meta">?&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="php使用mysql扩展连接数据库"><a href="#php使用mysql扩展连接数据库" class="headerlink" title="php使用mysql扩展连接数据库"></a>php使用mysql扩展连接数据库</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">注: 连接测试不能用root连接，用创建的账号</span><br><span class="line">注: 默认root用户无法用来测试连接</span><br><span class="line">使用mysql扩展连接数据库的测试代码</span><br><span class="line">   <span class="php"><span class="meta">&lt;?php</span></span></span><br><span class="line"><span class="php">      $conn = mysql_connect(<span class="string">'mysqlserver'</span>,<span class="string">'username'</span>,<span class="string">'password'</span>);</span></span><br><span class="line"><span class="php">      <span class="keyword">if</span> ($conn)</span></span><br><span class="line"><span class="php">         <span class="keyword">echo</span> <span class="string">"OK"</span>;</span></span><br><span class="line"><span class="php">      <span class="keyword">else</span></span></span><br><span class="line"><span class="php">         <span class="keyword">echo</span> <span class="string">"Failure"</span>;</span></span><br><span class="line"><span class="php">      mysql_close();</span></span><br><span class="line"><span class="php">   <span class="meta">?&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="php使用mysqli扩展连接数据库"><a href="#php使用mysqli扩展连接数据库" class="headerlink" title="php使用mysqli扩展连接数据库"></a>php使用mysqli扩展连接数据库</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">注: 连接测试不能用root连接，用创建的账号</span><br><span class="line">注: 默认root用户无法用来测试连接</span><br><span class="line">Php使用mysqli扩展连接数据库的测试代码</span><br><span class="line">   &lt;?php</span><br><span class="line">      <span class="variable">$mysqli</span>=new mysqli(<span class="string">"mysqlserver"</span>,<span class="string">"username"</span>,<span class="string">"password"</span>);</span><br><span class="line">      <span class="keyword">if</span>(mysqli_connect_errno())</span><br><span class="line">         &#123; echo <span class="string">"连接数据库失败!"</span>; <span class="variable">$mysqli</span>=null; <span class="keyword">exit</span>; &#125;</span><br><span class="line">      echo <span class="string">"连接数据库成功!"</span>;</span><br><span class="line">      <span class="variable">$mysqli</span>-&gt;close();</span><br><span class="line">   ?&gt;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="phpmyadmin"><a href="#phpmyadmin" class="headerlink" title="phpmyadmin"></a>phpmyadmin</h1><p>PhpMyAdmin是一个以PHP为基础，以Web-Base方式架构在网站主机上的MySQL的数据库管理工具，让管理者可用Web接口管理MySQL数据库WordPress是一种使用PHP语言开发的博客平台，用户可以在支持PHP和MySQL数据库的服务器上架设属于自己的网站，也可把 WordPress当作一个内容管理系统（CMS）来使用</p>
+<p>PHPWind:2003年发布了PHPWind的前身版本ofstar，并发展成为包含BBS、CMS、博客、SNS等一系列程序的通用型建站软件，于2008年加入阿里巴巴集团</p>
+<p>Crossday Discuz! Board（简称 Discuz!）是一套通用的社区论坛软件系统。自2001年6月面世以来，是全球成熟度最高、覆盖率最大的论坛软件系统之一。2010年8月23日，与腾讯达成收购协议</p>
+<p>ECShop是一款B2C独立网店系统，适合企业及个人快速构建个性化网上商店。系统是基于PHP语言及MYSQL数据库构架开发的跨平台开源程序。2006年6月，ECShop推出第一个版本1.0</p>
+<h2 id="布署phpMyadmin"><a href="#布署phpMyadmin" class="headerlink" title="布署phpMyadmin"></a>布署phpMyadmin</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">yum -y install  httpd mariadb-server  php   php-mysql</span><br><span class="line">systemctl start httpd</span><br><span class="line">systemctl start mariadb</span><br><span class="line">mysql_secure_installation</span><br><span class="line"></span><br><span class="line">下载: https:<span class="regexp">//</span>www.phpmyadmin.net<span class="regexp">/downloads/</span></span><br><span class="line">   tar xvf phpMyAdmin-<span class="number">4.0</span>.<span class="number">10.20</span>-all-languages.tar.xz -C <span class="regexp">/var/</span>www<span class="regexp">/html/</span>phpadmin</span><br><span class="line"></span><br><span class="line">cp  config.sample.inc.php  config.inc.php</span><br><span class="line">注: 把模板修改一下，有的版本需要，有的版本自动添加的</span><br><span class="line">   <span class="variable">$cfg</span>[<span class="string">'blowfish_secret'</span>] = <span class="string">''</span>;  <span class="comment"># 添加一些口令信息，不做要求</span></span><br><span class="line">   <span class="variable">$cfg</span>[<span class="string">'blowfish_secret'</span>] = <span class="string">'sdgdgdsgdsfhg'</span>;</span><br><span class="line"></span><br><span class="line">yum -y install php-mbstring  <span class="comment"># 所依赖的包</span></span><br><span class="line">systemctl reload httpd</span><br></pre></td></tr></table></figure>
+<h2 id="布署wordpress"><a href="#布署wordpress" class="headerlink" title="布署wordpress"></a>布署wordpress</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">官网: <span class="string">https:</span><span class="comment">//cn.wordpress.org/</span></span><br><span class="line"></span><br><span class="line">解压缩WordPress博客程序到网页站点目录下</span><br><span class="line">   unzip wordpress<span class="number">-4.3</span><span class="number">.1</span>-zh_CN.zip</span><br><span class="line">   mv wordpress blog</span><br><span class="line"></span><br><span class="line">新建wpdb库和wpuser用户</span><br><span class="line">   mysql&gt; create database wpdb;</span><br><span class="line">   mysql&gt; grant all privileges on wpdb.* to wpuser@<span class="string">'%'</span> identified by <span class="string">"wppass"</span>;</span><br><span class="line"></span><br><span class="line">打开<span class="string">http:</span><span class="comment">//webserver/wordpress进行页面安装</span></span><br><span class="line">注: wordpress目录权限</span><br><span class="line">   setfacl –R –m <span class="string">u:</span><span class="string">apache:</span>rwx wordpress</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="CentOS-7编译php-xcache加速访问"><a href="#CentOS-7编译php-xcache加速访问" class="headerlink" title="CentOS 7编译php-xcache加速访问"></a>CentOS 7编译php-xcache加速访问</h1><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">官网: <span class="symbol">http:</span>/<span class="regexp">/xcache.lighttpd.net/wiki</span><span class="regexp">/ReleaseArchive</span></span><br><span class="line"><span class="regexp">安装方法</span></span><br><span class="line"><span class="regexp">   rpm包: 来自epel源</span></span><br><span class="line"><span class="regexp">   编译安装</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">编译安装</span></span><br><span class="line"><span class="regexp">   yum -y install php-devel</span></span><br><span class="line"><span class="regexp">   下载并解压缩xcache-3.2.0.tar.bz2</span></span><br><span class="line"><span class="regexp">   phpize  # 生成编译环境</span></span><br><span class="line"><span class="regexp">   cd xcache-3.2.0</span></span><br><span class="line"><span class="regexp">   ./configure</span> --enable-xcache --<span class="keyword">with</span>-phpconfig=<span class="regexp">/usr/bin</span><span class="regexp">/php-config</span></span><br><span class="line"><span class="regexp">   make &amp;&amp; make install</span></span><br><span class="line"><span class="regexp">   cp xcache-3.2.0/xcache</span>.ini /etc/php.d/</span><br><span class="line">   systemctl restart httpd.service</span><br><span class="line"></span><br><span class="line">php</span><br><span class="line">   httpd+php结合的方式:</span><br><span class="line">      <span class="class"><span class="keyword">module</span>: <span class="title">php</span></span></span><br><span class="line">      cgi</span><br><span class="line">      <span class="symbol">fastcgi:</span> php-fpm</span><br><span class="line">   php-<span class="symbol">fpm:</span></span><br><span class="line">      CentOS <span class="number">6</span>: </span><br><span class="line">         PHP-<span class="number">5.3</span>.<span class="number">2</span>之前，默认不支持fpm机制，需要自行打补丁并编译安装</span><br><span class="line">         httpd-<span class="number">2.2</span>: 默认不支持fcgi协议，需要自行编译此模块</span><br><span class="line">         解决方案: 编译安装httpd-<span class="number">2.4</span>, php-<span class="number">5.3</span>.<span class="number">3</span>+</span><br><span class="line">      CentOS <span class="number">7</span>:</span><br><span class="line">         httpd-<span class="number">2.4</span>: rpm包默认编译支持了fcgi模块</span><br><span class="line">         php-fpm包: 专用于将php运行于fpm模式</span><br><span class="line"></span><br><span class="line">配置fastcgi</span><br><span class="line">   php配置</span><br><span class="line">   配置文件: <span class="regexp">/etc/php</span>.ini，/etc/php.d/*.ini</span><br><span class="line">      Module下，重启Httpd服务</span><br><span class="line">      FastCGI模式下，重启php-fpm服务</span><br><span class="line">   配置文件格式:</span><br><span class="line">      [foo]:Section Header</span><br><span class="line">      Directive=value</span><br><span class="line">      注释符:</span><br><span class="line">         <span class="comment"># 纯粹的注释信息</span></span><br><span class="line">         ; 用于注释可启动的指令在较新的版本中，已经完全使用<span class="string">";"</span>进行注释</span><br><span class="line"></span><br><span class="line">php.ini核心配置的详细说明</span><br><span class="line">   <span class="symbol">http:</span>/<span class="regexp">/php.net/manual</span><span class="regexp">/zh/ini</span>.core.php</span><br><span class="line"></span><br><span class="line">Php.ini配置选项列表</span><br><span class="line">   <span class="symbol">http:</span>/<span class="regexp">/php.net/manual</span><span class="regexp">/zh/ini</span>.list.php</span><br><span class="line"></span><br><span class="line">fcgi服务配置文件: <span class="regexp">/etc/php</span>-fpm.conf, <span class="regexp">/etc/phpfpm</span>.d/*.conf</span><br><span class="line">   连接池:</span><br><span class="line">      pm = static|dynamic</span><br><span class="line">      <span class="symbol">static:</span> 固定数量的子进程，pm.max_children</span><br><span class="line">      <span class="symbol">dynamic:</span> 子进程数量以动态模式管理</span><br><span class="line">         pm.max_children</span><br><span class="line">         pm.start_servers</span><br><span class="line">         pm.min_spare_servers</span><br><span class="line">         pm.max_spare_servers</span><br><span class="line">         pm.max_requests = <span class="number">500</span></span><br><span class="line"></span><br><span class="line">确保运行php-fpm进程的用户对session目录有读写权限</span><br><span class="line">   mkdir /var/<span class="class"><span class="keyword">lib</span>/<span class="title">php</span>/<span class="title">session</span></span></span><br><span class="line">   chown apache.apache /var/<span class="class"><span class="keyword">lib</span>/<span class="title">php</span>/<span class="title">session</span></span></span><br><span class="line"></span><br><span class="line">(<span class="number">1</span>) 配置httpd，添加/etc/httpd/conf.d/fcgi.conf配置文件，内容类似:</span><br><span class="line">   DirectoryIndex index.php</span><br><span class="line">   ProxyRequests Off</span><br><span class="line">   ProxyPassMatch ^<span class="regexp">/(.*\.php)$  fcgi:/</span><span class="regexp">/127.0.0.1:9000/var</span><span class="regexp">/www/html</span><span class="regexp">/$1</span></span><br><span class="line"><span class="regexp">   注: 在HTTPD服务器上必须启用proxy_fcgi_module模块，充当PHP客户端</span></span><br><span class="line"><span class="regexp">   httpd –M | grep fcgi</span></span><br><span class="line"><span class="regexp">   cat /etc</span><span class="regexp">/httpd/conf</span>.modules.d/<span class="number">00</span>-proxy.conf</span><br><span class="line"></span><br><span class="line">(<span class="number">2</span>) 虚拟主机配置</span><br><span class="line">   vim /etc/httpd/conf.d/vhosts.conf</span><br><span class="line">   DirectoryIndex index.php</span><br><span class="line">   &lt;VirtualHost *:<span class="number">80</span>&gt;</span><br><span class="line">      ServerName www.b.net</span><br><span class="line">      DocumentRoot /apps/vhosts/b.net</span><br><span class="line">      ProxyRequests Off</span><br><span class="line">      ProxyPassMatch ^<span class="regexp">/(.*\.php)$</span></span><br><span class="line"><span class="regexp">      fcgi:/</span><span class="regexp">/127.0.0.1:9000/apps</span><span class="regexp">/vhosts/b</span>.net/$<span class="number">1</span></span><br><span class="line">      &lt;Directory <span class="string">"/apps/vhosts/b.net"</span>&gt;</span><br><span class="line">         Options None</span><br><span class="line">         AllowOverride None</span><br><span class="line">         Require all granted</span><br><span class="line">      &lt;<span class="regexp">/Directory&gt;</span></span><br><span class="line"><span class="regexp">   &lt;/</span>VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LAMP/" rel="tag"># LAMP</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/18/linux/服务/LAMP/LAMP相关实验6.9/" rel="next" title="LAMP相关实验（6.9）">
+                <i class="fa fa-chevron-left"></i> LAMP相关实验（6.9）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/19/linux/服务/LAMP/LAMP相关实验7.3/" rel="prev" title="LAMP相关实验（7.3）">
+                LAMP相关实验（7.3） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">80</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LAMP介绍"><span class="nav-number">1.</span> <span class="nav-text">LAMP介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#WEB资源类型"><span class="nav-number">1.1.</span> <span class="nav-text">WEB资源类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web相关语言"><span class="nav-number">1.2.</span> <span class="nav-text">Web相关语言</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CGI"><span class="nav-number">2.</span> <span class="nav-text">CGI</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PHP简介"><span class="nav-number">3.</span> <span class="nav-text">PHP简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#php配置"><span class="nav-number">3.1.</span> <span class="nav-text">php配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#php设置"><span class="nav-number">3.2.</span> <span class="nav-text">php设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#php的加速器"><span class="nav-number">3.3.</span> <span class="nav-text">php的加速器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LAMP应用"><span class="nav-number">4.</span> <span class="nav-text">LAMP应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#快速部署LAMP"><span class="nav-number">4.1.</span> <span class="nav-text">快速部署LAMP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#php使用mysql扩展连接数据库"><span class="nav-number">4.2.</span> <span class="nav-text">php使用mysql扩展连接数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#php使用mysqli扩展连接数据库"><span class="nav-number">4.3.</span> <span class="nav-text">php使用mysqli扩展连接数据库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#phpmyadmin"><span class="nav-number">5.</span> <span class="nav-text">phpmyadmin</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#布署phpMyadmin"><span class="nav-number">5.1.</span> <span class="nav-text">布署phpMyadmin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#布署wordpress"><span class="nav-number">5.2.</span> <span class="nav-text">布署wordpress</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CentOS-7编译php-xcache加速访问"><span class="nav-number">6.</span> <span class="nav-text">CentOS 7编译php-xcache加速访问</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
