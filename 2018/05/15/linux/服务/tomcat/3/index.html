@@ -1,0 +1,902 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tomcat," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="部署(deploy)webapp的相关操作12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394">
+<meta name="keywords" content="tomcat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tomcat其它">
+<meta property="og:url" content="http://yoursite.com/2018/05/15/linux/服务/tomcat/3/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="部署(deploy)webapp的相关操作12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-21T06:22:25.449Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tomcat其它">
+<meta name="twitter:description" content="部署(deploy)webapp的相关操作12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/15/linux/服务/tomcat/3/"/>
+
+
+
+
+
+  <title> tomcat其它 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/15/linux/服务/tomcat/3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                tomcat其它
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-15T00:00:00+08:00">
+                2018-05-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="部署-deploy-webapp的相关操作"><a href="#部署-deploy-webapp的相关操作" class="headerlink" title="部署(deploy)webapp的相关操作"></a>部署(deploy)webapp的相关操作</h1><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br></pre></td><td class="code"><pre><span class="line">deploy: 将webapp的源文件放置于目标目录(网页程序文件存放目录)，</span><br><span class="line">  配置tomcat服务器能够基于web.xml和context.xml文件中定义的路径来访问此webapp，</span><br><span class="line">  将其特有的类和依赖的类通过<span class="class"><span class="keyword">class</span> <span class="title">loader</span>装载至<span class="title">JVM</span></span></span><br><span class="line"></span><br><span class="line">部署有两种方式:</span><br><span class="line">   自动部署: auto deploy</span><br><span class="line">   手动部署:</span><br><span class="line">      冷部署: 把webapp复制到指定的位置，而后才启动tomcat</span><br><span class="line">      热部署: 在不停止tomcat的前提下进行部署</span><br><span class="line">      部署工具: manager、ant脚本、tcd(tomcat client deployer)等</span><br><span class="line">		</span><br><span class="line">undeploy: 拆除（反部署），停止webapp，并从tomcat实例上卸载webapp</span><br><span class="line">start: 启动处于停止状态的webapp</span><br><span class="line">stop: 停止webapp，不再向用户提供服务，其类依然在jvm上</span><br><span class="line">redeploy: 重新部署</span><br><span class="line"></span><br><span class="line">手动提供一测试类应用，并冷部署</span><br><span class="line"><span class="comment"># mkidr  -pv  /usr/local/tomcat/webapps/test/&#123;classes,lib,WEB-INF&#125;</span></span><br><span class="line"><span class="comment"># 创建文件/usr/local/tomcat/webapps/test/index.jsp</span></span><br><span class="line">   &lt;%@ page language=<span class="string">"java"</span> %&gt;</span><br><span class="line">   &lt;%@ page <span class="keyword">import</span>=<span class="string">"java.util.*"</span> %&gt;</span><br><span class="line">      &lt;html&gt;</span><br><span class="line">      &lt;head&gt;</span><br><span class="line">         &lt;title&gt;Test Page&lt;/title&gt;</span><br><span class="line">      &lt;/head&gt;</span><br><span class="line">      &lt;body&gt;</span><br><span class="line">         &lt;%</span><br><span class="line">            out.println(<span class="string">"hello world"</span>);</span><br><span class="line">         %&gt;</span><br><span class="line">      &lt;/body&gt;</span><br><span class="line">      &lt;/html&gt;</span><br><span class="line"></span><br><span class="line">tomcat的两个管理应用:  <span class="comment"># 配置相应的管理用户才能使用</span></span><br><span class="line">   manager</span><br><span class="line">   host-manager</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">tomcat的常用组件配置</span><br><span class="line">   Server: 代表tomcat instance，即表现出的一个java进程，监听在<span class="number">8005</span>端口，只接收<span class="string">"SHUTDOWN"</span></span><br><span class="line">     各server监听的端口不能相同，因此，在同一物理主机启动多个实例时，需要修改其监听端口为不同的端口，</span><br><span class="line">   <span class="comment"># &lt;Server port="8005" shutdown="SHUTDOWN"&gt;</span></span><br><span class="line">      <span class="comment"># 可以用远程登录的方式（telnet）上去之后，输入SHUTDOWN 这样就可以把tomcat服务给闭关</span></span><br><span class="line">   <span class="comment"># 如果不启用的话， port="-1" 这样就可以关闭</span></span><br><span class="line">   <span class="comment"># 如果是rpm安装的话，使用catalina.sh 这个脚本关闭的话，是关闭不了的，它是依赖于8005来进行关闭的</span></span><br><span class="line"></span><br><span class="line">   Service: 用于实现将一个或多个connector组件关联至一个engine组件</span><br><span class="line"></span><br><span class="line">   Connector组件: 负责接收请求，常见的有三类http/https/ajp</span><br><span class="line"></span><br><span class="line">进入tomcat的请求可分为两类</span><br><span class="line">   (<span class="number">1</span>) standalone : 请求来自于客户端浏览器</span><br><span class="line">   (<span class="number">2</span>) 由其它的web server反代：来自前端的反代服务器</span><br><span class="line">      nginx<span class="function"> --&gt;</span> http connector<span class="function"> --&gt;</span> tomcat</span><br><span class="line">      httpd<span class="function"><span class="params">(proxy_http_module)</span> --&gt;</span> http connector<span class="function"> --&gt;</span> tomcat</span><br><span class="line">      httpd<span class="function"><span class="params">(proxy_ajp_module)</span> --&gt;</span> ajp connector<span class="function"> --&gt;</span> tomcat</span><br><span class="line">      httpd<span class="function"><span class="params">(mod_jk)</span> --&gt;</span> ajp connector<span class="function"> --&gt;</span> tomcat</span><br><span class="line">   </span><br><span class="line">属性:</span><br><span class="line">   port=<span class="string">"8080"</span></span><br><span class="line">   protocol=<span class="string">"HTTP/1.1"</span></span><br><span class="line">   connectionTimeout=<span class="string">"20000"</span></span><br><span class="line"></span><br><span class="line">address: 监听的IP地址，默认为本机所有可用地址</span><br><span class="line">maxThreads: 最大并发连接数，默认为<span class="number">200</span></span><br><span class="line">enableLookups: 是否启用DNS查询功能</span><br><span class="line">acceptCount: 等待队列的最大长度</span><br><span class="line">secure:</span><br><span class="line">sslProtocol</span><br><span class="line"></span><br><span class="line">Engine组件: Servlet实例，即servlet引擎，其内部可以一个或多个host组件来定义站点</span><br><span class="line">  通常需要通过defaultHost来定义默认的虚拟主机</span><br><span class="line"></span><br><span class="line">属性：</span><br><span class="line">   name=</span><br><span class="line">   defaultHost=<span class="string">"localhost"</span></span><br><span class="line">   jvmRoute=</span><br><span class="line"></span><br><span class="line">Host组件: 位于engine内部用于接收请求并进行相应处理的主机或虚拟主机</span><br><span class="line">例:</span><br><span class="line">   &lt;Host name=<span class="string">"localhost"</span>  appBase=<span class="string">"webapps"</span>	unpackWARs=<span class="string">"true"</span> autoDeploy=<span class="string">"true"</span>&gt; &lt;/Host&gt;</span><br><span class="line">   <span class="comment"># unpackWARs="true" 一般压缩文件放在目录下面，会自动解开的，就是开启了这个功能</span></span><br><span class="line"></span><br><span class="line">常用属性说明:</span><br><span class="line">   (<span class="number">1</span>) appBase: 此Host的webapps的默认存放目录，指存放非归档的web应用程序的目录或归档的WAR文件</span><br><span class="line">     目录路径，可以使用基于$CATALINA_BASE变量所定义的路径的相对路径</span><br><span class="line">   (<span class="number">2</span>) autoDeploy: 在Tomcat处于运行状态时，将某webapp放置于appBase所定义的目录中时，是否自动将其部署至tomcat</span><br><span class="line">例:</span><br><span class="line">   &lt;Host name=<span class="string">"tc1.magedu.com"</span> appBase=<span class="string">"/appdata/webapps"</span> unpackWARs=<span class="string">"true"</span> autoDeploy=<span class="string">"true"</span>&gt;&lt;/Host&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># mkdir -pv /appdata/webapps</span></span><br><span class="line"><span class="comment"># mkdir -pv /appdata/webapps/ROOT/&#123;lib,classes,WEB-INF&#125;</span></span><br><span class="line"><span class="comment"># 这里指是构建了一个虚拟的环境而已，也可以在ROOT目录下提供一个测试页即可，index.jsp上面的有示例</span></span><br><span class="line"></span><br><span class="line">Context组件:</span><br><span class="line">例:</span><br><span class="line">   &lt;Context path=<span class="string">"/PATH"</span> docBase=<span class="string">"/PATH/TO/SOMEDIR"</span> reloadable=<span class="string">""</span>/&gt;</span><br><span class="line"></span><br><span class="line">path: 指定访问该Web应用的URL入口</span><br><span class="line">docBase: 指定Web应用的文件路径，可以给定绝对路径，也可以给定相对路径</span><br><span class="line">reloadable: 是否可重新装载</span><br><span class="line"></span><br><span class="line">综合示例:</span><br><span class="line">   &lt;Host name=<span class="string">"node1.magedu.com"</span> appBase=<span class="string">"/web/apps"</span> unpackWARs=<span class="string">"true"</span> autoDeploy=<span class="string">"true"</span>&gt;</span><br><span class="line">         &lt;Valve className=<span class="string">"org.apache.catalina.valves.AccessLogValve"</span> directory=<span class="string">"logs"</span></span><br><span class="line">         prefix=<span class="string">"node1_access"</span> suffix=<span class="string">".log"</span></span><br><span class="line">         pattern=<span class="string">"%h %l %u %t &amp;quot;%r&amp;quot; %s %b"</span> /&gt;</span><br><span class="line">      &lt;Context path=<span class="string">"/test"</span> docBase=<span class="string">"test"</span> reloadable=<span class="string">""</span>&gt;</span><br><span class="line">         &lt;Valve className=<span class="string">"org.apache.catalina.valves.AccessLogValve"</span> directory=<span class="string">"logs"</span></span><br><span class="line">         prefix=<span class="string">"node1_test_access_"</span> suffix=<span class="string">".log"</span></span><br><span class="line">         pattern=<span class="string">"%h %l %u %t &amp;quot;%r&amp;quot; %s %b"</span> /&gt;</span><br><span class="line">      &lt;/Context&gt;</span><br><span class="line">   &lt;/Host&gt;		</span><br><span class="line"><span class="comment"># 添加虚拟主机在页面当中配置，可以直接添加进行配置相差设置</span></span><br><span class="line"></span><br><span class="line">Valve组件:（相当于阀门）</span><br><span class="line">   &lt;Valve className=<span class="string">"org.apache.catalina.valves.AccessLogValve"</span></span><br><span class="line">      directory=<span class="string">"logs"</span></span><br><span class="line">      prefix=<span class="string">"localhost_access_log"</span> suffix=<span class="string">".txt"</span></span><br><span class="line">      pattern=<span class="string">"%h %l %u %t &amp;quot;%r&amp;quot; %s %b"</span> /&gt;</span><br><span class="line">   <span class="comment"># 控制访问日志: prefix 文件名  suffix 后缀名  pattern 定义格式</span></span><br><span class="line"></span><br><span class="line">   &lt;Valve className=<span class="string">"org.apache.catalina.valves.RemoteAddrValve"</span></span><br><span class="line">      deny=<span class="string">"172\.16\.100\.67"</span> /&gt;</span><br><span class="line"></span><br><span class="line">Valve存在多种类型:</span><br><span class="line">   定义访问日志: org.apache.catalina.valves.AccessLogValve</span><br><span class="line">   定义访问控制: org.apache.catalina.valves.RemoteAddrValve</span><br><span class="line"></span><br><span class="line">LNMT: Linux Nginx MySQL Tomcat  <span class="comment"># 基于nginx反代理</span></span><br><span class="line">   Client <span class="function"><span class="params">(http)</span> --&gt;</span> nginx <span class="function"><span class="params">(reverse proxy)(http)</span> --&gt;</span> tomcat (http connector)</span><br><span class="line"></span><br><span class="line">      location / &#123;</span><br><span class="line">         proxy_pass http:<span class="regexp">//tc1.magedu.com:8080;</span></span><br><span class="line"><span class="regexp">         <span class="comment"># 如果设置了自己的站点主机的话，就配置如下: 记得要加 /</span></span></span><br><span class="line"><span class="regexp">         location  /  &#123;</span></span><br><span class="line"><span class="regexp">            proxy_pass http://</span>www.xdg.com:<span class="number">8080</span>/test/;</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">LAMT: Linux Apache(httpd) MySQL Tomcat  <span class="comment"># 基于httpd反代理</span></span><br><span class="line"><span class="comment"># httpd的代理模块</span></span><br><span class="line">   proxy_module</span><br><span class="line">   proxy_http_module: 适配http协议客户端</span><br><span class="line">   proxy_ajp_module: 适配ajp协议客户端</span><br><span class="line"></span><br><span class="line">Client <span class="function"><span class="params">(http)</span> --&gt;</span> httpd <span class="function"><span class="params">(proxy_http_module)(http)</span> --&gt;</span> tomcat  (http connector)</span><br><span class="line">Client <span class="function"><span class="params">(http)</span> --&gt;</span> httpd <span class="function"><span class="params">(proxy_ajp_module)(ajp)</span> --&gt;</span> tomcat  (ajp connector)</span><br><span class="line">Client <span class="function"><span class="params">(http)</span> --&gt;</span> httpd <span class="function"><span class="params">(mod_jk)(ajp)</span> --&gt;</span> tomcat  (ajp connector)</span><br><span class="line"></span><br><span class="line">proxy_http_module代理配置示例:</span><br><span class="line">   &lt;VirtualHost *:<span class="number">80</span>&gt;</span><br><span class="line">      ServerName   tc1.magedu.com</span><br><span class="line">      ProxyRequests Off  <span class="comment"># 关闭正向代理</span></span><br><span class="line">      ProxyVia   On  <span class="comment"># 响应报文中添加via首部</span></span><br><span class="line">      ProxyPreserveHost On  <span class="comment"># 是否把客户机请求的主机名(host)，以请求的方式转发</span></span><br><span class="line">        <span class="comment"># 给后端的主机来响应。（比如，后面的RS服务器是主机区分的话）</span></span><br><span class="line">      &lt;Proxy *&gt;  <span class="comment"># * 所有代理</span></span><br><span class="line">         Require all granted</span><br><span class="line">      &lt;/Proxy&gt;</span><br><span class="line">      ProxyPass / http:<span class="regexp">//tc1.magedu.com:8080/  <span class="comment"># 后面的/ 是以代替的形式，必须要有</span></span></span><br><span class="line"><span class="regexp">      ProxyPassReverse / http://</span>tc1.magedu.com:<span class="number">8080</span>/ </span><br><span class="line">      <span class="comment"># 如果后端服务器响应的是302或301的重定向，是否要保留这要样的代理操作</span></span><br><span class="line">      &lt;Location /&gt;</span><br><span class="line">         Require all granted</span><br><span class="line">      &lt;/Location&gt;</span><br><span class="line">   &lt;/VirtualHost&gt;</span><br><span class="line"><span class="comment"># 这里注意的是，在使用FQDN进行代理的时候，比如: http://www.xdg.com:8080/test/</span></span><br><span class="line"><span class="comment">#   在这里默认主机和自定义主机下都定义了test站点</span></span><br><span class="line"><span class="comment"># 进行调度的时候，进行域名调度的时候，返回的是默认站点下的test而不是自定义主机名(www.xdg.com)下的站点</span></span><br><span class="line"><span class="comment"># 用nginx进行调度的时候，没用问题，用windows访问的时候，也是没有问题的</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">proxy_ajp_module代理配置示例:</span><br><span class="line">   &lt;VirtualHost *:<span class="number">80</span>&gt;</span><br><span class="line">      ServerName  tc1.magedu.com</span><br><span class="line">      ProxyRequests  Off</span><br><span class="line">      ProxyVia  On</span><br><span class="line">      ProxyPreserveHost  On</span><br><span class="line">      &lt;Proxy *&gt;</span><br><span class="line">         Require all granted</span><br><span class="line">      &lt;/Proxy&gt;</span><br><span class="line">         ProxyPass / ajp:<span class="regexp">//tc1.magedu.com:8009/  <span class="comment"># ajp端口是8009</span></span></span><br><span class="line"><span class="regexp">         ProxyPassReverse / ajp://</span>tc1.magedu.com:<span class="number">8009</span>/</span><br><span class="line">      &lt;Location /&gt;</span><br><span class="line">         Require all granted</span><br><span class="line">      &lt;/Location&gt;</span><br><span class="line">   &lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Tomcat处理的请求:</span><br><span class="line">   nt: nginx-&gt;http-&gt;tomcat(http connector)</span><br><span class="line">   at: httpd-&gt;http-&gt;tomcat(http connector)</span><br><span class="line">      httpd-&gt;ajp-&gt;tomcat(ajp connector)</span><br></pre></td></tr></table></figure>
+<h1 id="会话保持"><a href="#会话保持" class="headerlink" title="会话保持"></a>会话保持</h1><p>```<br>(1) session sticky<br>   source_ip:<br>      nginx: ip_hash<br>      haproxy: source<br>      lvs: sh<br>   cookie:<br>      nginx: hash<br>      haproxy: cookie<br>(2) session cluster: delta session manager<br>(3) session server: redis(store), memcached(cache)</p>
+<p>Tomcat Cluster(session)<br>   (1) session sticky<br>   (2) session cluster<br>      tomcat delta manager<br>   (3) session server<br>      memcached</p>
+<p>Tomcat Cluster<br>   (1) httpd + tomcat cluster<br>      httpd: mod_proxy, mod_proxy_http, mod_proxy_balancer<br>      tomcat cluster：http connector<br>   (2) httpd + tomcat cluster<br>      httpd: mod_proxy, mod_proxy_ajp, mod_proxy_balancer<br>      tomcat cluster：ajp connector<br>   (3) httpd + tomcat cluster<br>      httpd: mod_jk  # 基于不使用<br>      tomcat cluster：ajp connector<br>   (4) nginx + tomcat cluster</p>
+<p>第一种方法的实现:<br>   基于nginx上的调度实现<br>      upstream trsrvs {<br>         server 172.18.48.225:8080;<br>         server 172.18.48.200:8080;<br>      }<br>      server {<br>         ….<br>         location / {<br>            proxy_pass <a href="http://trservs/test/" target="_blank" rel="noopener">http://trservs/test/</a>;<br>         }<br>      }</p>
+<h1 id="客户机测试的话，应该一个是225，一个是200的主机页面，各个主机的测试页面在下面案例当中"><a href="#客户机测试的话，应该一个是225，一个是200的主机页面，各个主机的测试页面在下面案例当中" class="headerlink" title="客户机测试的话，应该一个是225，一个是200的主机页面，各个主机的测试页面在下面案例当中"></a>客户机测试的话，应该一个是225，一个是200的主机页面，各个主机的测试页面在下面案例当中</h1><p>   基于httpd上的调度实现<br>      <proxy balancer:="" tcsrvs=""><br>         BalancerMember <a href="http://172.18.100.67:8080" target="_blank" rel="noopener">http://172.18.100.67:8080</a>  loadfactor=1  # loadfactor是基于权重的<br>         BalancerMember <a href="http://172.18.100.68:8080" target="_blank" rel="noopener">http://172.18.100.68:8080</a>  loadfactor=2</proxy></p>
+<pre><code>   # 如果改成ajp协议
+      BalancerMember ajp://172.18.100.67:8009
+      BalancerMember ajp://172.18.100.68:8009
+      # 其它的不用修改，只要修改这里就可以基于ajp协议的方式了
+   ProxySet lbmethod=byrequests
+&lt;/Proxy&gt;
+
+&lt;VirtualHost *:80&gt;
+   ServerName lb.magedu.com
+   ProxyVia On
+   ProxyRequests Off
+   ProxyPreserveHost On
+   &lt;Proxy *&gt;
+      Require all granted
+   &lt;/Proxy&gt;
+   ProxyPass / balancer://tcsrvs/
+   ProxyPassReverse / balancer://tcsrvs/
+   &lt;Location /&gt;
+      Require all granted
+   &lt;/Location&gt;
+&lt;/VirtualHost&gt;
+</code></pre><h1 id="在测试的时候，http-ip-test访问应该和上面一样的情况"><a href="#在测试的时候，http-ip-test访问应该和上面一样的情况" class="headerlink" title="在测试的时候，http://ip/test访问应该和上面一样的情况"></a>在测试的时候，<a href="http://ip/test访问应该和上面一样的情况" target="_blank" rel="noopener">http://ip/test访问应该和上面一样的情况</a></h1><p>   基于ajp上的调度实现<br>      <proxy balancer:="" tcsrvs=""><br>         BalancerMember ajp://172.18.100.67:8009<br>         BalancerMember ajp://172.18.100.68:8009<br>         ProxySet lbmethod=byrequests<br>      </proxy></p>
+<pre><code>&lt;VirtualHost *:80&gt;
+   ServerName lb.magedu.com
+   ProxyVia On
+   ProxyRequests Off
+   ProxyPreserveHost On
+   &lt;Proxy *&gt;
+      Require all granted
+   &lt;/Proxy&gt;
+   ProxyPass / balancer://tcsrvs/
+   ProxyPassReverse / balancer://tcsrvs/
+   &lt;Location /&gt;
+      Require all granted
+   &lt;/Location&gt;
+   &lt;Location /balancer-manager&gt;
+      SetHandler balancer-manager
+      ProxyPass !
+      Require all granted
+   &lt;/Location&gt;
+&lt;/VirtualHost&gt;    
+</code></pre><p>启用管理接口: # ajp和httpd两个协议都可以使用<br>   <location balancer-manager=""><br>      SetHandler balancer-manager  # 启用内建的balancer管理器<br>      ProxyPass !  # 访问这个路径的时候，不向后端进行代理<br>      Require all granted  # 权限的允许<br>   </location></p>
+<p>BalancerMember:<br>   BalancerMember [balancerurl] url [key=value [key=value …]]<br>   status：<br>      D: Worker is disabled and will not accept any requests.<br>      S: Worker is administratively stopped.<br>      I: Worker is in ignore-errors mode and will always be considered available.<br>      H: Worker is in hot-standby mode and will only be used if no other viable workers are available.<br>      E: Worker is in an error state.<br>      N: Worker is in drain mode and will only accept existing sticky sessions destined for itself and ignore all other requests.</p>
+<h1 id="指定调度的服务的状态信息的，比如-把一个后端的调度服务设置为不可用状态"><a href="#指定调度的服务的状态信息的，比如-把一个后端的调度服务设置为不可用状态" class="headerlink" title="指定调度的服务的状态信息的，比如: 把一个后端的调度服务设置为不可用状态"></a>指定调度的服务的状态信息的，比如: 把一个后端的调度服务设置为不可用状态</h1><p>例: BalancerMember ajp://172.18.100.67:8009 status=S</p>
+<p>loadfactor:<br>   负载因子，即权重<br>lbmethod:<br>   Balancer load-balance method. Select the load-balancing scheduler method to use. Either byrequests, to perform weighted request counting; bytraffic, to perform weighted traffic byte count balancing; or bybusyness, to perform pending request balancing. The default is byrequests.<br>stickysession:<br>   Balancer sticky session name. The value is usually set to something like JSESSIONID or PHPSESSIONID, and it depends on the backend application server that support sessions. If the backend application server uses different name for cookies and url encoded id (like servlet containers) use | to separate them. The first part is for the cookie the second for the path.<br>   Available in Apache HTTP Server 2.4.4 and later.</p>
+<p>会话粘性的实现方法:<br>   这种方法是设置cookie信息，当客户端访问的时候，会加上cookie信息，然后根据cookie的信息，进行相应的调度。</p>
+<p>   Header add Set-Cookie “ROUTEID=.%{BALANCER_WORKER_ROUTE}e; path=/“ env=BALANCER_ROUTE_CHANGED</p>
+<h1 id="设置相应的cookie的信息"><a href="#设置相应的cookie的信息" class="headerlink" title="设置相应的cookie的信息"></a>设置相应的cookie的信息</h1><p>   <proxy balancer:="" tcsrvs=""><br>      BalancerMember <a href="http://172.18.100.67:8080" target="_blank" rel="noopener">http://172.18.100.67:8080</a> route=TomcatA loadfactor=1  # route这个可以不要<br>      BalancerMember <a href="http://172.18.100.68:8080" target="_blank" rel="noopener">http://172.18.100.68:8080</a> route=TomcatB loadfactor=2<br>      ProxySet lbmethod=byrequests<br>      ProxySet stickysession=ROUTEID<br>   </proxy></p>
+<p>   <virtualhost *:80=""><br>      ServerName lb.magedu.com<br>      ProxyVia On<br>      ProxyRequests Off<br>      ProxyPreserveHost On<br>      <proxy *=""><br>         Require all granted<br>      </proxy><br>      ProxyPass / balancer://tcsrvs/<br>      ProxyPassReverse / balancer://tcsrvs/<br>      <location><br>         Require all granted<br>      </location><br>   </virtualhost></p>
+<h1 id="会话的绑定，在客户端访问的时候，会给定一个cookie的，当再次访问的时间，会附带自己的cookie的信息"><a href="#会话的绑定，在客户端访问的时候，会给定一个cookie的，当再次访问的时间，会附带自己的cookie的信息" class="headerlink" title="会话的绑定，在客户端访问的时候，会给定一个cookie的，当再次访问的时间，会附带自己的cookie的信息"></a>会话的绑定，在客户端访问的时候，会给定一个cookie的，当再次访问的时间，会附带自己的cookie的信息</h1><p>  然后根据cookie调度（这里应该是同一个主机的的调度，而在session的值也是相同的不会改变，请求<br>  报文当中的信息也是不会改变）</p>
+<p>示例程序:<br>   演示效果，在TomcatA上某context中（如/test），提供如下页面<br>   &lt;%@ page language=”java” %&gt;<br>   <html><br>   <head><title>TomcatA</title></head><br>   <body><br>      <h1><font color="red">TomcatA.magedu.com</font></h1><br>      <table align="centre" border="1"><br>      <tr><br>         <td>Session ID</td><br>         &lt;% session.setAttribute(“magedu.com”,”magedu.com”); %&gt;<br>         <td>&lt;%= session.getId() %&gt;</td><br>      </tr><br>      <tr><br>         <td>Created on</td><br>         <td>&lt;%= session.getCreationTime() %&gt;</td><br>      </tr><br>      </table><br>   </body><br>   </html></p>
+<p>   演示效果，在TomcatB上某context中（如/test），提供如下页面<br>   &lt;%@ page language=”java” %&gt;<br>   <html><br>   <head><title>TomcatB</title></head><br>   <body><br>      <h1><font color="blue">TomcatB.magedu.com</font></h1><br>      <table align="centre" border="1"><br>      <tr><br>         <td>Session ID</td><br>         &lt;% session.setAttribute(“magedu.com”,”magedu.com”); %&gt;<br>          <td>&lt;%= session.getId() %&gt;</td><br>      </tr><br>      <tr><br>         <td>Created on</td><br>         <td>&lt;%= session.getCreationTime() %&gt;</td><br>      </tr><br>      </table><br>   </body><br>   </html></p>
+<h1 id="测试方法"><a href="#测试方法" class="headerlink" title="测试方法"></a>测试方法</h1><p>   for i in {1..10}; do curl -s <a href="http://172.18.48.100/test/" target="_blank" rel="noopener">http://172.18.48.100/test/</a> | grep -i tomcat; done</p>
+<p>Tomcat Session Replication Cluster:<br>   (1) 配置启用集群，将下列配置放置于<engine>或<host>中<br>      <cluster classname="org.apache.catalina.ha.tcp.SimpleTcpCluster" channelsendoptions="8"><br>         <manager classname="org.apache.catalina.ha.session.DeltaManager" expiresessionsonshutdown="false" notifylistenersonreplication="true"><br>         <channel classname="org.apache.catalina.tribes.group.GroupChannel"><br>         <membership classname="org.apache.catalina.tribes.membership.McastService" address="228.0.0.48" #="" 不要使用默认的组播地址，必免冲突="" port="45564" frequency="500" droptime="3000"><br>         <receiver classname="org.apache.catalina.tribes.transport.nio.NioReceiver" address="172.18.48.225" #="" 本机做通信的固定地址，建议不用使用auto，如果本机多个地址，可能会选择出错="" port="4000" autobind="100" selectortimeout="5000" maxthreads="6"></receiver></membership></channel></manager></cluster></host></engine></p>
+<pre><code>   &lt;Sender className=&quot;org.apache.catalina.tribes.transport.ReplicationTransmitter&quot;&gt;
+      &lt;Transport className=&quot;org.apache.catalina.tribes.transport.nio.PooledParallelSender&quot;/&gt;
+   &lt;/Sender&gt;
+   &lt;Interceptor className=&quot;org.apache.catalina.tribes.group.interceptors.TcpFailureDetector&quot;/&gt;
+   &lt;Interceptor className=&quot;org.apache.catalina.tribes.group.interceptors.MessageDispatch15Interceptor&quot;/&gt;
+   &lt;/Channel&gt;
+
+   &lt;Valve className=&quot;org.apache.catalina.ha.tcp.ReplicationValve&quot; filter=&quot;&quot;/&gt;
+   &lt;Valve className=&quot;org.apache.catalina.ha.session.JvmRouteBinderValve&quot;/&gt;
+
+   &lt;Deployer className=&quot;org.apache.catalina.ha.deploy.FarmWarDeployer&quot;
+      tempDir=&quot;/tmp/war-temp/&quot;
+      deployDir=&quot;/tmp/war-deploy/&quot;
+      watchDir=&quot;/tmp/war-listen/&quot;
+      watchEnabled=&quot;false&quot;/&gt;
+
+   &lt;ClusterListener className=&quot;org.apache.catalina.ha.session.JvmRouteSessionIDBinderListener&quot;/&gt;
+   &lt;ClusterListener className=&quot;org.apache.catalina.ha.session.ClusterSessionListener&quot;/&gt;
+   &lt;/Cluster&gt;    
+   # CentOS 7上的tomcat自带的文档中的配置示例有语法错误
+   # 在官方文档当中，最后两个没有结尾闭合标签，所以要自己手动添加上去
+
+2.确保Engine的jvmRoute属性配置正确。
+   在Engine当中添加jvmRoute的相差信息，例如:（必须要添加）
+      &lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot; jvmRoute=&quot;tomcatB&quot; &gt;
+   另一个也要进行配置
+      &lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot; jvmRoute=&quot;tomcatA&quot; &gt;
+</code></pre><p>   (2) 配置test  # 这里是自己所指定的主机站点，所以要进行配置<br>      1.编辑WEB-INF/web.xml  # 这里直接把主站点当中的/etc/tomcat/conf/web.xml这个文件拷贝过来就可以了<br>        然后在web.xml文件当中添加 <distributable> 元素  # 在空白处直接添加这个元素就可以了<br>      test<br>         ├── index.jsp<br>           └── WEB-INF<br>             └── web.xml</distributable></p>
+<h1 id="测试的结果"><a href="#测试的结果" class="headerlink" title="测试的结果"></a>测试的结果</h1><pre><code>不管调度到A主机，还是B主机，它们的session的值是不会改变的，始终是一个值，如:
+   Session ID    AF393D96A0AE77F9C4A4302A6EBEF88C.tomcatA  # A主机            
+   Session ID    AF393D96A0AE77F9C4A4302A6EBEF88C.tomcatB  # B主机
+</code></pre><p>Tomcat的常用优化配置<br>   (1) 内存空间<br>   /etc/sysconfig/tomcat<br>      JAVA_OPTS=”-server -Xms32g -Xmx32g -XX:NewSize= -XX:MaxNewSize= -XX:PermSize= -XX:MaxPermSize=”<br>         -server: 服务器模型<br>         -Xms: 堆内存初始化大小<br>         -Xmx: 堆内存空间上限<br>         -XX:NewSize=: 新生代空间初始化大小<br>         -XX:MaxNewSize=: 新生代空间最大值<br>         -XX:PermSize=: 持久代空间初始化大小<br>         -XX:MaxPermSize=: 持久代空间最大值 </p>
+<p>   (2) 线程池设置<br>      <connector port="8080" protocol="HTTP/1.1" connectiontimeout="20000" redirectport="8443"><br>      常用属性<br>         maxThreads: 最大线程数；最大并发连接数；<br>         minSpareThreads: 最小空闲线程数<br>         maxSpareThreads: 最大空闲线程数<br>         acceptCount: 等待队列的最大长度<br>         URIEncoding: URI地址编码格式，建议使用UTF-8<br>         enableLookups: 是否启用dns解析，建议禁用<br>         compression: 是否启用传输压缩机制，建议”on”<br>         compressionMinSize: 启用压缩传输的数据流最小值，单位是字节<br>         compressableMimeType: 定义启用压缩功能的MIME类型<br>            text/html, text/xml, text/css, text/javascript</connector></p>
+<p>   (3) 禁用8005端口<br>      <server port="-1" shutdown="SHUTDOWN"></server></p>
+<p>   (4) 隐藏版本信息<br>      <connector port="8080" protocol="HTTP/1.1" connectiontimeout="20000" redirectport="8443"><br>         Server=”SOME STRING”</connector></p>
+<p>Tomcat Session Server (memcached)<br>   <a href="https://github.com/magro/memcached-session-manager" target="_blank" rel="noopener">https://github.com/magro/memcached-session-manager</a><br>  支持的session server类型<br>      memcached<br>      couchbase<br>      redis</p>
+<p>JVM常用的分析工具<br>   jps: 用来查看运行的所有jvm进程<br>   jinfo: 查看进程的运行环境参数，主要是jvm命令行参数<br>   jstat: 对jvm应用程序的资源和性能进行实时监控<br>   jstack: 查看所有线程的运行状态<br>   jmap: 查看jvm占用物理内存的状态<br>   jconsole<br>   jvisualvm</p>
+<p>jps: Java virutal machine Process Status tool，<br>   jps [-q] [-mlvV] [<hostid>]<br>      -q: 静默模式<br>      -v: 显示传递给jvm的命令行参数<br>      -m: 输出传入main方法的参数<br>      -l: 输出main类或jar完全限定名称<br>      -V: 显示通过flag文件传递给jvm的参数</hostid></p>
+<pre><code>[&lt;hostid&gt;]: 主机id，默认为localhost
+</code></pre><p>jinfo: 输出给定的java进程的所有配置信息<br>   jinfo [option] <pid><br>      -flags: to print VM flags<br>      -sysprops: to print Java system properties<br>      -flag <name>: to print the value of the named VM flag</name></pid></p>
+<p>jstack: 查看指定的java进程的线程栈的相关信息<br>   jstack [-l] <pid><br>   jstack -F [-m] [-l] <pid><br>      -l: long listings，会显示额外的锁信息，因此，发生死锁时常用此选项<br>      -m: 混合模式，既输出java堆栈信息，也输出C/C++堆栈信息<br>      -F: 当使用”jstack -l PID”无响应，可以使用-F强制输出信息</pid></pid></p>
+<p>jstat: 输出指定的java进程的统计信息<br>   jstat -help|-options<br>   jstat -<option> [-t] [-h<lines>] <vmid> [<interval> [<count>]]<br>      -class: class loader<br>      -compiler: JIT<br>      -gc: gc<br>      -gccapacity: 统计堆中各代的容量<br>      -gccause<br>      -gcmetacapacity<br>      -gcnew: 新生代<br>      -gcnewcapacity<br>      -gcold: 老年代<br>      -gcoldcapacity<br>      -gcutil<br>      -printcompilation</count></interval></vmid></lines></option></p>
+<pre><code>[&lt;interval&gt; [&lt;count&gt;]]
+   interval: 时间间隔，单位是毫秒
+   count: 显示的次数
+
+-gc
+   YGC: 新生代的垃圾回收次数
+   YGCT: 新生代垃圾回收消耗的时长
+   FGC: Full GC的次数
+   FGCT: Full GC消耗的时长
+   GCT: GC消耗的总时长
+</code></pre><p>图形工具<br>   jconsole<br>   jvisualvm</p>
+<p>jmap：Memory Map, 用于查看堆内存的使用状态<br>   jhat：Java Heap Analysis Tool<br>   jmap [option] <pid></pid></p>
+<pre><code>        查看堆空间的详细信息
+            jmap -heap &lt;pid&gt;
+
+        查看堆内存中的对象的数目
+            jmap -histo[:live] &lt;pid&gt;
+                live：只统计活动对象
+
+        保存堆内存数据至文件中，而后使用jvisualvm或jhat进行查看
+            jmap -dump:&lt;dump-options&gt; &lt;pid&gt;
+                dump-options:
+                live         dump only live objects; if not specified, all objects in the heap are dumped.
+                format=b     binary format
+                file=&lt;file&gt;  dump heap to &lt;file&gt;    
+
+课外作业：了解何为full gc，如何应对
+</code></pre>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tomcat/" rel="tag"># tomcat</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/15/linux/服务/tomcat/2/" rel="next" title="tomcat基本配置">
+                <i class="fa fa-chevron-left"></i> tomcat基本配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/15/linux/服务/tomcat/1/" rel="prev" title="tomcat基础理论">
+                tomcat基础理论 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#部署-deploy-webapp的相关操作"><span class="nav-number">1.</span> <span class="nav-text">部署(deploy)webapp的相关操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#会话保持"><span class="nav-number">2.</span> <span class="nav-text">会话保持</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#客户机测试的话，应该一个是225，一个是200的主机页面，各个主机的测试页面在下面案例当中"><span class="nav-number">3.</span> <span class="nav-text">客户机测试的话，应该一个是225，一个是200的主机页面，各个主机的测试页面在下面案例当中</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在测试的时候，http-ip-test访问应该和上面一样的情况"><span class="nav-number">4.</span> <span class="nav-text">在测试的时候，http://ip/test访问应该和上面一样的情况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#指定调度的服务的状态信息的，比如-把一个后端的调度服务设置为不可用状态"><span class="nav-number">5.</span> <span class="nav-text">指定调度的服务的状态信息的，比如: 把一个后端的调度服务设置为不可用状态</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设置相应的cookie的信息"><span class="nav-number">6.</span> <span class="nav-text">设置相应的cookie的信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#会话的绑定，在客户端访问的时候，会给定一个cookie的，当再次访问的时间，会附带自己的cookie的信息"><span class="nav-number">7.</span> <span class="nav-text">会话的绑定，在客户端访问的时候，会给定一个cookie的，当再次访问的时间，会附带自己的cookie的信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">8.</span> <span class="nav-text">TomcatA.magedu.com</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">9.</span> <span class="nav-text">TomcatB.magedu.com</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试方法"><span class="nav-number">10.</span> <span class="nav-text">测试方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试的结果"><span class="nav-number">11.</span> <span class="nav-text">测试的结果</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

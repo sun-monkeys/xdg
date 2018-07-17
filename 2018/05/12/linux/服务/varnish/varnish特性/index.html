@@ -1,0 +1,779 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="varnish," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="vcl的语法格式12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152(1) VCL files start with vcl 4.0(2) //, # and /* foo */ for comments(3) Subroutines are declared">
+<meta name="keywords" content="varnish">
+<meta property="og:type" content="article">
+<meta property="og:title" content="varnish特性">
+<meta property="og:url" content="http://yoursite.com/2018/05/12/linux/服务/varnish/varnish特性/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="vcl的语法格式12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152(1) VCL files start with vcl 4.0(2) //, # and /* foo */ for comments(3) Subroutines are declared">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-11T06:24:29.631Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="varnish特性">
+<meta name="twitter:description" content="vcl的语法格式12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152(1) VCL files start with vcl 4.0(2) //, # and /* foo */ for comments(3) Subroutines are declared">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/12/linux/服务/varnish/varnish特性/"/>
+
+
+
+
+
+  <title> varnish特性 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/12/linux/服务/varnish/varnish特性/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                varnish特性
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-12T00:00:00+08:00">
+                2018-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="vcl的语法格式"><a href="#vcl的语法格式" class="headerlink" title="vcl的语法格式"></a>vcl的语法格式</h1><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">1</span>) VCL files start with vcl <span class="number">4.0</span></span><br><span class="line">(<span class="number">2</span>) //, <span class="comment"># and /* foo */ for comments</span></span><br><span class="line">(<span class="number">3</span>) Subroutines are declared with the <span class="function"><span class="keyword">sub</span> <span class="title">keyword</span></span>; 如<span class="function"><span class="keyword">sub</span> <span class="title">vcl_recv</span> </span>&#123; ...&#125;</span><br><span class="line">(<span class="number">4</span>) No loops, <span class="keyword">state</span>-limited variables（受限于引擎的内建变量）</span><br><span class="line">(<span class="number">5</span>) Terminating statements with a keyword <span class="keyword">for</span> <span class="keyword">next</span> action as argument of </span><br><span class="line">  the <span class="keyword">return</span>() function, i.e.: <span class="keyword">return</span>(action)，用于实现状态引擎转换</span><br><span class="line">(<span class="number">6</span>) Domain-specific</span><br><span class="line"></span><br><span class="line">The VCL Finite State Machine</span><br><span class="line">   (<span class="number">1</span>) Each request is processed separately;</span><br><span class="line">   (<span class="number">2</span>) Each request is independent from others at any <span class="keyword">given</span> <span class="keyword">time</span>;</span><br><span class="line">   (<span class="number">3</span>) States are related, but isolated;</span><br><span class="line">   (<span class="number">4</span>) <span class="keyword">return</span>(action); exits one <span class="keyword">state</span> <span class="keyword">and</span> instructs Varnish to proceed to the <span class="keyword">next</span> <span class="keyword">state</span>;</span><br><span class="line">   (<span class="number">5</span>) Built-in VCL code is always present <span class="keyword">and</span> appended below your own VCL;</span><br><span class="line"></span><br><span class="line">三类主要语法</span><br><span class="line">   <span class="function"><span class="keyword">sub</span> <span class="title">subroutine</span> </span>&#123;</span><br><span class="line">      ...</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">if</span> CONDITION &#123;</span><br><span class="line">      ...</span><br><span class="line">   &#125; <span class="keyword">else</span> &#123;	</span><br><span class="line">      ...</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span>(), hash_data()</span><br><span class="line"></span><br><span class="line">VCL Built-in Functions <span class="keyword">and</span> Keywords</span><br><span class="line">   函数</span><br><span class="line">      regsub(str, regex, <span class="function"><span class="keyword">sub</span>)  # 在<span class="title">str</span>查找，当中符合<span class="title">regex</span>，用<span class="title">sub</span>来替换</span></span><br><span class="line"><span class="function">      <span class="title">regsuball</span>(<span class="title">str</span>, <span class="title">regex</span>, <span class="title">sub</span>)</span></span><br><span class="line"><span class="function">      <span class="title">ban</span>(<span class="title">boolean</span> <span class="title">expression</span>)</span></span><br><span class="line"><span class="function">      <span class="title">hash_data</span>(<span class="title">input</span>)</span></span><br><span class="line"><span class="function">      <span class="title">synthetic</span>(<span class="title">str</span>)</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">Keywords</span>:</span></span><br><span class="line"><span class="function">   <span class="title">call</span> <span class="title">subroutine</span>，<span class="title">return</span>(<span class="title">action</span>)，<span class="title">new</span>，<span class="title">set</span>，<span class="title">unset</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">操作符</span></span><br><span class="line"><span class="function">   ==, !=, ~, &gt;, &gt;=, &lt;, &lt;=</span></span><br><span class="line"><span class="function">   逻辑操作符: &amp;&amp;, ||, !</span></span><br><span class="line"><span class="function">   变量赋值: =</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">例: <span class="title">obj</span>.<span class="title">hits</span>是内建变量，用于保存某缓存项的从缓存中命中的次数</span></span><br><span class="line"><span class="function">在<span class="title">sub</span> <span class="title">vcl_deliver</span>的函数当中定义</span></span><br><span class="line"><span class="function">   <span class="title">if</span> (<span class="title">obj</span>.<span class="title">hits</span>&gt;0) </span>&#123;</span><br><span class="line">      set resp.http.X-Cache = <span class="string">"HIT via "</span> + server.ip;</span><br><span class="line">      <span class="comment"># 在响应报文的当中添加一个响应报文为X-Cache</span></span><br><span class="line">   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      set resp.http.X-Cache = <span class="string">"MISS from "</span> + server.ip;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="变量类型"><a href="#变量类型" class="headerlink" title="变量类型"></a>变量类型</h1><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">内建变量</span><br><span class="line">   req.*: request  <span class="comment"># 表示由客户端发来的请求报文相关</span></span><br><span class="line">      req.http.*  <span class="comment"># 指定某个具体的一个值</span></span><br><span class="line">      req.http.User-Agent, req.http.Referer, ...</span><br><span class="line">   <span class="keyword">bereq.* </span> <span class="comment"># 由varnish发往BE主机的httpd请求相关</span></span><br><span class="line">      <span class="keyword">bereq.http.*</span></span><br><span class="line"><span class="keyword"> </span>  <span class="keyword">beresp.* </span> <span class="comment"># 由BE主机响应给varnish的响应报文相关</span></span><br><span class="line">      <span class="keyword">beresp.http.*</span></span><br><span class="line"><span class="keyword"> </span>  resp.*  <span class="comment"># 由varnish响应给client相关</span></span><br><span class="line">   obj.*  <span class="comment"># 存储在缓存空间中的缓存对象的属性，只读</span></span><br><span class="line"></span><br><span class="line">常用变量</span><br><span class="line">   <span class="keyword">bereq.*</span></span><br><span class="line"><span class="keyword"> </span>     <span class="keyword">bereq.http.HEADERS</span></span><br><span class="line"><span class="keyword"> </span>     <span class="keyword">bereq.request </span> <span class="comment"># 请求方法</span></span><br><span class="line">      <span class="keyword">bereq.url </span> <span class="comment"># 请求的url</span></span><br><span class="line">      <span class="keyword">bereq.proto </span> <span class="comment"># 请求的协议版本</span></span><br><span class="line">      <span class="keyword">bereq.backend </span> <span class="comment"># 指明要调用的后端主机</span></span><br><span class="line"></span><br><span class="line">   req.*</span><br><span class="line">      req.http.Cookie  <span class="comment"># 客户端的请求报文中Cookie首部的值</span></span><br><span class="line">      req.http.User-Agent ~ <span class="string">"chrome"</span></span><br><span class="line"></span><br><span class="line">   <span class="keyword">beresp.*, </span>resp.*</span><br><span class="line">      <span class="keyword">beresp.http.HEADERS</span></span><br><span class="line"><span class="keyword"> </span>     <span class="keyword">beresp.status </span> <span class="comment"># 响应的状态码</span></span><br><span class="line">      reresp.proto  <span class="comment"># 协议版本</span></span><br><span class="line">      <span class="keyword">beresp.backend.name </span> <span class="comment"># BE主机的主机名</span></span><br><span class="line">      <span class="keyword">beresp.ttl </span> <span class="comment"># BE主机响应的内容的余下的可缓存时长</span></span><br><span class="line"></span><br><span class="line">   obj.*</span><br><span class="line">      obj.hits  <span class="comment"># 此对象从缓存中命中的次数</span></span><br><span class="line">      obj.ttl  <span class="comment"># 对象的ttl值</span></span><br><span class="line"></span><br><span class="line">   server.*</span><br><span class="line">      server.ip  <span class="comment"># varnish主机的IP</span></span><br><span class="line">      server.hostname  <span class="comment"># varnish主机的Hostname</span></span><br><span class="line"></span><br><span class="line">   client.*</span><br><span class="line">      client.ip  <span class="comment"># 发请求至varnish主机的客户端IP</span></span><br><span class="line"></span><br><span class="line">用户自定义</span><br><span class="line">   set</span><br><span class="line">   unset</span><br><span class="line"></span><br><span class="line">例: 强制对某类资源的请求不检查缓存</span><br><span class="line">   vcl_recv &#123;</span><br><span class="line">      if (req.url ~ <span class="string">"(?i)^/(login|admin)"</span>) &#123;</span><br><span class="line">         return(pass)<span class="comment">;</span></span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"><span class="comment"># (?i)  忽略大小写</span></span><br><span class="line"><span class="comment"># ^  某个为开头</span></span><br><span class="line"><span class="comment"># /(login|admin)  /login 或者 /admin</span></span><br></pre></td></tr></table></figure>
+<h1 id="vcl-fetch"><a href="#vcl-fetch" class="headerlink" title="vcl_fetch"></a>vcl_fetch</h1><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">如前面所述，相对于<span class="selector-tag">vcl_recv</span>是根据客户端的请求作出缓存决策来说，<span class="selector-tag">vcl_fetch</span>则是根据</span><br><span class="line">  服务器端的响应作出缓存决策。在任何<span class="selector-tag">VCL</span>状态引擎中返回的<span class="selector-tag">pass</span>操作都将由<span class="selector-tag">vcl_fetch</span>进行</span><br><span class="line">  后续处理。<span class="selector-tag">vcl_fetch</span>中有许多可用的内置变量，比如最常用的用于定义某对象缓存时长的</span><br><span class="line">  <span class="selector-tag">beresp</span><span class="selector-class">.ttl</span>变量。通过<span class="selector-tag">return</span>()返回给<span class="selector-tag">varnish</span>的操作指示有:</span><br><span class="line">(<span class="number">1</span>) <span class="selector-tag">deliver</span>: 缓存此对象，并将其发送给客户端(经由vcl_deliver)</span><br><span class="line">(<span class="number">2</span>) <span class="selector-tag">hit_for_pass</span>: 不缓存此对象，但可以导致后续对此对象的请求直接送达到<span class="selector-tag">vcl_pass</span>进行处理</span><br><span class="line">(<span class="number">3</span>) <span class="selector-tag">restart</span>: 重启整个<span class="selector-tag">VCL</span>，并增加重启计数；超出<span class="selector-tag">max_restarts</span>限定的最大重启次数后将会返回错误信息</span><br><span class="line">(<span class="number">4</span>) <span class="selector-tag">error</span> <span class="selector-tag">code</span> <span class="selector-attr">[reason]</span>: 返回指定的错误代码给客户端并丢弃此请求</span><br><span class="line"># 默认的<span class="selector-tag">vcl_fetch</span>放弃了缓存任何使用了<span class="selector-tag">Set-Cookie</span>首部的响应</span><br></pre></td></tr></table></figure>
+<h2 id="对于特定类型的资源，如公开的图片等，取消其私有标识，并强行设定其可以由varnish缓存的时长"><a href="#对于特定类型的资源，如公开的图片等，取消其私有标识，并强行设定其可以由varnish缓存的时长" class="headerlink" title="对于特定类型的资源，如公开的图片等，取消其私有标识，并强行设定其可以由varnish缓存的时长"></a>对于特定类型的资源，如公开的图片等，取消其私有标识，并强行设定其可以由varnish缓存的时长</h2><figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">定义在vcl_backend_response中</span><br><span class="line">   <span class="keyword">if</span> (beresp.<span class="keyword">http</span>.cache-control !~ <span class="string">"s-maxage"</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (bereq.url ~ <span class="string">"(?i)\.(jpg|jpeg|png|gif|css|js)$"</span>) &#123;</span><br><span class="line">         <span class="keyword">unset</span> beresp.<span class="keyword">http</span>.Set-Cookie;</span><br><span class="line">         <span class="keyword">set</span> beresp.ttl = <span class="number">3600</span>s;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"><span class="comment"># 凡是带有cookie的信息都是不允许缓存的（默认）</span></span><br><span class="line"></span><br><span class="line">   <span class="keyword">if</span> (bereq.url ~ <span class="string">"(?i)\.(jpg|png|gif)$"</span>) &#123;</span><br><span class="line">      <span class="keyword">unset</span> beresp.<span class="keyword">http</span>.Set-Cookie;</span><br><span class="line">      <span class="keyword">set</span> beresp.ttl = <span class="number">7200</span>s;</span><br><span class="line">   &#125;</span><br><span class="line"><span class="comment"># 对url当中以jpg,png,gif为结尾的图片</span></span><br><span class="line"><span class="comment"># 取消它的cookie(一般正常的图片是没有的)</span></span><br><span class="line"><span class="comment"># 设定图片的缓存时常为 7200s</span></span><br></pre></td></tr></table></figure>
+<h2 id="定义在vcl-recv中"><a href="#定义在vcl-recv中" class="headerlink" title="定义在vcl_recv中"></a>定义在vcl_recv中</h2><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (req.<span class="attr">restarts</span> == <span class="number">0</span>) &#123;  <span class="comment"># 请求的重启次数为 0  --&gt; 重写</span></span><br><span class="line">   <span class="keyword">if</span> (req.http.X-Fowarded-For) &#123;</span><br><span class="line">      set req.http.<span class="attr">X-Forwarded-For</span> = req.http.X-Forwarded-For + <span class="string">","</span> + client.ip;</span><br><span class="line">   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      set req.http.<span class="attr">X-Forwarded-For</span> = client.ip;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;		</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 缓存对象的修剪: purge, ban</span></span><br><span class="line">(<span class="number">1</span>) 能执行purge操作</span><br><span class="line">   sub vcl_purge &#123;</span><br><span class="line">      return (synth(<span class="number">200</span>,<span class="string">"Purged"</span>));</span><br><span class="line">   &#125;</span><br><span class="line"><span class="comment"># 在安装包当中builtin.vcl的内建当中有默认的使用方法</span></span><br><span class="line"></span><br><span class="line">(<span class="number">2</span>) 何时执行purge操作</span><br><span class="line">   sub vcl_recv &#123;</span><br><span class="line">      <span class="keyword">if</span> (req.<span class="attr">method</span> == <span class="string">"PURGE"</span>) &#123;  <span class="comment"># 定义请求的方法: 如果是PURGE就执行修剪</span></span><br><span class="line">         return(purge);</span><br><span class="line">      &#125;</span><br><span class="line">      ...</span><br><span class="line">   &#125;</span><br><span class="line"><span class="comment"># 访问一个资源，将它purge，如果在用户访问的时候，请求的方法是PURGE那么就</span></span><br><span class="line"><span class="comment">#   调用return(purge)方法</span></span><br><span class="line"><span class="comment"># curl -X PURGE http://172.18.48.200/picture.jpg</span></span><br><span class="line"><span class="comment"># 当修剪过后，再次访问的时候，用户会重新向后端的RS服务进行请求，</span></span><br><span class="line"><span class="comment">#   再进行缓存。（仅一次有效）</span></span><br><span class="line"></span><br><span class="line">添加此类请求的访问控制法则</span><br><span class="line">   acl purgers &#123;</span><br><span class="line">      <span class="string">"127.0.0.0"</span>/<span class="number">8</span>;</span><br><span class="line">      <span class="string">"10.1.0.0"</span>/<span class="number">16</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   sub vcl_recv &#123;</span><br><span class="line">      <span class="keyword">if</span> (req.<span class="attr">method</span> == <span class="string">"PURGE"</span>) &#123;</span><br><span class="line">         <span class="keyword">if</span> (!client.ip ~ purgers) &#123;</span><br><span class="line">            return(synth(<span class="number">405</span>,<span class="string">"Purging not allowed for "</span> + client.ip));</span><br><span class="line">         &#125;</span><br><span class="line">         return(purge);</span><br><span class="line">      &#125;</span><br><span class="line">      ...</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">Banning:</span><br><span class="line">(<span class="number">1</span>) varnishadm:</span><br><span class="line">   ban &lt;field&gt; &lt;operator&gt; &lt;arg&gt;</span><br><span class="line">例:</span><br><span class="line">   ban req.url ~ ^/javascripts</span><br><span class="line"></span><br><span class="line">   ban  req.url ~ (?i).(jpg|png)$  <span class="comment"># 在命令行当中直接添加，没有转意字符</span></span><br><span class="line">   <span class="comment"># 使用一次有效，后面的还会被缓存</span></span><br><span class="line"></span><br><span class="line">(<span class="number">2</span>) 在配置文件中定义，使用ban()函数	</span><br><span class="line">例:</span><br><span class="line">   <span class="keyword">if</span> (req.<span class="attr">method</span> == <span class="string">"BAN"</span>) &#123;</span><br><span class="line">      ban(<span class="string">"req.http.host == "</span> + req.http.host + <span class="string">" &amp;&amp; req.url == "</span> + req.url);</span><br><span class="line">      <span class="comment"># Throw a synthetic page so the request won't go to the backend.</span></span><br><span class="line">      return(synth(<span class="number">200</span>, <span class="string">"Ban added"</span>));</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">ban req.http.<span class="attr">host==www.ilinux.io</span> &amp;&amp; req.<span class="attr">url==/test1.html</span></span><br><span class="line"><span class="comment"># 使用技巧: 显示ban当中指定的规则 --&gt; ban.list</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">如何设定使用多个后端主机:</span><br><span class="line">   backend default &#123;</span><br><span class="line">      .<span class="attr">host</span> = <span class="string">"172.16.100.6"</span>;</span><br><span class="line">      .<span class="attr">port</span> = <span class="string">"80"</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   backend appsrv &#123;</span><br><span class="line">      .<span class="attr">host</span> = <span class="string">"172.16.100.7"</span>;</span><br><span class="line">      .<span class="attr">port</span> = <span class="string">"80"</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   sub vcl_recv &#123;				</span><br><span class="line">      <span class="keyword">if</span> (req.url ~ <span class="string">"(?i)\.php$"</span>) &#123;</span><br><span class="line">         set req.<span class="attr">backend_hint</span> = appsrv;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         set req.<span class="attr">backend_hint</span> = default;</span><br><span class="line">      &#125;		</span><br><span class="line">      ...</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">Director:</span><br><span class="line">varnish module:</span><br><span class="line"><span class="comment"># 使用前需要导入</span></span><br><span class="line">   <span class="built_in">import</span> directors;  <span class="comment"># 一定要先装载模块，后使用</span></span><br><span class="line">例:</span><br><span class="line">   <span class="built_in">import</span> directors;  <span class="comment"># load the directors</span></span><br><span class="line"></span><br><span class="line">   backend server1 &#123;</span><br><span class="line">      .<span class="attr">host</span> =</span><br><span class="line">      .<span class="attr">port</span> =</span><br><span class="line">   &#125;</span><br><span class="line">   backend server2 &#123;</span><br><span class="line">      .<span class="attr">host</span> =</span><br><span class="line">      .<span class="attr">port</span> =</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   sub vcl_init &#123;  <span class="comment"># 相当于awk当中的 begin&#123;&#125; 初始化的作用</span></span><br><span class="line">      new <span class="attr">GROUP_NAME</span> = directors.round_robin();</span><br><span class="line">      <span class="comment"># round_robin 调度方法，GROUP_NAME: 自定义的组名</span></span><br><span class="line">      GROUP_NAME.add_backend(server1);</span><br><span class="line">      GROUP_NAME.add_backend(server2);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   sub vcl_recv &#123;</span><br><span class="line">      <span class="comment"># send all traffic to the bar director:</span></span><br><span class="line">      set req.<span class="attr">backend_hint</span> = GROUP_NAME.backend();  <span class="comment"># 添加调度组</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">基于cookie的session sticky</span><br><span class="line">   sub vcl_init &#123;</span><br><span class="line">      new <span class="attr">h</span> = directors.hash();</span><br><span class="line">      h.add_backend(one, <span class="number">1</span>);   // backend 'one' <span class="keyword">with</span> weight '<span class="number">1</span>'</span><br><span class="line">      h.add_backend(two, <span class="number">1</span>);   // backend 'two' <span class="keyword">with</span> weight '<span class="number">1</span>'</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   sub vcl_recv &#123;</span><br><span class="line">      // pick a backend based on the cookie header of the client</span><br><span class="line">      set req.<span class="attr">backend_hint</span> = h.backend(req.http.cookie);</span><br><span class="line">   &#125;				</span><br><span class="line"></span><br><span class="line">BE Health Check:</span><br><span class="line">   backend BE_NAME &#123;</span><br><span class="line">      .<span class="attr">host</span> =</span><br><span class="line">      .<span class="attr">port</span> =</span><br><span class="line">      .<span class="attr">probe</span> = &#123;</span><br><span class="line">         .<span class="attr">url=</span> </span><br><span class="line">         .<span class="attr">timeout=</span> </span><br><span class="line">         .<span class="attr">interval=</span> </span><br><span class="line">         .<span class="attr">window=</span></span><br><span class="line">         .<span class="attr">threshold=</span></span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">.probe: 定义健康状态检测方法:</span><br><span class="line">   .url  <span class="comment"># 检测时要请求的URL，默认为”/";</span></span><br><span class="line">   .request  <span class="comment"># 发出的具体请求</span></span><br><span class="line">      .<span class="attr">request</span> =</span><br><span class="line">      <span class="string">"GET /.healthtest.html HTTP/1.1"</span></span><br><span class="line">      <span class="string">"Host: www.magedu.com"</span></span><br><span class="line">      <span class="string">"Connection: close"</span></span><br><span class="line">   .window  <span class="comment"># 基于最近的多少次检查来判断其健康状态</span></span><br><span class="line">   .threshold  <span class="comment"># 最近.window中定义的这么次检查中至有.threshhold定义的次数是成功的</span></span><br><span class="line">   .interval  <span class="comment"># 检测频度</span></span><br><span class="line">   .timeout  <span class="comment"># 超时时长</span></span><br><span class="line">   .expected_response  <span class="comment"># 期望的响应码，默认为200</span></span><br><span class="line"></span><br><span class="line">健康状态检测的配置方式</span><br><span class="line">(<span class="number">1</span>) probe PB_NAME  &#123;  <span class="comment"># 定义健康的规则</span></span><br><span class="line">      ...</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   backend <span class="attr">NAME</span> = &#123;  </span><br><span class="line">      .<span class="attr">probe</span> = PB_NAME;  <span class="comment"># 调用的方式</span></span><br><span class="line">      ...</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">(<span class="number">2</span>) backend NAME  &#123;</span><br><span class="line">      .<span class="attr">probe</span> = &#123;  <span class="comment"># 直接在主机当中定义使用</span></span><br><span class="line">         ...</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">probe check &#123;</span><br><span class="line">   .<span class="attr">url</span> = <span class="string">"/.healthcheck.html"</span>;</span><br><span class="line">   .<span class="attr">window</span> = <span class="number">5</span>;</span><br><span class="line">   .<span class="attr">threshold</span> = <span class="number">4</span>;</span><br><span class="line">   .<span class="attr">interval</span> = <span class="number">2</span>s;</span><br><span class="line">   .<span class="attr">timeout</span> = <span class="number">1</span>s;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">backend default &#123;</span><br><span class="line">   .<span class="attr">host</span> = <span class="string">"10.1.0.68"</span>;</span><br><span class="line">   .<span class="attr">port</span> = <span class="string">"80"</span>;</span><br><span class="line">   .<span class="attr">probe</span> = check;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">backend appsrv &#123;</span><br><span class="line">   .<span class="attr">host</span> = <span class="string">"10.1.0.69"</span>;</span><br><span class="line">   .<span class="attr">port</span> = <span class="string">"80"</span>;</span><br><span class="line">   .<span class="attr">probe</span> = check;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">手动设定BE主机的状态</span><br><span class="line">   sick  <span class="comment"># 管理down，指定为down</span></span><br><span class="line">   healthy  <span class="comment"># 管理up，指定为up，如果是down也不会认为是down，还是会往这个主机上调度</span></span><br><span class="line">   auto  <span class="comment"># probe auto，指定为自动识别，根据健康检测probe</span></span><br><span class="line">例: 在管理命令当中</span><br><span class="line">   backend.set_health   default  （sick,healthy,auto） <span class="comment"># 设置默认的3个当中某个值</span></span><br><span class="line"></span><br><span class="line">设置后端的主机属性</span><br><span class="line">   backend BE_NAME &#123;</span><br><span class="line">      ...</span><br><span class="line">      .<span class="attr">connect_timeout</span> = <span class="number">0.5</span>s;  <span class="comment"># 超时时长，指tcp建立连接的超时时长</span></span><br><span class="line">      .<span class="attr">first_byte_timeout</span> = <span class="number">20</span>s;  <span class="comment"># 第一个字节的超时时长，指传输数据的超时时长</span></span><br><span class="line">      .<span class="attr">between_bytes_timeout</span> = <span class="number">5</span>s;  <span class="comment"># 传输第一个数据之后，传输第二个数据之间超时时长</span></span><br><span class="line">      .<span class="attr">max_connections</span> = <span class="number">50</span>;  <span class="comment"># 最大并发连接数</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="varnish的运行时参数"><a href="#varnish的运行时参数" class="headerlink" title="varnish的运行时参数"></a>varnish的运行时参数</h1><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">线程模型</span><br><span class="line">   cache-worker</span><br><span class="line">   cache-main</span><br><span class="line">   ban lurker</span><br><span class="line">   acceptor</span><br><span class="line">   epoll/kqueue</span><br><span class="line">   ...</span><br><span class="line"></span><br><span class="line">线程相关的参数: 使用线程池机制管理线程</span><br><span class="line">   在线程池内部，其每一个请求由一个线程来处理，其worker线程的最大数决定了varnish的并发响应能力</span><br><span class="line">   thread_pools: Number <span class="keyword">of</span> worker thread pools.  <span class="comment"># 最好小于或等于CPU核心数量</span></span><br><span class="line">   thread_pool_max: The maximum <span class="built_in">number</span> <span class="keyword">of</span> worker threads <span class="keyword">in</span> each pool.  <span class="comment"># 每线程池的最大线程数</span></span><br><span class="line">   thread_pool_min: The minimum <span class="built_in">number</span> <span class="keyword">of</span> worker threads <span class="keyword">in</span> each pool.  <span class="comment"># 额外意义为"最大空闲线程数"</span></span><br><span class="line">      最大并发连接数 = thread_pools  * thread_pool_max</span><br><span class="line">   thread_pool_timeout</span><br><span class="line">   <span class="comment"># Thread idle threshold.  Threads in excess of thread_pool_min, which have been idle for at least this long, will be destroyed.</span></span><br><span class="line">   thread_pool_add_delay: Wait <span class="keyword">at</span> least this long <span class="keyword">after</span> creating a thread.</span><br><span class="line">   <span class="comment"># 如果线程池没有多余的空闲进程的时候，不会立刻分配资源，而是等待一会（指的就是这里的时间）</span></span><br><span class="line">   <span class="comment">#   因为说不定等一会，就有其它使用的进程，退出来了，这样就不用申请新的空闲进程了</span></span><br><span class="line">   thread_pool_destroy_delay: Wait this long <span class="keyword">after</span> destroying a thread.</span><br><span class="line">   <span class="comment"># 原理跟上面一样</span></span><br><span class="line"></span><br><span class="line">Timer相关的参数:</span><br><span class="line">   send_timeout: Send <span class="keyword">timeout</span> <span class="keyword">for</span> client connections. If <span class="keyword">the</span> HTTP response hasn't been transmitted <span class="keyword">in</span> this many seconds <span class="keyword">the</span> session <span class="keyword">is</span> closed.</span><br><span class="line">   timeout_idle: Idle <span class="keyword">timeout</span> <span class="keyword">for</span> client connections. </span><br><span class="line">   timeout_req: Max <span class="built_in">time</span> <span class="keyword">to</span> receive clients request headers, measured <span class="keyword">from</span> <span class="keyword">first</span> non-white-<span class="literal">space</span> <span class="built_in">character</span> <span class="keyword">to</span> double CRNL.</span><br><span class="line">   cli_timeout: Timeout <span class="keyword">for</span> <span class="keyword">the</span> childs replies <span class="keyword">to</span> CLI requests <span class="keyword">from</span> <span class="keyword">the</span> mgt_param.</span><br><span class="line"></span><br><span class="line">设置方式  <span class="comment"># 这里是直接在内存当中进行设置</span></span><br><span class="line">   vcl.param </span><br><span class="line">   param.<span class="keyword">set</span></span><br><span class="line">   param.show -l  <span class="comment"># 列出所有参数</span></span><br><span class="line">例:</span><br><span class="line">   param.<span class="keyword">set</span>   thread_pool_max  <span class="number">3000</span>  <span class="comment"># 设置</span></span><br><span class="line">   param.show  thread_pool_max  <span class="comment"># 查看</span></span><br><span class="line"></span><br><span class="line">永久有效的方法  <span class="comment"># 这里是直接在配置文件当中设置</span></span><br><span class="line">   varnish.params</span><br><span class="line">      DEAMON_OPTS=<span class="string">"-p PARAM1=VALUE -p PARAM2=VALUE"</span></span><br><span class="line">   <span class="comment"># 设置变量的时，必须要用-p 引导</span></span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">   DEAMON_OPTS = <span class="string">"-p thread_pool_min=100 -p thread_pool_max=3000 -p thread_pool_timeout=300</span></span><br><span class="line"><span class="string">     -p thread_pools=4  -r thread_pool_min,thread_pool_max,thread_pool_timeout,thread_pools"</span></span><br><span class="line">   <span class="comment"># -r :指定相关的参数，在内存当中是不允许进行修改</span></span><br></pre></td></tr></table></figure>
+<h1 id="varnish日志区域"><a href="#varnish日志区域" class="headerlink" title="varnish日志区域"></a>varnish日志区域</h1><figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line">shared memory log</span><br><span class="line">   计数器</span><br><span class="line">   日志信息</span><br><span class="line"></span><br><span class="line">1、varnishstat - Varnish Cache statistics</span><br><span class="line">   -1</span><br><span class="line">   -1 -f FILED_NAME</span><br><span class="line">   -l: 可用于-f选项指定的字段名称列表</span><br><span class="line"></span><br><span class="line">   MAIN.cache_hit</span><br><span class="line">   MAIN.cache_miss</span><br><span class="line"></span><br><span class="line"><span class="comment"># varnishstat -1 -f MAIN.cache_hit -f MAIN.cache_miss</span></span><br><span class="line"><span class="comment"># 显示指定参数的当前统计数据</span></span><br><span class="line">   MAIN.cache_hit  <span class="comment"># 命中的次数</span></span><br><span class="line">   MAIN.cache_miss  <span class="comment"># 没有命中的次数</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># varnishstat -l -f MAIN -f MEMPOOL</span></span><br><span class="line"><span class="comment"># 列出指定配置段的每个参数的意义</span></span><br><span class="line"></span><br><span class="line">2、varnishtop - Varnish log entry ranking</span><br><span class="line">   -1  Instead of a continously updated display, print the statistics once and exit.</span><br><span class="line">   -i taglist  <span class="comment"># 可以同时使用多个-i选项，也可以一个选项跟上多个标签</span></span><br><span class="line">   -I  &lt;[taglist:]regex&gt;  <span class="comment"># 正则匹配，匹配的包括后面的值，并非表示标签的值</span></span><br><span class="line">   -x taglist  <span class="comment"># 排除列表</span></span><br><span class="line">   -X  &lt;[taglist:]regex&gt;</span><br><span class="line">例:</span><br><span class="line">   varnishtop -i ReqHeader  <span class="comment"># 显示标签为ReqHeader</span></span><br><span class="line">   varnishtop -x ReqHeader  <span class="comment"># 显示除去标签为ReqHeader</span></span><br><span class="line"></span><br><span class="line">3、varnishlog - Display Varnish logs</span><br><span class="line"></span><br><span class="line">4、varnishncsa - Display Varnish logs in Apache / NCSA combined log format</span><br><span class="line"></span><br><span class="line">内建函数</span><br><span class="line">   hash_data()  <span class="comment"># 指明哈希计算的数据；减少差异，以提升命中率</span></span><br><span class="line">   regsub(str,regex,sub)  <span class="comment"># 把str中被regex第一次匹配到字符串替换为sub，主要用于URL Rewrite</span></span><br><span class="line">   regsuball(str,regex,sub)  <span class="comment"># 把str中被regex每一次匹配到字符串均替换为sub</span></span><br><span class="line">   return()</span><br><span class="line">   ban(expression)</span><br><span class="line">   ban_url(regex)  <span class="comment"># Bans所有的其URL可以被此处的regex匹配到的缓存对象</span></span><br><span class="line">   synth(status,<span class="string">"STRING"</span>)  <span class="comment"># purge操作</span></span><br><span class="line"></span><br><span class="line">总结</span><br><span class="line">   varnish: state engine, vcl</span><br><span class="line">   varnish 4.0</span><br><span class="line">      vcl_init </span><br><span class="line">      vcl_recv</span><br><span class="line">      vcl_hash </span><br><span class="line">      vcl_hit </span><br><span class="line">      vcl_pass</span><br><span class="line">      vcl_miss </span><br><span class="line">      vcl_pipe </span><br><span class="line">      vcl_waiting</span><br><span class="line">      vcl_purge </span><br><span class="line">      vcl_deliver</span><br><span class="line">      vcl_synth</span><br><span class="line">      vcl_fini</span><br><span class="line"></span><br><span class="line">      vcl_backend_fetch</span><br><span class="line">      vcl_backend_response</span><br><span class="line">      vcl_backend_error </span><br><span class="line">				</span><br><span class="line">   sub <span class="keyword">VCL_STATE_ENGINE</span> &#123;</span><br><span class="line">      ...</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">backend</span> <span class="keyword">BE_NAME</span> &#123;&#125; </span><br><span class="line">   <span class="keyword">probe</span> <span class="keyword">PB_NAME</span> &#123;&#125;</span><br><span class="line">   <span class="keyword">acl</span> <span class="keyword">ACL_NAME</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">   backend <span class="keyword">imgsrv1</span> &#123;</span><br><span class="line">      .host = <span class="string">"192.168.10.11"</span>;</span><br><span class="line">      .port = <span class="string">"80"</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">backend</span> <span class="keyword">imgsrv2</span> &#123;</span><br><span class="line">      .host = <span class="string">"192.168.10.12"</span>;</span><br><span class="line">      .port = <span class="string">"80"</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">backend</span> <span class="keyword">appsrv1</span> &#123;</span><br><span class="line">      .host = <span class="string">"192.168.10.21"</span>;</span><br><span class="line">      .port = <span class="string">"80"</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">backend</span> <span class="keyword">appsrv2</span> &#123;</span><br><span class="line">      .host = <span class="string">"192.168.10.22"</span>;</span><br><span class="line">      .port = <span class="string">"80"</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">sub</span> <span class="keyword">vcl_init</span> &#123;</span><br><span class="line">      new imgsrvs = directors.random();</span><br><span class="line">      imgsrvs.add_backend(imgsrv1,<span class="number">10</span>);</span><br><span class="line">      imgsrvs.add_backend(imgsrv2,<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">      new staticsrvs = directors.round_robin();</span><br><span class="line">      appsrvs.add_backend(appsrv1);</span><br><span class="line">      appsrvs.add_backend(appsrv2);</span><br><span class="line"></span><br><span class="line">      new appsrvs = directors.hash();</span><br><span class="line">      appsrvs.add_backend(appsrv1,<span class="number">1</span>);</span><br><span class="line">      appsrvs.add_backend(appsrv2,<span class="number">1</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">sub</span> <span class="keyword">vcl_recv</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (req.url ~ <span class="string">"(?i)\.(css|js)$"</span> &#123;</span><br><span class="line">         set req.backend_hint = staticsrvs.backend();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (req.url ~ <span class="string">"(?i)\.(jpg|jpeg|png|gif)$"</span> &#123;</span><br><span class="line">         set req.backend_hint = imgsrvs.backend();</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         set req.backend_hint = appsrvs.backend(req.http.cookie);</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/varnish/" rel="tag"># varnish</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/10/linux/服务/haproxy/haproxy特性/" rel="next" title="haproxy特性">
+                <i class="fa fa-chevron-left"></i> haproxy特性
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/12/linux/服务/varnish/varnish基础理论/" rel="prev" title="varnish基础理论">
+                varnish基础理论 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vcl的语法格式"><span class="nav-number">1.</span> <span class="nav-text">vcl的语法格式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#变量类型"><span class="nav-number">2.</span> <span class="nav-text">变量类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vcl-fetch"><span class="nav-number">3.</span> <span class="nav-text">vcl_fetch</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对于特定类型的资源，如公开的图片等，取消其私有标识，并强行设定其可以由varnish缓存的时长"><span class="nav-number">3.1.</span> <span class="nav-text">对于特定类型的资源，如公开的图片等，取消其私有标识，并强行设定其可以由varnish缓存的时长</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义在vcl-recv中"><span class="nav-number">3.2.</span> <span class="nav-text">定义在vcl_recv中</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#varnish的运行时参数"><span class="nav-number">4.</span> <span class="nav-text">varnish的运行时参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#varnish日志区域"><span class="nav-number">5.</span> <span class="nav-text">varnish日志区域</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

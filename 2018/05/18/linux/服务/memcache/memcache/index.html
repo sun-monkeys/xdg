@@ -1,0 +1,832 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="memcache," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="memcached1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586memcache是一套分布式的高速缓存系统，由LiveJ">
+<meta name="keywords" content="memcache">
+<meta property="og:type" content="article">
+<meta property="og:title" content="memcache基础理论">
+<meta property="og:url" content="http://yoursite.com/2018/05/18/linux/服务/memcache/memcache/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="memcached1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586memcache是一套分布式的高速缓存系统，由LiveJ">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-22T10:04:04.426Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="memcache基础理论">
+<meta name="twitter:description" content="memcached1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586memcache是一套分布式的高速缓存系统，由LiveJ">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/18/linux/服务/memcache/memcache/"/>
+
+
+
+
+
+  <title> memcache基础理论 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/18/linux/服务/memcache/memcache/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                memcache基础理论
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-18T00:00:00+08:00">
+                2018-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="memcached"><a href="#memcached" class="headerlink" title="memcached"></a>memcached</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">memcache是一套分布式的高速缓存系统，由LiveJournal的Brad Fitzpatrick开发，但目前被许多网站使用以提升网站的访问速度，</span><br><span class="line">   尤其对于一些大型的、需要频繁访问数据库的网站访问速度提升效果十分显著。这是一套开放源代码软件，以BSD license授权发布。</span><br><span class="line"></span><br><span class="line">缓存服务器</span><br><span class="line">   缓存: cache，无持久存储功能</span><br><span class="line">   bypass缓存，依赖于客户端的智能</span><br><span class="line">   k/v cache，仅支持存储可流式化数据</span><br><span class="line"></span><br><span class="line">特性</span><br><span class="line">   k/v cache  # 仅可存储可序列化数据，存储项: k/v</span><br><span class="line">   智能性一半依赖于客户端（调用memcached的API开发程序），一半依赖于服务端</span><br><span class="line">   分布式缓存  # 互不通信的分布式集群</span><br><span class="line">      分布式系统请求路由方法  # 取模法，一致性哈希算法</span><br><span class="line">   算法复杂度  # O(1)</span><br><span class="line">   清理过期缓存项:</span><br><span class="line">      缓存耗尽: LRU</span><br><span class="line">      缓存项过期: 惰性清理机制  # 不进行清理，而是把它标记为不可用。当用户访问的时候，会找不到数据</span><br><span class="line">      # 单个item最大数据是1MB，超过1MB数据不予存储</span><br><span class="line"></span><br><span class="line">安装配置:</span><br><span class="line">   yum install memcached  # 由CentOS 7 base仓库直接提供</span><br><span class="line">   yum install libmemcached  # 管理工具</span><br><span class="line">   # memdump <span class="attribute">--servers</span>=172.18.48.225:11211  查看memcache当中的值</span><br><span class="line">   # 监听的端口: 11211/tcp，11211/udp</span><br><span class="line"></span><br><span class="line">主程序: /usr/bin/memcached</span><br><span class="line">配置文件: /etc/sysconfig/memcached</span><br><span class="line">Unit File: memcached.service</span><br><span class="line"></span><br><span class="line">协议格式: memcached协议</span><br><span class="line">   文本格式</span><br><span class="line">   二进制格式</span><br><span class="line"></span><br><span class="line">命令:</span><br><span class="line">   统计类: stats, stats items, stats slabs, stats sizes</span><br><span class="line">   存储类: set, add, replace, append（在后插入）, prepend（在前插入）</span><br><span class="line">      命令格式: &lt;command name&gt; &lt;key&gt; &lt;flags&gt; &lt;exptime&gt; &lt;bytes&gt; &lt;cas unique&gt;</span><br><span class="line">   检索类: get, delete, incr/decr （自增，自减）</span><br><span class="line">   清空: flush_all</span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">   telnet&gt; <span class="builtin-name">add</span>  KEY &lt;flags&gt; &lt;expiretime&gt; &lt;bytes&gt; \r</span><br><span class="line">   telnet&gt; VALUE</span><br><span class="line">例: telnet 127.0.0.1 11211</span><br><span class="line">   登录后:</span><br><span class="line">      <span class="builtin-name">add</span> xdg 1 600 15  # 添加一个变量xdg  600: 10分钟  15: 15个字符</span><br><span class="line">      hello memcached   # 设定变量的值</span><br><span class="line">      STORED</span><br><span class="line">      <span class="builtin-name">get</span> xdg           # 取出变量的值</span><br><span class="line">      VALUE xdg 1 15    # 显示出的信息</span><br><span class="line">      hello memcached   # 显示出的信息</span><br><span class="line">      END</span><br><span class="line">      <span class="builtin-name">add</span> count 1  1200  1  # 自增的变量的每次取值的时候会自增加1</span><br><span class="line">      <span class="builtin-name">get</span> count         # 取值count为2</span><br><span class="line"></span><br><span class="line">memcached程序的常用选项: -h 查看帮助</span><br><span class="line">   -m &lt;num&gt;: Use &lt;num&gt; MB memory max <span class="keyword">to</span> use <span class="keyword">for</span> object storage; the<span class="built_in"> default </span>is 64 megabytes.</span><br><span class="line">   -c &lt;num&gt;: Use &lt;num&gt; max simultaneous connections; the<span class="built_in"> default </span>is 1024.</span><br><span class="line">   -u &lt;username&gt;  # 以指定的用户身份来运行进程</span><br><span class="line">   -l &lt;ip_addr&gt;  # 监听的IP地址，默认为本机所有地址</span><br><span class="line">   -p &lt;num&gt;  # 监听的TCP端口，the<span class="built_in"> default </span>is<span class="built_in"> port </span>11211.</span><br><span class="line">   -U &lt;num&gt;  # Listen on UDP<span class="built_in"> port </span>&lt;num&gt;, the<span class="built_in"> default </span>is<span class="built_in"> port </span>11211, 0 is off.</span><br><span class="line">   -M  # 内存耗尽时，不执行LRU清理缓存，而是拒绝存入新的缓存项，直到有多余的空间可用时为止</span><br><span class="line">   -f &lt;factor&gt;  # 增长因子，默认是1.25</span><br><span class="line">   -t &lt;threads&gt;  # 启动的用于响应用户请求的线程数</span><br><span class="line"></span><br><span class="line">memcached默认没有认证机制，可借用于SASL进行认证  # 没有自带的认证的功能 </span><br><span class="line">SASL：Simple Authentication Secure Layer</span><br><span class="line"></span><br><span class="line">API:</span><br><span class="line">   php-pecl-memcache</span><br><span class="line">   php-pecl-memcached</span><br><span class="line">   python-memcached</span><br><span class="line">   libmemcached</span><br><span class="line">   libmemcached-devel</span><br><span class="line"></span><br><span class="line">命令行工具</span><br><span class="line">   memcached-tool  SERVER:PORT  COMMAND</span><br><span class="line"></span><br><span class="line">各个配置文件信息</span><br><span class="line">   vim  /etc/sysconfig/memcached</span><br><span class="line">      <span class="attribute">PORT</span>=<span class="string">"11211"</span></span><br><span class="line">      <span class="attribute">USER</span>=<span class="string">"memcached"</span></span><br><span class="line">      <span class="attribute">MAXCONN</span>=<span class="string">"1024"</span>   # 最大并发连接数</span><br><span class="line">      <span class="attribute">CACHESIZE</span>=<span class="string">"64"</span>   # 缓存大小: 默认64m</span><br><span class="line">      <span class="attribute">OPTIONS</span>=<span class="string">""</span>       # 其它选项</span><br></pre></td></tr></table></figure>
+<h1 id="基于memcache的session绑定的效果"><a href="#基于memcache的session绑定的效果" class="headerlink" title="基于memcache的session绑定的效果"></a>基于memcache的session绑定的效果</h1><p>```<br>根据tomcat章节当中的tomcat基本配置当中的后续实验使用到了mamcache功能<br>一共4台主机<br>   1.tomcatA 主机<br>   2.tomcatB 主机<br>   3.调度 主机<br>   4.客户端 主机</p>
+<h1 id="把相应的-jar的包放在相应的位置当中（yum安装的话-usr-share-tomcat-lib-）"><a href="#把相应的-jar的包放在相应的位置当中（yum安装的话-usr-share-tomcat-lib-）" class="headerlink" title="把相应的*.jar的包放在相应的位置当中（yum安装的话 /usr/share/tomcat/lib ）"></a>把相应的*.jar的包放在相应的位置当中（yum安装的话 /usr/share/tomcat/lib ）</h1><p>   javolution-5.4.3.1.jar<br>   msm-javolution-serializer-1.8.3.jar<br>   memcached-session-manager-1.8.3.jar<br>   spymemcached-2.11.1.jar<br>   memcached-session-manager-tc7-1.8.3.jar</p>
+<p>在调度主机的配置<br>   <proxy balancer:="" tcsrvs=""><br>      BalancerMember <a href="http://172.18.48.200:8080" target="_blank" rel="noopener">http://172.18.48.200:8080</a><br>      BalancerMember <a href="http://172.18.48.225:8080" target="_blank" rel="noopener">http://172.18.48.225:8080</a><br>      ProxySet lbmethod=byrequests<br>   </proxy></p>
+   <virtualhost *:80=""><br>      ServerName www.xdg.com<br>      ProxyVia On<br>      ProxyRequests Off<br>      ProxyPreserveHost On<br>      ProxyPass / balancer://tcsrvs/<br>      ProxyPassReverse / balancer://tcsrvs/<br>   </virtualhost>
+
+<p>在tomcatA 和 tomcatB 主机的配置</p>
+<h1 id="这里设置在默认的站点下进行的配置"><a href="#这里设置在默认的站点下进行的配置" class="headerlink" title="这里设置在默认的站点下进行的配置"></a>这里设置在默认的站点下进行的配置</h1><p>   vim /etc/tomcat/context.xml  # 添加进去<br>      <manager classname="de.javakaffee.web.msm.MemcachedBackupSessionManager" memcachednodes="n1:172.18.48.224:11211,n2:172.18.48.226:11211" failovernodes="n1" requesturiignorepattern=".*\.(ico|png|gif|jpg|css|js)$" transcoderfactoryclass="de.javakaffee.web.msm.serializer.javolution.JavolutionTranscoderFactory"></manager></p>
+<p>查看日志文件，配置的环境是否成功<br>   Nov 21, 2017 1:50:55 AM de.javakaffee.web.msm.MemcachedSessionService startInternal<br>   INFO: ——–</p>
+<ul>
+<li>finished initialization:</li>
+<li>sticky: true</li>
+<li>operation timeout: 1000</li>
+<li>node ids: [n2]</li>
+<li>failover node ids: [n1]</li>
+<li>storage key prefix: null</li>
+</ul>
+<hr>
+<p>测试<br>   访问的时候，调度到A和B上，但是当中session值是不会改变的</p>
+<p>session会话保持之session服务器</p>
+<p>前提：<br>两个tomcat节点：172.16.100.7(tomcatA.magedu.com)，172.16.100.8(tomcatB.magedu.com)<br>两个memcached节点：172.16.100.9, 172.16.100.10<br>一个负载均衡节点：172.16.100.6</p>
+<p>Clients–&gt;172.16.100.6–&gt;(tomcatA, tomcatB)</p>
+<p>memcached-session-manager项目地址，<a href="http://code.google.com/p/memcached-session-manager/" target="_blank" rel="noopener">http://code.google.com/p/memcached-session-manager/</a>, <a href="https://github.com/magro/memcached-session-manager" target="_blank" rel="noopener">https://github.com/magro/memcached-session-manager</a></p>
+<p>下载如下jar文件至各tomcat节点的tomcat安装目录下的lib目录中，其中的${version}要换成你所需要的版本号，tc${6,7,8}要换成与tomcat版本相同的版本号。<br>    memcached-session-manager-${version}.jar<br>    memcached-session-manager-tc${6,7,8}-${version}.jar<br>    spymemcached-${version}.jar<br>    msm-javolution-serializer-${version}.jar<br>    javolution-${version}.jar</p>
+<p>分别在两个tomcat上的某host上定义一个用于测试的context容器，并在其中创建一个会话管理器，如下所示：</p>
+<pre><code>&lt;Context path=&quot;/test&quot; docBase=&quot;/usr/local/tomcat/webapps/test&quot; reloadable=&quot;true&quot;&gt;
+   &lt;Manager className=&quot;de.javakaffee.web.msm.MemcachedBackupSessionManager&quot;
+     memcachedNodes=&quot;n1:172.16.100.9:11211,n2:172.16.100.10:11211&quot;
+     failoverNodes=&quot;n1&quot;
+     requestUriIgnorePattern=&quot;.*\.(ico|png|gif|jpg|css|js)$&quot;
+     transcoderFactoryClass=&quot;de.javakaffee.web.msm.serializer.javolution.JavolutionTranscoderFactory&quot;
+   /&gt;
+  &lt;/Context&gt;
+</code></pre><p>分别为两个context提供测试页面：</p>
+<p>tomcatA:</p>
+<h1 id="mkdir-pv-usr-local-tomcat-webapps-test-WEB-INF-classes-lib"><a href="#mkdir-pv-usr-local-tomcat-webapps-test-WEB-INF-classes-lib" class="headerlink" title="mkdir -pv /usr/local/tomcat/webapps/test/WEB-INF/{classes,lib}"></a>mkdir -pv /usr/local/tomcat/webapps/test/WEB-INF/{classes,lib}</h1><h1 id="vim-usr-local-tomcat-webapps-test-index-jsp"><a href="#vim-usr-local-tomcat-webapps-test-index-jsp" class="headerlink" title="vim /usr/local/tomcat/webapps/test/index.jsp"></a>vim /usr/local/tomcat/webapps/test/index.jsp</h1><p>添加如下内容：<br>&lt;%@ page language=”java” %&gt;</p>
+<html><br>  <head><title>TomcatA</title></head><br>  <body><br>    <h1><font color="red">TomcatA.magedu.com</font></h1><br>    <table align="centre" border="1"><br>      <tr><br>        <td>Session ID</td><br>    &lt;% session.setAttribute(“magedu.com”,”magedu.com”); %&gt;<br>        <td>&lt;%= session.getId() %&gt;</td><br>      </tr><br>      <tr><br>        <td>Created on</td><br>        <td>&lt;%= session.getCreationTime() %&gt;</td><br>     </tr><br>    </table><br>  </body><br></html>
+
+
+<p>tomcatB:</p>
+<h1 id="mkdir-pv-usr-local-tomcat-webapps-test-WEB-INF-classes-lib-1"><a href="#mkdir-pv-usr-local-tomcat-webapps-test-WEB-INF-classes-lib-1" class="headerlink" title="mkdir -pv /usr/local/tomcat/webapps/test/WEB-INF/{classes,lib}"></a>mkdir -pv /usr/local/tomcat/webapps/test/WEB-INF/{classes,lib}</h1><h1 id="vim-usr-local-tomcat-webapps-test-index-jsp-1"><a href="#vim-usr-local-tomcat-webapps-test-index-jsp-1" class="headerlink" title="vim /usr/local/tomcat/webapps/test/index.jsp"></a>vim /usr/local/tomcat/webapps/test/index.jsp</h1><p>添加如下内容：<br>&lt;%@ page language=”java” %&gt;</p>
+<html><br>  <head><title>TomcatB</title></head><br>  <body><br>    <h1><font color="blue">TomcatB.magedu.com</font></h1><br>    <table align="centre" border="1"><br>      <tr><br>        <td>Session ID</td><br>    &lt;% session.setAttribute(“magedu.com”,”magedu.com”); %&gt;<br>        <td>&lt;%= session.getId() %&gt;</td><br>      </tr><br>      <tr><br>        <td>Created on</td><br>        <td>&lt;%= session.getCreationTime() %&gt;</td><br>     </tr><br>    </table><br>  </body><br></html>
+
+
+<p>在172.16.100.6上配置反向代理的负载均衡内容，类似如下所示：</p>
+<proxy balancer:="" tomcat=""><br>    BalancerMember  <a href="http://172.16.100.7:8080" target="_blank" rel="noopener">http://172.16.100.7:8080</a> loadfactor=1<br>    BalancerMember  <a href="http://172.16.100.8:8080" target="_blank" rel="noopener">http://172.16.100.8:8080</a> loadfactor=1<br>    ProxySet  lbmethod=byrequests<br></proxy>
+
+<p>ProxyVia Off<br>ProxyRequests Off<br>ProxyPass / balancer://tomcat/<br>ProxyPassReverse / balancer://tomcat/</p>
+<proxy *=""><br>    Order Allow,Deny<br>    Allow From all<br></proxy>
+
+<location><br>    Order Allow,Deny<br>    Allow From all<br></location>
+
+
+
+<p>测试结果，在浏览器中访问<a href="http://172.16.100.6/test，结果如下所示，其session" target="_blank" rel="noopener">http://172.16.100.6/test，结果如下所示，其session</a> ID在负载均衡环境中保持不变。</p>
+<p>TomcatA.magedu.com</p>
+<p>Session ID    4DD0340CE6294FF2BBE802CD4CD039EC-n2<br>Created on    1399890838103</p>
+<p>TomcatB.magedu.com</p>
+<p>Session ID    4DD0340CE6294FF2BBE802CD4CD039EC-n2<br>Created on    1399890838103</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/memcache/" rel="tag"># memcache</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/15/linux/服务/tomcat/1/" rel="next" title="tomcat基础理论">
+                <i class="fa fa-chevron-left"></i> tomcat基础理论
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/22/linux/服务/mysql/mysql基础理论/" rel="prev" title="mysql基础理论">
+                mysql基础理论 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#memcached"><span class="nav-number">1.</span> <span class="nav-text">memcached</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于memcache的session绑定的效果"><span class="nav-number">2.</span> <span class="nav-text">基于memcache的session绑定的效果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#把相应的-jar的包放在相应的位置当中（yum安装的话-usr-share-tomcat-lib-）"><span class="nav-number">3.</span> <span class="nav-text">把相应的*.jar的包放在相应的位置当中（yum安装的话 /usr/share/tomcat/lib ）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#这里设置在默认的站点下进行的配置"><span class="nav-number">4.</span> <span class="nav-text">这里设置在默认的站点下进行的配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mkdir-pv-usr-local-tomcat-webapps-test-WEB-INF-classes-lib"><span class="nav-number">5.</span> <span class="nav-text">mkdir -pv /usr/local/tomcat/webapps/test/WEB-INF/{classes,lib}</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vim-usr-local-tomcat-webapps-test-index-jsp"><span class="nav-number">6.</span> <span class="nav-text">vim /usr/local/tomcat/webapps/test/index.jsp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">7.</span> <span class="nav-text">TomcatA.magedu.com</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mkdir-pv-usr-local-tomcat-webapps-test-WEB-INF-classes-lib-1"><span class="nav-number">8.</span> <span class="nav-text">mkdir -pv /usr/local/tomcat/webapps/test/WEB-INF/{classes,lib}</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vim-usr-local-tomcat-webapps-test-index-jsp-1"><span class="nav-number">9.</span> <span class="nav-text">vim /usr/local/tomcat/webapps/test/index.jsp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">10.</span> <span class="nav-text">TomcatB.magedu.com</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

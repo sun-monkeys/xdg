@@ -1703,7 +1703,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ff40ff;
+  background: #86ff74;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2871,4 +2871,8 @@ pre .javascript .function {
   .post-body {
     text-align: justify;
   }
+}
+@font-face {
+  font-family: Iosevka;
+  src: url("/fonts/iosevka-regular.ttf");
 }

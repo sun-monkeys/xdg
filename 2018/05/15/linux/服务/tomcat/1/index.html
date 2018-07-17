@@ -1,0 +1,777 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tomcat," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="tomcat基础理论1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798991">
+<meta name="keywords" content="tomcat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tomcat基础理论">
+<meta property="og:url" content="http://yoursite.com/2018/05/15/linux/服务/tomcat/1/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="tomcat基础理论1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798991">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-11T07:08:39.645Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tomcat基础理论">
+<meta name="twitter:description" content="tomcat基础理论1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798991">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/15/linux/服务/tomcat/1/"/>
+
+
+
+
+
+  <title> tomcat基础理论 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/Linux" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/Python" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question">
+          <a href="/categories/Question" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/15/linux/服务/tomcat/1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                tomcat基础理论
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-15T00:00:00+08:00">
+                2018-05-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="tomcat基础理论"><a href="#tomcat基础理论" class="headerlink" title="tomcat基础理论"></a>tomcat基础理论</h1><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><span class="line">JRE  java运行时环境</span><br><span class="line">JDK  java开发环境</span><br><span class="line"></span><br><span class="line">编程语言</span><br><span class="line">   硬件级: 微码编程，汇编语言</span><br><span class="line">   系统级: C，C++，<span class="string">...</span></span><br><span class="line">   应用级: Java，PHP，Python，Ruby，Perl， C<span class="comment">#，...</span></span><br><span class="line">      Python: PVM</span><br><span class="line">         Standard Library</span><br><span class="line">             Web Framework: Django，Flask，<span class="string">...</span></span><br><span class="line">      Java: JVM，JDK</span><br><span class="line">      bash: bash explainer</span><br><span class="line">		<span class="string">...</span></span><br><span class="line"></span><br><span class="line">程序: 指令+数据</span><br><span class="line">   过程式编程: 以指令为中心，数据服务于代码</span><br><span class="line">   对象式编程: 以数据为中心，指令服务于数据</span><br><span class="line">      对象，方法（method）</span><br><span class="line"></span><br><span class="line">Java</span><br><span class="line">   Sun, Green Project, Oak,  James Gosling;</span><br><span class="line">   1995: Java 1.0, Write once, Run Anywhere;</span><br><span class="line">   1996: JDK（Java Development Kit），包含类库<span class="params">(API)</span>、开发工具<span class="params">(javac)</span>、JVM（SUN Classic VM）  </span><br><span class="line">      JDK 1.0,  Applet, AWT</span><br><span class="line">   1997: JDK 1.1</span><br><span class="line">   1998: JDK 1.2</span><br><span class="line">      Sun分拆Java技术为三个方向</span><br><span class="line">         J2SE：Standard Edition</span><br><span class="line">         J2EE：Enterprise Edition</span><br><span class="line">         J2ME：Mobile Edition</span><br><span class="line">代表性技术: EJB，java plugin, Swing, JIT<span class="params">(Just In Time，即时编译)</span></span><br><span class="line"></span><br><span class="line">2000: JDK 1.3</span><br><span class="line">   HotSpot VM</span><br><span class="line">2002: JDK 1.4</span><br><span class="line">2006: Sun开源了Java技术，GPL，建立一个称为OpenJDK组织</span><br><span class="line">   Java 2 SE, Java 2 EE, Java 2 ME</span><br><span class="line">2011: JDK 1.7</span><br><span class="line">2014: JDK 1.8</span><br><span class="line">2016: JDK 1.9</span><br><span class="line"></span><br><span class="line">Java代码的运行</span><br><span class="line">   *<span class="string">.java</span><span class="params">(source code)</span> --&gt; javac --&gt; *<span class="string">.class</span><span class="params">(bytecode)</span></span><br><span class="line">   jvm: class loader，加载程序的类文件及程序的类文件依赖到的其它的类文件而后运行，</span><br><span class="line">     整个运行表现为一个jvm进程threads</span><br><span class="line"></span><br><span class="line">java技术体系</span><br><span class="line">   Java编程语言</span><br><span class="line">   Java Class文件格式</span><br><span class="line">   Java API</span><br><span class="line">   Java VM</span><br><span class="line">      class loader</span><br><span class="line">      执行引擎</span><br><span class="line"></span><br><span class="line">JVM运行时区域</span><br><span class="line">   方法区: 线程共享，用于存储被JVM加载的class信息、常量、静态变量、方法等</span><br><span class="line">   堆: 是jvm所管理的内存中占用空间最大的一部分，也是GC管理的主要区域，存储对象</span><br><span class="line">   Java栈: 线程私有，存储线程自己的局部变量</span><br><span class="line">   PC寄存器: 线程私有的内存空间，程序的指令指针</span><br><span class="line">   本地方法栈</span><br><span class="line"></span><br><span class="line">OpenJDK</span><br><span class="line">   java-VERSION-openjdk</span><br><span class="line">      The OpenJDK runtime environment.</span><br><span class="line">   java-VERSION-openjdk-headless</span><br><span class="line">      The OpenJDK runtime environment without audio and video support.</span><br><span class="line">   java-VERSION-openjdk-devel</span><br><span class="line">      The OpenJDK development tools.</span><br><span class="line"></span><br><span class="line">CentOS 7</span><br><span class="line">   VERSION：1.6.0, 1.7.0, 1.8.0</span><br><span class="line"><span class="comment"># 注: 多版本并存时，可使用alternatives命令设定默认使用的版本</span></span><br><span class="line"></span><br><span class="line">Oracle JDK</span><br><span class="line">   安装相应版本的rpm包</span><br><span class="line">   jdk-VERSION-OS-ARCH.rpm</span><br><span class="line">   <span class="comment"># 如: jdk-1.8.0_25-linux-x64.rpm </span></span><br><span class="line">例:</span><br><span class="line">   默认安装的的目录是下 <span class="string">/usr/java/jdk_VERSION</span></span><br><span class="line">   default -&gt; <span class="string">/usr/java/latest</span>  <span class="comment"># 这里是指向的是默认的java的版本</span></span><br><span class="line">   jdk1.7.0_67  <span class="comment"># 当时java版本存放的路径</span></span><br><span class="line">   latest -&gt; <span class="string">/usr/java/jdk1.7.0_67</span>  <span class="comment"># 之前的java版本存放的位置</span></span><br><span class="line">   <span class="comment"># 这里一开始就只安装的一个，所以指向的都是同一个</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装完成后，要配置JAVA_HOME环境变量，指向java的安装路径</span></span><br><span class="line">   OpenJDK:</span><br><span class="line">      JAVA_HOME=<span class="string">/usr</span></span><br><span class="line">   Oracle JDK:</span><br><span class="line">      JAVA_HOME=<span class="string">/usr/java/jdk_VERSION</span></span><br><span class="line">   <span class="comment"># 系统会找JAVA_HOME下的路径，如果没有的话，系统会自动找/usr/bin下的java</span></span><br><span class="line"></span><br><span class="line">Java 2 EE</span><br><span class="line">   CGI: Common Gateway Interface</span><br><span class="line"></span><br><span class="line">   Servlet</span><br><span class="line">      类库，web app</span><br><span class="line">      Servlet container, Servlet Engine</span><br><span class="line"></span><br><span class="line">   JSP: Java Server Page</span><br><span class="line">      类库</span><br><span class="line">      &lt;html&gt;</span><br><span class="line">         &lt;title&gt;TITLE&lt;<span class="string">/title</span>&gt;</span><br><span class="line">         &lt;body&gt;</span><br><span class="line">            &lt;h1&gt;<span class="string">...</span>&lt;<span class="string">/h1</span>&gt;</span><br><span class="line">            &lt;%</span><br><span class="line">               <span class="string">...</span></span><br><span class="line">               java code</span><br><span class="line">               <span class="string">...</span></span><br><span class="line">            %&gt;</span><br><span class="line">         &lt;<span class="string">/body</span>&gt;</span><br><span class="line">      &lt;<span class="string">/html</span>&gt;</span><br><span class="line"></span><br><span class="line"><span class="string">.jsp</span> --&gt;jasper--&gt; <span class="string">.java</span> --&gt; javac --&gt; <span class="string">.class</span> --&gt; jvm </span><br><span class="line"></span><br><span class="line"><span class="comment"># 基于jasper将静态输出的数据转为java代码进行输出，结果为servlet规范的代码</span></span><br><span class="line"></span><br><span class="line">JSP Container</span><br><span class="line">   JSP + Servlet Container</span><br><span class="line"></span><br><span class="line">Java Web Server: JWS</span><br><span class="line">   ASF: JServ</span><br><span class="line">   O'Reilly</span><br><span class="line">   Tomcat 3.x</span><br><span class="line">   Tomcat 4.x</span><br><span class="line">      Catalina</span><br><span class="line">http:<span class="string">//tomcat.apache.org/</span></span><br><span class="line"></span><br><span class="line">商业实现:</span><br><span class="line">   WebSphere, WebLogic, Oc4j, Glassfish, Geronimo, JOnAS, JBoss, <span class="string">...</span></span><br><span class="line">开源实现:</span><br><span class="line">   Tomcat, Jetty, Resin, <span class="string">...</span></span><br><span class="line"></span><br><span class="line">安装Tomcat:</span><br><span class="line">   Base Repo</span><br><span class="line">      tomcat, tomcat-lib, tomcat-admin-webapps, tomcat-webapps, tomcat-docs-webapp</span><br><span class="line"></span><br><span class="line">   Tomcat binary release:</span><br><span class="line">      <span class="comment"># tar xf apache-tomcat-VERSION.tar.gz  -C /usr/local/</span></span><br><span class="line">      <span class="comment"># cd /usr/local</span></span><br><span class="line">      <span class="comment"># ln -sv apache-tomcat-VERSION  tomcat</span></span><br></pre></td></tr></table></figure>
+<h1 id="各常见组件"><a href="#各常见组件" class="headerlink" title="各常见组件"></a>各常见组件</h1><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">1、服务器(server): Tomcat的一个实例，通常一个JVM只能包含一个Tomcat实例，</span></span><br><span class="line">  因此，一台物理服务器上可以在启动多个JVM的情况下在每一个JVM中启动一个Tomcat实例，</span><br><span class="line">  每个实例分属于一个独立的管理端口。这是一个顶级组件</span><br><span class="line">	</span><br><span class="line"><span class="section">2、服务(service): 一个服务组件通常包含一个引擎和与此引擎相关联的一个或多个连接器。</span></span><br><span class="line">  给服务命名可以方便管理员在日志文件中识别不同服务产生的日志。一个server可以包含</span><br><span class="line">  多个service组件，但通常情下只为一个service指派一个server</span><br><span class="line"></span><br><span class="line"><span class="section">连接器类组件:</span></span><br><span class="line"><span class="section">3、连接器(connectors): 负责连接客户端（可以是浏览器或Web服务器）请求至Servlet容器</span></span><br><span class="line">  内的Web应用程序，通常指的是接收客户发来请求的位置及服务器端分配的端口。</span><br><span class="line">  默认端口通常是HTTP协议的8080，管理员也可以根据自己的需要改变此端口。</span><br><span class="line">  一个引擎可以配置多个连接器，但这些连接器必须使用不同的端口。默认的连接器是</span><br><span class="line">  基于HTTP/1.1的Coyote。同时，Tomcat也支持AJP、JServ和JK2连接器</span><br><span class="line"></span><br><span class="line"><span class="section">容器类组件:</span></span><br><span class="line"><span class="section">4、引擎(Engine): 引擎通是指处理请求的Servlet引擎组件，即Catalina Servlet引擎，</span></span><br><span class="line">  它检查每一个请求的HTTP首部信息以辨别此请求应该发往哪个host或context，</span><br><span class="line">  并将请求处理后的结果返回的相应的客户端。严格意义上来说，容器不必非得通过</span><br><span class="line">  引擎来实现，它也可以是只是一个容器。如果Tomcat被配置成为独立服务器，默认引擎</span><br><span class="line">  就是已经定义好的引擎。而如果Tomcat被配置为Apache Web服务器的提供Servlet功能</span><br><span class="line">  的后端，默认引擎将被忽略，因为Web服务器自身就能确定将用户请求发往何处。</span><br><span class="line">  一个引擎可以包含多个host组件</span><br><span class="line">	</span><br><span class="line"><span class="section">5、主机(Host): 主机组件类似于Apache中的虚拟主机，但在Tomcat中只支持基于</span></span><br><span class="line">  FQDN的<span class="string">"虚拟主机"</span>。一个引擎至少要包含一个主机组件</span><br><span class="line">	</span><br><span class="line"><span class="section">6、上下文(Context): Context组件是最内层次的组件，它表示Web应用程序本身。</span></span><br><span class="line">  配置一个Context最主要的是指定Web应用程序的根目录，以便Servlet容器能够将</span><br><span class="line">  用户请求发往正确的位置。Context组件也可包含自定义的错误页，以实现在</span><br><span class="line">  用户访问发生错误时提供友好的提示信息</span><br></pre></td></tr></table></figure>
+<h1 id="被嵌套类-nested-组件"><a href="#被嵌套类-nested-组件" class="headerlink" title="被嵌套类(nested)组件"></a>被嵌套类(nested)组件</h1><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">这类组件通常包含于容器类组件中以提供具有管理功能的服务，它们不能包含其它组件，</span><br><span class="line">  但有些却可以由不同层次的容器各自配置</span><br><span class="line"><span class="selector-tag">7</span>、阀门(Valve)：用来拦截请求并在将其转至目标之前进行某种处理操作，</span><br><span class="line">  类似于<span class="selector-tag">Servlet</span>规范中定义的过滤器。<span class="selector-tag">Valve</span>可以定义在任何容器类的组件中。</span><br><span class="line">  <span class="selector-tag">Valve</span>常被用来记录客户端请求、客户端<span class="selector-tag">IP</span>地址和服务器等信息，这种处理技术</span><br><span class="line">  通常被称作请求转储(request dumping)。请求转储<span class="selector-tag">valve</span>记录请求客户端请求</span><br><span class="line">  数据包中的<span class="selector-tag">HTTP</span>首部信息和<span class="selector-tag">cookie</span>信息文件中，响应转储<span class="selector-tag">valve</span>则记录响应数据包</span><br><span class="line">  首部信息和<span class="selector-tag">cookie</span>信息至文件中</span><br><span class="line">	</span><br><span class="line"><span class="selector-tag">8</span>、日志记录器(Logger): 用于记录组件内部的状态信息，可被用于除<span class="selector-tag">Context</span>之外的</span><br><span class="line">  任何容器中。日志记录的功能可被继承，因此，一个引擎级别的<span class="selector-tag">Logger</span>将会记录</span><br><span class="line">  引擎内部所有组件相关的信息，除非某内部组件定义了自己的<span class="selector-tag">Logger</span>组件</span><br><span class="line">	</span><br><span class="line"><span class="selector-tag">9</span>、领域(Realm): 用于用户的认证和授权；在配置一个应用程序时，管理员可以为</span><br><span class="line">  每个资源或资源组定义角色及权限，而这些访问控制功能的生效需要通过<span class="selector-tag">Realm</span>来实现。</span><br><span class="line">  <span class="selector-tag">Realm</span>的认证可以基于文本文件、数据库表、<span class="selector-tag">LDAP</span>服务等来实现。<span class="selector-tag">Realm</span>的效用会遍及</span><br><span class="line">  整个引擎或顶级容器，因此，一个容器内的所有应用程序将共享用户资源。同时，</span><br><span class="line">  <span class="selector-tag">Realm</span>可以被其所在组件的子组件继承，也可以被子组件中定义的<span class="selector-tag">Realm</span>所覆盖。</span><br><span class="line">	</span><br><span class="line">引擎(Engine): 引擎是指处理请求的<span class="selector-tag">Servlet</span>引擎组件，即<span class="selector-tag">Catalina</span> <span class="selector-tag">Servlet</span>引擎，</span><br><span class="line">  它从<span class="selector-tag">HTTPconnector</span>接收请求并响应请求。它检查每一个请求的<span class="selector-tag">HTTP</span>首部信息以辨别</span><br><span class="line">  此请求应该发往哪个<span class="selector-tag">host</span>或<span class="selector-tag">context</span>，并将请求处理后的结果返回的相应的客户端。</span><br><span class="line">  严格意义上来说，容器不必非得通过引擎来实现，它也可以是只是一个容器。如果<span class="selector-tag">Tomcat</span>被</span><br><span class="line">  配置成为独立服务器，默认引擎就是已经定义好的引擎。而如果<span class="selector-tag">Tomcat</span>被配置为</span><br><span class="line">  <span class="selector-tag">Apache</span> <span class="selector-tag">Web</span>服务器的提供<span class="selector-tag">Servlet</span>功能的后端，默认引擎将被忽略，因为<span class="selector-tag">Web</span>服务器</span><br><span class="line">  自身就能确定将用户请求发往何处。一个引擎可以包含多个<span class="selector-tag">host</span>组件。</span><br></pre></td></tr></table></figure>
+<h1 id="Server的相关属性"><a href="#Server的相关属性" class="headerlink" title="Server的相关属性"></a>Server的相关属性</h1><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">className:</span> 用于实现此Server容器的完全限定类的名称，</span><br><span class="line">  默认为org.apache.catalina.core.StandardServer</span><br><span class="line"><span class="string">port:</span> 接收shutdown指令的端口，默认仅允许通过本机访问，默认为<span class="number">8005</span></span><br><span class="line"><span class="string">shutdown:</span> 发往此Server用于实现关闭tomcat实例的命令字符串，默认为SHUTDOWN</span><br><span class="line"></span><br><span class="line">Service组件:</span><br><span class="line">Service主要用于关联一个引擎和与此引擎相关的连接器，每个连接器通过一个</span><br><span class="line">  特定的端口和协议接收入站请求交将其转发至关联的引擎进行处理。因此，</span><br><span class="line">  Service要包含一个引擎、一个或多个连接器。</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">常用属性说明:</span><br><span class="line"><span class="number">1</span>) <span class="string">appBase:</span> 此Host的webapps目录，即存放非归档的web应用程序的目录或归档后</span><br><span class="line">  的WAR文件的目录路径；可以使用基于$CATALINA_HOME的相对路径</span><br><span class="line"><span class="number">2</span>) <span class="string">autoDeploy:</span> 在Tomcat处于运行状态时放置于appBase目录中的应用程序文件</span><br><span class="line">  是否自动进行deploy，默认为<span class="literal">true</span></span><br><span class="line"><span class="number">3</span>) <span class="string">unpackWars:</span> 在启用此webapps时是否对WAR格式的归档文件先进行展开，默认为<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h1 id="Realm组件"><a href="#Realm组件" class="headerlink" title="Realm组件"></a>Realm组件</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">一个Realm表示一个安全上下文，它是一个授权访问某个给定Context的用户列表和</span><br><span class="line">  某用户所允许切换的角色相关定义的列表。因此，Realm就像是一个用户和组</span><br><span class="line">  相关的数据库。定义Realm时惟一必须要提供的属性是classname，它是Realm的多个</span><br><span class="line">  不同实现，用于表示此Realm认证的用户及角色等认证信息的存放位置</span><br><span class="line">JAASRealm: 基于Java Authintication <span class="keyword">and</span> Authorization Service实现用户认证</span><br><span class="line">JDBCRealm: 通过JDBC访问某关系型数据库表实现用户认证</span><br><span class="line">JNDIRealm: 基于JNDI使用目录服务实现认证信息的获取</span><br><span class="line">MemoryRealm: 查找tomcat-user.xml文件实现用户信息的获取</span><br><span class="line">UserDatabaseRealm: 基于UserDatabase文件(通常是tomcat-user.xml)实现用户认证，</span><br><span class="line">  它实现是一个完全可更新和持久有效的MemoryRealm，因此能够跟标准的</span><br><span class="line">  MemoryRealm兼容；它通过JNDI实现</span><br><span class="line"></span><br><span class="line">下面是一个常见的使用UserDatabase的配置</span><br><span class="line">   &lt;Realm <span class="attribute">className</span>=<span class="string">"org.apache.catalina.realm.UserDatabaseRealm"</span></span><br><span class="line">     <span class="attribute">resourceName</span>=”UserDatabase”/&gt;</span><br><span class="line"></span><br><span class="line">下面是一个使用JDBC方式获取用户认证信息的配置:</span><br><span class="line">   &lt;Realm <span class="attribute">className</span>=<span class="string">"org.apache.catalina.realm.JDBCRealm"</span> <span class="attribute">debug</span>=<span class="string">"99"</span></span><br><span class="line">     <span class="attribute">driverName</span>=<span class="string">"org.gjt.mm.mysql.Driver"</span></span><br><span class="line">     <span class="attribute">connectionURL</span>=<span class="string">"jdbc:mysql://localhost/authority"</span></span><br><span class="line">     <span class="attribute">connectionName</span>=<span class="string">"test"</span> <span class="attribute">connectionPassword</span>=<span class="string">"test"</span></span><br><span class="line">     <span class="attribute">userTable</span>=<span class="string">"users"</span> <span class="attribute">userNameCol</span>=<span class="string">"user_name"</span></span><br><span class="line">     <span class="attribute">userCredCol</span>=<span class="string">"user_pass"</span></span><br><span class="line">     <span class="attribute">userRoleTable</span>=<span class="string">"user_roles"</span> <span class="attribute">roleNameCol</span>=<span class="string">"role_name"</span> /&gt;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tomcat/" rel="tag"># tomcat</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/15/linux/服务/tomcat/3/" rel="next" title="tomcat其它">
+                <i class="fa fa-chevron-left"></i> tomcat其它
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/18/linux/服务/memcache/memcache/" rel="prev" title="memcache基础理论">
+                memcache基础理论 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#tomcat基础理论"><span class="nav-number">1.</span> <span class="nav-text">tomcat基础理论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#各常见组件"><span class="nav-number">2.</span> <span class="nav-text">各常见组件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#被嵌套类-nested-组件"><span class="nav-number">3.</span> <span class="nav-text">被嵌套类(nested)组件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Server的相关属性"><span class="nav-number">4.</span> <span class="nav-text">Server的相关属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Realm组件"><span class="nav-number">5.</span> <span class="nav-text">Realm组件</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
