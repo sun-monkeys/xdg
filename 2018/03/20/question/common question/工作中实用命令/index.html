@@ -1,0 +1,838 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic|Iosevka:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="基本命令,工作总结,rar," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="工作中的命令杀死僵尸进程1ps -A -o stat,ppid,pid,cmd | grep -e &apos;^[Zz]&apos; | awk &apos;&amp;#123;print $2&amp;#125;&apos; | xargs kill -9 查看TCP 并发123456789101112131415161718192021netstat -n | awk &apos;/^tcp/ &amp;#123;++state[$NF]&amp;#125; END &amp;#">
+<meta name="keywords" content="基本命令,工作总结,rar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="工作中实用命令">
+<meta property="og:url" content="http://yoursite.com/2018/03/20/question/common question/工作中实用命令/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="工作中的命令杀死僵尸进程1ps -A -o stat,ppid,pid,cmd | grep -e &apos;^[Zz]&apos; | awk &apos;&amp;#123;print $2&amp;#125;&apos; | xargs kill -9 查看TCP 并发123456789101112131415161718192021netstat -n | awk &apos;/^tcp/ &amp;#123;++state[$NF]&amp;#125; END &amp;#">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-30T09:39:18.037Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="工作中实用命令">
+<meta name="twitter:description" content="工作中的命令杀死僵尸进程1ps -A -o stat,ppid,pid,cmd | grep -e &apos;^[Zz]&apos; | awk &apos;&amp;#123;print $2&amp;#125;&apos; | xargs kill -9 查看TCP 并发123456789101112131415161718192021netstat -n | awk &apos;/^tcp/ &amp;#123;++state[$NF]&amp;#125; END &amp;#">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/20/question/common question/工作中实用命令/"/>
+
+
+
+
+
+  <title> 工作中实用命令 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home Page
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux1">
+          <a href="/categories/LinuxBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux2">
+          <a href="/categories/LinuxServices" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Services
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python1">
+          <a href="/categories/PythonBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python2">
+          <a href="/categories/PythonCase" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Case
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question1">
+          <a href="/categories/CommonQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Common Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question2">
+          <a href="/categories/InterviewQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Interview Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/20/question/common question/工作中实用命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                工作中实用命令
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-20T00:00:00+08:00">
+                2018-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CommonQuestion/" itemprop="url" rel="index">
+                    <span itemprop="name">CommonQuestion</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="工作中的命令"><a href="#工作中的命令" class="headerlink" title="工作中的命令"></a>工作中的命令</h1><h2 id="杀死僵尸进程"><a href="#杀死僵尸进程" class="headerlink" title="杀死僵尸进程"></a>杀死僵尸进程</h2><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -A -o stat,ppid,pid,<span class="keyword">cmd</span><span class="bash"> | grep -e <span class="string">'^[Zz]'</span> | awk <span class="string">'&#123;print $2&#125;'</span> | xargs <span class="built_in">kill</span> -9</span></span><br></pre></td></tr></table></figure>
+<h2 id="查看TCP-并发"><a href="#查看TCP-并发" class="headerlink" title="查看TCP 并发"></a>查看TCP 并发</h2><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">netstat -n | awk '/^tcp/ &#123;++<span class="keyword">state</span>[<span class="variable">$NF</span>]&#125; END &#123;<span class="keyword">for</span>(i <span class="keyword">in</span> <span class="keyword">state</span>) print i,<span class="string">"\t"</span>,<span class="keyword">state</span>[i]&#125;'</span><br><span class="line"></span><br><span class="line">LAST_ACK <span class="number">5</span>  (正在等待处理的请求数) </span><br><span class="line">   SYN_RECV <span class="number">30</span></span><br><span class="line">   ESTABLISHED <span class="number">1597</span>  (正常数据传输状态) </span><br><span class="line">   FIN_WAIT1 <span class="number">51</span></span><br><span class="line">   FIN_WAIT2 <span class="number">504</span></span><br><span class="line">   TIME_WAIT <span class="number">1057</span>  (处理完毕，等待超时结束的请求数) </span><br><span class="line"></span><br><span class="line">状态: 描述</span><br><span class="line">   CLOSED: 无连接是活动的或正在进行</span><br><span class="line">   LISTEN: 服务器在等待进入呼叫</span><br><span class="line">   SYN_RECV: 一个连接请求已经到达，等待确认</span><br><span class="line">   SYN_SENT: 应用已经开始，打开一个连接</span><br><span class="line">   ESTABLISHED: 正常数据传输状态</span><br><span class="line">   FIN_WAIT1: 应用说它已经完成</span><br><span class="line">   FIN_WAIT2: 另一边已同意释放</span><br><span class="line">   ITMED_WAIT: 等待所有分组死掉</span><br><span class="line">   CLOSING: 两边同时尝试关闭</span><br><span class="line">   TIME_WAIT: 另一边已初始化一个释放</span><br><span class="line">   LAST_ACK: 等待所有分组死掉</span><br></pre></td></tr></table></figure>
+<h2 id="查看IP按连接数量进行排序"><a href="#查看IP按连接数量进行排序" class="headerlink" title="查看IP按连接数量进行排序"></a>查看IP按连接数量进行排序</h2><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">netstat -ntu | <span class="type">awk</span> '&#123;print $<span class="number">5</span>&#125;' | <span class="type">cut</span> -d: -f1 | <span class="type">sort</span> | <span class="type">uniq</span> -c | <span class="type">sort</span> -n</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">查找较多time_wait连接</span><br><span class="line">   netstat -n | <span class="type">grep</span> TIME_WAIT | <span class="type">awk</span> '&#123;print $<span class="number">5</span>&#125;' | <span class="type">sort</span> | <span class="type">uniq</span> -c | <span class="type">sort</span> -rn | <span class="type">head</span> -n20</span><br><span class="line"></span><br><span class="line">找出使用CPU最多的前<span class="number">10</span>名进程</span><br><span class="line">   ps -auxf | <span class="type">sort</span> -nr -k <span class="number">3</span> | <span class="type">head</span> <span class="number">-10</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装依赖报错so-解决方法"><a href="#安装依赖报错so-解决方法" class="headerlink" title="安装依赖报错so 解决方法"></a>安装依赖报错so 解决方法</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum provides *<span class="string">/libiconv.so.2</span></span><br><span class="line">yum provides *<span class="string">/libboost_system.so</span></span><br></pre></td></tr></table></figure>
+<h2 id="Linux-下查看温度及风扇转速"><a href="#Linux-下查看温度及风扇转速" class="headerlink" title="Linux 下查看温度及风扇转速"></a>Linux 下查看温度及风扇转速</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、安装 lm_sensors 软件包</span><br><span class="line">   yum install lm_sensors</span><br><span class="line"></span><br><span class="line"><span class="number">2</span>、手动配置下（一路yes或enter就行了）</span><br><span class="line">   sensors-detect</span><br><span class="line"></span><br><span class="line"><span class="number">3</span>、最后打开终端输入（需要root权限执行，如果不是root，需要使用sudo）</span><br><span class="line">   sensors  # 这样就输出各传感器的温度及风扇转速了</span><br></pre></td></tr></table></figure>
+<h2 id="挂载内存到目录"><a href="#挂载内存到目录" class="headerlink" title="挂载内存到目录"></a>挂载内存到目录</h2><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t tmpfs -o <span class="built_in">size</span>=00G tmpfs /<span class="keyword">data</span></span><br></pre></td></tr></table></figure>
+<h2 id="查看Web服务器进程连接数"><a href="#查看Web服务器进程连接数" class="headerlink" title="查看Web服务器进程连接数"></a>查看Web服务器进程连接数</h2><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -antp | <span class="type">grep</span> <span class="number">80</span> | <span class="type">grep</span> ESTABLISHED -c</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="在centos当中使用rar"><a href="#在centos当中使用rar" class="headerlink" title="在centos当中使用rar"></a>在centos当中使用rar</h1><p>RAR是一种专利文件格式，用于数据压缩与归档打包，开发者是尤金·罗谢尔（Eugene Roshal），全名是：Roshal ARchive。首个公开版本RAR 1.3发布于1993年。</p>
+<p>在计算机科学中，RAR是一种文件压缩与归档的私有专利压缩格式。RAR的名字源自其作者Eugene Roshal，为Roshal ARchive的缩写。Eugene Roshal最初编写了DOS版本的编码和解码程序，后来移植到很多平台，例如比较著名的Windows平台上的WinRAR。Eugene Roshal有条件的公开了解码程序的源代码，但是编码程序仍然是私有的。<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>. centos7上安装rar解压软件（<span class="symbol">http:</span>/<span class="regexp">/www.rarlab.com 官网可以查看最新的版本）</span></span><br><span class="line"><span class="regexp">   wget https:/</span><span class="regexp">/www.rarlab.com/rar</span><span class="regexp">/rarlinux-x64-5.5.0.tar.gz</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">2. 解压文件</span></span><br><span class="line"><span class="regexp">   tar -xzvf rarlinux-x64-5.5.0.tar.gz</span></span><br><span class="line"><span class="regexp">   cd rar</span></span><br><span class="line"><span class="regexp">   make</span></span><br><span class="line"><span class="regexp">	</span></span><br><span class="line"><span class="regexp">3. make执行完后，出现如下几条命令，直接运行即可</span></span><br><span class="line"><span class="regexp">   mkdir -p /usr</span><span class="regexp">/local/bin</span></span><br><span class="line">   mkdir -p /usr/local/<span class="class"><span class="keyword">lib</span></span></span><br><span class="line">   cp rar unrar /usr/local/bin</span><br><span class="line">   cp rarfiles.lst /etc</span><br><span class="line">   cp default.sfx /usr/local/<span class="class"><span class="keyword">lib</span></span></span><br><span class="line"></span><br><span class="line"><span class="number">4</span>. 如果运行命令rar时，出现下面这个问题</span><br><span class="line">   错误: error <span class="keyword">while</span> loading shared <span class="symbol">libraries:</span> libstdc++.so.<span class="number">6</span>: cannot open shared object <span class="symbol">file:</span> No such file or directory</span><br><span class="line">   解决: cp rar_static /usr/local/bin/rar</span><br><span class="line"></span><br><span class="line"><span class="number">5</span>. 使用说明</span><br><span class="line">   a   <span class="comment"># 添加文件到压缩档案</span></span><br><span class="line">   x   <span class="comment"># 解压缩到完整路径</span></span><br><span class="line">   v   <span class="comment"># 列出压缩档案的详细信息</span></span><br></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="在centos当中挂载ntfs格式的磁盘"><a href="#在centos当中挂载ntfs格式的磁盘" class="headerlink" title="在centos当中挂载ntfs格式的磁盘"></a>在centos当中挂载ntfs格式的磁盘</h1><p>NTFS（New Technology File System），是 WindowsNT 环境的文件系统。新技术文件系统是Windows NT家族（如，Windows 2000、Windows XP、Windows Vista、Windows 7和 windows 8.1）等的限制级专用的文件系统（操作系统所在的盘符的文件系统必须格式化为NTFS的文件系统，4096簇环境下）。NTFS取代了老式的FAT文件系统。</p>
+<p>NTFS对FAT和HPFS作了若干改进，例如，支持元数据，并且使用了高级数据结构，以便于改善性能、可靠性和磁盘空间利用率，并提供了若干附加扩展功能。<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>. 在centos当中默认是没有ntfs文件系统格式的，查看当前系统所支持的</span><br><span class="line">   <span class="number">1</span>、cd /<span class="class"><span class="keyword">lib</span>/<span class="title">modules</span>/3.10.0-693.<span class="title">el7</span>.<span class="title">x86_64</span>/<span class="title">kernel</span>/<span class="title">fs</span>  <span class="comment"># 再使用ls列出显示</span></span></span><br><span class="line">   <span class="number">2</span>、使用mkfs，再按两次Tab键，也可以列出所支持的格式</span><br><span class="line"></span><br><span class="line"><span class="number">2</span>. 下载ntfs-<span class="number">3</span>g，具体版本因时间而异</span><br><span class="line">   wget <span class="symbol">https:</span>/<span class="regexp">/tuxera.com/opensource</span><span class="regexp">/ntfs-3g_ntfsprogs-2017.3.23.tgz</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">3. 解压并安装</span></span><br><span class="line"><span class="regexp">   tar -zxvf ntfs-3g_ntfsprogs-2017.3.23.tgz</span></span><br><span class="line"><span class="regexp">   cd ntfs-3g_ntfsprogs-2017.3.23/</span></span><br><span class="line">   ./configure</span><br><span class="line">   make &amp;&amp; make install</span><br><span class="line"></span><br><span class="line"><span class="number">4</span>. 查看盘符</span><br><span class="line">   [root@XDG ~]<span class="comment"># fdisk -l</span></span><br><span class="line">      Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">   /dev/sdb1   *     <span class="number">1301265</span>    <span class="number">59777864</span>    <span class="number">29238300</span>    <span class="number">7</span>  HPFS/NTFS/exFAT</span><br><span class="line">   /dev/sdb4        <span class="number">59791284</span>    <span class="number">60548984</span>      <span class="number">378850</span>+   e  W95 FAT16 (LBA)</span><br><span class="line"></span><br><span class="line"><span class="number">5</span>. 创建挂载的目录</span><br><span class="line">   mkdir -p /mnt/usb  <span class="comment"># 创建目录</span></span><br><span class="line">   ntfs-<span class="number">3</span>g /dev/sdb1 /mnt/usb  <span class="comment"># 挂载</span></span><br><span class="line">   umount /mnt/usb  <span class="comment"># 卸载</span></span><br><span class="line"></span><br><span class="line">查看挂载: lsblk、blkid</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/基本命令/" rel="tag"># 基本命令</a>
+          
+            <a href="/tags/工作总结/" rel="tag"># 工作总结</a>
+          
+            <a href="/tags/rar/" rel="tag"># rar</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/19/question/common question/安装CentOS出现的问题/" rel="next" title="安装CentOS 7出现的问题">
+                <i class="fa fa-chevron-left"></i> 安装CentOS 7出现的问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/21/linux/基础/进程和计划任务 -1/" rel="prev" title="进程">
+                进程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">93</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#工作中的命令"><span class="nav-number">1.</span> <span class="nav-text">工作中的命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#杀死僵尸进程"><span class="nav-number">1.1.</span> <span class="nav-text">杀死僵尸进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看TCP-并发"><span class="nav-number">1.2.</span> <span class="nav-text">查看TCP 并发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看IP按连接数量进行排序"><span class="nav-number">1.3.</span> <span class="nav-text">查看IP按连接数量进行排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装依赖报错so-解决方法"><span class="nav-number">1.4.</span> <span class="nav-text">安装依赖报错so 解决方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux-下查看温度及风扇转速"><span class="nav-number">1.5.</span> <span class="nav-text">Linux 下查看温度及风扇转速</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#挂载内存到目录"><span class="nav-number">1.6.</span> <span class="nav-text">挂载内存到目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看Web服务器进程连接数"><span class="nav-number">1.7.</span> <span class="nav-text">查看Web服务器进程连接数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在centos当中使用rar"><span class="nav-number">2.</span> <span class="nav-text">在centos当中使用rar</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在centos当中挂载ntfs格式的磁盘"><span class="nav-number">3.</span> <span class="nav-text">在centos当中挂载ntfs格式的磁盘</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

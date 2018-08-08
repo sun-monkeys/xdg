@@ -1,0 +1,854 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic|Iosevka:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="disk," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="设备文件12345678910111213141516171819202122232425262728293031323334I/O Ports: I/O设备地址一切皆文件: open()，read()，write()，close()设备类型:   块设备: block，存取单位&quot;块&quot;，磁盘   字符设备: char，存取单位&quot;字符&quot;，键盘设备文件: 关联至一个设备驱动程序，进而能够跟与之对应硬件">
+<meta name="keywords" content="disk">
+<meta property="og:type" content="article">
+<meta property="og:title" content="磁盘管理">
+<meta property="og:url" content="http://yoursite.com/2018/03/07/linux/基础/磁盘管理/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="设备文件12345678910111213141516171819202122232425262728293031323334I/O Ports: I/O设备地址一切皆文件: open()，read()，write()，close()设备类型:   块设备: block，存取单位&quot;块&quot;，磁盘   字符设备: char，存取单位&quot;字符&quot;，键盘设备文件: 关联至一个设备驱动程序，进而能够跟与之对应硬件">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-23T11:17:19.463Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="磁盘管理">
+<meta name="twitter:description" content="设备文件12345678910111213141516171819202122232425262728293031323334I/O Ports: I/O设备地址一切皆文件: open()，read()，write()，close()设备类型:   块设备: block，存取单位&quot;块&quot;，磁盘   字符设备: char，存取单位&quot;字符&quot;，键盘设备文件: 关联至一个设备驱动程序，进而能够跟与之对应硬件">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/07/linux/基础/磁盘管理/"/>
+
+
+
+
+
+  <title> 磁盘管理 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home Page
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux1">
+          <a href="/categories/LinuxBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux2">
+          <a href="/categories/LinuxServices" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Services
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python1">
+          <a href="/categories/PythonBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python2">
+          <a href="/categories/PythonCase" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Case
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question1">
+          <a href="/categories/CommonQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Common Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question2">
+          <a href="/categories/InterviewQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Interview Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/07/linux/基础/磁盘管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                磁盘管理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-07T00:00:00+08:00">
+                2018-03-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LinuxBasics/" itemprop="url" rel="index">
+                    <span itemprop="name">LinuxBasics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="设备文件"><a href="#设备文件" class="headerlink" title="设备文件"></a>设备文件</h1><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">I/O Ports: I/O设备地址</span><br><span class="line"></span><br><span class="line">一切皆文件: open<span class="params">()</span>，read<span class="params">()</span>，write<span class="params">()</span>，close<span class="params">()</span></span><br><span class="line"></span><br><span class="line">设备类型:</span><br><span class="line">   块设备: block，存取单位<span class="string">"块"</span>，磁盘</span><br><span class="line">   字符设备: char，存取单位<span class="string">"字符"</span>，键盘</span><br><span class="line"></span><br><span class="line">设备文件: 关联至一个设备驱动程序，进而能够跟与之对应硬件设备进行通信</span><br><span class="line"></span><br><span class="line">设备号码:</span><br><span class="line">   主设备号: major number，标识设备类型</span><br><span class="line">   次设备号: minor number，标识同一类型下的不同设备</span><br><span class="line">	</span><br><span class="line">磁盘设备的设备文件命名: <span class="string">/dev/DEV_FILE</span></span><br><span class="line"></span><br><span class="line">SCSI，SATA，SAS，IDE，USB: <span class="string">/dev/sd</span></span><br><span class="line"></span><br><span class="line">虚拟磁盘: <span class="string">/dev/vd</span></span><br><span class="line"></span><br><span class="line">不同磁盘标识: a-z，aa，ab，<span class="string">...</span></span><br><span class="line">   <span class="string">/dev/sda</span>，<span class="string">/dev/sdb</span>，<span class="string">...</span></span><br><span class="line"></span><br><span class="line">同一设备上的不同分区: 1，2，<span class="string">...</span></span><br><span class="line">   <span class="string">/dev/sda1</span>，<span class="string">/dev/sda5</span></span><br><span class="line">	</span><br><span class="line">硬盘存储术语</span><br><span class="line">   head: 磁头</span><br><span class="line">   track: 磁道</span><br><span class="line">   cylinder: 柱面</span><br><span class="line">   sector: 扇区，512bytes</span><br><span class="line">	</span><br><span class="line">注: 添加一块新的磁盘后，查找新的磁盘  <span class="keyword">echo</span> '- - -' &gt; <span class="string">/sys/class/scsi_host/host2/scan</span></span><br><span class="line">注: 上面的办法在不关机的情况下，在线查找，也可以重新启动即可</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="CHS和LBA"><a href="#CHS和LBA" class="headerlink" title="CHS和LBA"></a>CHS和LBA</h1><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CHS</span><br><span class="line">   采用<span class="number">24</span>bit位寻址</span><br><span class="line">   其中前<span class="number">10</span>位表示cylinder，中间<span class="number">8</span>位表示head，后面<span class="number">6</span>位表示 sector。</span><br><span class="line">   最大寻址空间<span class="number">8</span>GB</span><br><span class="line"></span><br><span class="line">LBA（logical block addressing）</span><br><span class="line">   LBA是一个整数，通过转换成CHS格式完成磁盘具体寻址</span><br><span class="line">   LBA采用<span class="number">48</span>个bit位寻址</span><br><span class="line">   最大寻址空间<span class="number">128</span>PB</span><br><span class="line">   由于CHS寻址方式的寻址空间在大概<span class="number">8</span>GB以内，所以在磁盘容量小于大概<span class="number">8</span>GB时，可以使用CHS寻址方式或是LBA寻址方式；在磁盘容量大于大概<span class="number">8</span>GB时，则只能使用LBA寻址方式</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="磁盘分区"><a href="#磁盘分区" class="headerlink" title="磁盘分区"></a>磁盘分区</h1><figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">为什么分区?</span><br><span class="line">   优化<span class="keyword">I</span>/<span class="keyword">O</span>性能</span><br><span class="line">   实现磁盘空间配额限制</span><br><span class="line">   提高修复速度</span><br><span class="line">   隔离系统和程序</span><br><span class="line">   安装多个OS</span><br><span class="line">   采用不同文件系统</span><br><span class="line"></span><br><span class="line">两种分区方式: MBR，GPT</span><br><span class="line"></span><br><span class="line">MBR: Master Boot <span class="keyword">Record</span>，<span class="number">1982</span>年，使用<span class="number">32</span>位表示扇区数，分区不超过<span class="number">2</span>T</span><br><span class="line"><span class="number">0</span>磁道<span class="number">0</span>扇区: <span class="number">512</span>bytes</span><br><span class="line">   <span class="number">446</span>bytes: boot loader</span><br><span class="line">   <span class="number">64</span>bytes: 分区表（<span class="number">4</span>个<span class="number">16</span>,代表最多有<span class="number">4</span>个主分区）</span><br><span class="line">      <span class="number">16</span>bytes: 标识一个分区</span><br><span class="line">   <span class="number">2</span>bytes: <span class="number">55</span>AA  （结果标识位，固定的）</span><br><span class="line"><span class="number">4</span>个主分区: <span class="number">3</span>主分区+<span class="number">1</span>扩展(<span class="keyword">N</span>个逻辑分区)</span><br><span class="line"></span><br><span class="line">MBR分区结构</span><br><span class="line">   硬盘主引导记录MBR由<span class="number">4</span>个部分组成</span><br><span class="line">      主引导程序（偏移地址<span class="number">0000</span>H-<span class="number">-0088</span>H），它负责从活动分区中装载，并运行系统引导程序。</span><br><span class="line">      出错信息数据区，偏移地址<span class="number">0089</span>H-<span class="number">-00E1</span>H为出错信息，<span class="number">00E2</span>H-<span class="number">-01</span>BDH全为<span class="number">0</span>字节。</span><br><span class="line">      分区表（DPT,<span class="keyword">Disk</span> <span class="keyword">Partition</span> <span class="keyword">Table</span>）含<span class="number">4</span>个分区项，偏移地 址<span class="number">01</span>BEH-<span class="number">-01</span>FDH,每个分区表项长<span class="number">16</span>个字节，共<span class="number">64</span>字节为分区项<span class="number">1</span>、分区项<span class="number">2</span>、分区项<span class="number">3</span>、分区项<span class="number">4</span></span><br><span class="line">      结束标志字，偏移地址<span class="number">01</span>FE-<span class="number">-01</span>FF的<span class="number">2</span>个字节值为结束标志 <span class="number">55</span>AA</span><br><span class="line"></span><br><span class="line">GPT分区</span><br><span class="line">   GPT: GUID（Globals <span class="keyword">Unique</span> Identifiers）partition table 支持<span class="number">128</span>个分区，使用<span class="number">64</span>位，支持<span class="number">8</span>Z（ <span class="number">512</span><span class="keyword">Byte</span>/block ） <span class="number">64</span>Z（<span class="number">4096</span><span class="keyword">Byte</span>/block）</span><br><span class="line">     使用<span class="number">128</span>位UUID（Universally <span class="keyword">Unique</span> Identifier）表示磁盘和分区 </span><br><span class="line">     GPT分区表自动备份在头和尾两份，并有CRC校验位</span><br><span class="line">   UEFI（统一扩展固件接口）硬件支持GPT，使操作系统启动</span><br></pre></td></tr></table></figure>
+<h2 id="BIOS-MBR与UEFI-GPT"><a href="#BIOS-MBR与UEFI-GPT" class="headerlink" title="BIOS+MBR与UEFI+GPT"></a>BIOS+MBR与UEFI+GPT</h2><figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">传统BIOS运行流程</span></span><br><span class="line"><span class="comment"></span>   <span class="comment">开机</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">BIOS初始化</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">BIOS自检</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">引导操作系统</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">进入系统</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">UEFI运行流程</span></span><br><span class="line"><span class="comment"></span>   <span class="comment">开机</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">UEFI初始化</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">引导操作系统</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">进入系统</span></span><br></pre></td></tr></table></figure>
+<h2 id="管理分区"><a href="#管理分区" class="headerlink" title="管理分区"></a>管理分区</h2><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">列出块设备</span><br><span class="line">   lsblk</span><br><span class="line"></span><br><span class="line"><span class="section">创建分区使用:</span></span><br><span class="line">   fdisk 创建MBR分区</span><br><span class="line">   gdisk 创建GPT分区</span><br><span class="line">   parted 高级分区操作</span><br><span class="line">   partprobe － 重新设置内存中的内核分区表版本</span><br></pre></td></tr></table></figure>
+<h2 id="parted命令"><a href="#parted命令" class="headerlink" title="parted命令"></a>parted命令</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">parted的操作都是实时生效的，小心使用</span><br><span class="line">用法: parted [选项]<span class="string">...</span> [设备 [命令 [参数]<span class="string">...</span>]<span class="string">...</span>]</span><br><span class="line">   parted  <span class="string">/dev/sdb</span>  mklabel  gpt | msdos</span><br><span class="line">      创建分区以 gpt 还是 msdos 格式</span><br><span class="line">      gpt前512个字节是不用的，为了兼容msdos</span><br><span class="line">      如果原来已经有分区了，比如原有创建有gpt格式的分区，再创建的话会重建分区，之前的gpt就消毁了</span><br><span class="line">   parted <span class="string">/dev/sdb</span> print  <span class="comment"># 打印出当前分区情况</span></span><br><span class="line">   parted <span class="string">/dev/sdb</span> mkpart primary 1 200（默认M）</span><br><span class="line">      例: parted <span class="string">/dev/sdb</span> mkpart primary 1 1024（创建一个主分区1024M的分区）</span><br><span class="line">   parted <span class="string">/dev/sdb</span> rm 1</span><br><span class="line">   parted -l</span><br></pre></td></tr></table></figure>
+<h2 id="分区工具fdisk和gdisk"><a href="#分区工具fdisk和gdisk" class="headerlink" title="分区工具fdisk和gdisk"></a>分区工具fdisk和gdisk</h2><figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">gfisk /dev/sdb 类fdisk的GPT分区工具</span><br><span class="line">fdisk -l [-u] [device...] 查看分区</span><br><span class="line">fdisk /dev/sdb  管理分区</span><br><span class="line">子命令:</span><br><span class="line">   p 分区列表</span><br><span class="line">   t 更改分区类型</span><br><span class="line">   n 创建新分区</span><br><span class="line">   d 删除分区</span><br><span class="line">   v 校验分区</span><br><span class="line">   u 转换单位</span><br><span class="line">   w 保存并退出</span><br><span class="line">   q 不保存并退出</span><br><span class="line"></span><br><span class="line">查看内核是否已经识别新的分区:</span><br><span class="line">   cat /<span class="keyword">proc</span>/partations</span><br><span class="line"></span><br><span class="line">centos6通知内核重新读取硬盘分区表</span><br><span class="line">   新增分区用 （增加分区不同步）</span><br><span class="line"><span class="title">      partx</span> -a /dev/DEVICE</span><br><span class="line"></span><br><span class="line"><span class="title">      kpartx</span> -a /dev/DEVICE  -f:<span class="title"> force</span></span><br><span class="line"><span class="title"></span></span><br><span class="line"><span class="title"></span>   删除分区用 （减少分区不同步）</span><br><span class="line"><span class="title">      partx</span> -d --nr<span class="title"> M-N</span> /dev/DEVICE</span><br><span class="line">      例:<span class="title"> partx</span> -d --nr 6-8  /dev/sda  如果不连续分区一个一个删除</span><br><span class="line">      注: 如果在一个分区里 又删除 又增加 会冲突，最好分开操作</span><br><span class="line">      注: 如果实在不行，重启也可以（一切都解决）</span><br><span class="line"></span><br><span class="line">CentOS 5，7: 使用partprobe</span><br><span class="line"><span class="title">   partprobe</span> [/dev/DEVICE]（在6上有BUG，不能显示出来）</span><br><span class="line"></span><br><span class="line">哪些可以看相关挂载的信息</span><br><span class="line"><span class="title">   cat</span>  /etc/fstab  开机自动挂载</span><br><span class="line"><span class="title">   cat</span>  /etc/mtab   当前系统磁盘已经挂载的设备</span><br><span class="line"><span class="title">   cat</span>  /<span class="keyword">proc</span>/mounts</span><br><span class="line"><span class="title">   cat</span>  /<span class="keyword">proc</span>/partitions</span><br><span class="line"><span class="title">   df</span></span><br><span class="line"><span class="title"></span> <span class="title">  fdisk</span>  -l</span><br><span class="line"><span class="title">   lsblk</span>  磁盘的实际挂载的情况</span><br><span class="line"><span class="title">   blkid</span>  查看当前系统挂载的块设备的信息</span><br><span class="line"><span class="title">   mount</span></span><br></pre></td></tr></table></figure>
+<h2 id="同步分区表"><a href="#同步分区表" class="headerlink" title="同步分区表"></a>同步分区表</h2><figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">查看内核是否已经识别新的分区：</span><br><span class="line">cat /<span class="keyword">proc</span>/partations</span><br><span class="line"></span><br><span class="line">centos6通知内核重新读取硬盘分区表</span><br><span class="line">新增分区用</span><br><span class="line">partx -a /dev/DEVICE</span><br><span class="line">kpartx -a /dev/DEVICE -f:<span class="title"> force</span></span><br><span class="line"><span class="title">删除分区用</span></span><br><span class="line"><span class="title">partx</span> -d --nr<span class="title"> M-N</span> /dev/DEVICE</span><br><span class="line"></span><br><span class="line">CentOS 5，7: 使用partprobe<span class="title"> partprobe</span> [/dev/DEVICE]</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h1><p>　　文件系统是操作系统用于明确存储设备或分区上的文件的方法和数据结构，即在存储设备上组织文件的方法，操作系统中负责管理和存储文件信息的软件结构称为文件管理系统，简称文件系统<br>　　从系统角度来看，文件系统是对文件存储设备的空间进行组织和分配，负责文件存储并对存入的文件进行保护和检索的系统。具体地说，它负责为用户建立文件，存入、读出、修改、转储文件，控制文件的存取，安全控制，日志，压缩，加密等 </p>
+<h2 id="支持的文件系统"><a href="#支持的文件系统" class="headerlink" title="支持的文件系统"></a>支持的文件系统</h2><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/<span class="class"><span class="keyword">lib</span>/<span class="title">modules</span>/`<span class="title">uname</span> –<span class="title">r</span>`/<span class="title">kernel</span>/<span class="title">fs</span>  <span class="comment"># uanme -r 指的是当前内核版本</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="文件系统类型"><a href="#文件系统类型" class="headerlink" title="文件系统类型"></a>文件系统类型</h2><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">Linux文件系统: ext2(Extended file system)，ext3，ext4，xfs（SGI），btrfs（Oracle），reiserfs，jfs（ AIX），swap</span></span><br><span class="line"><span class="section">光盘: iso9660</span></span><br><span class="line"><span class="section">Windows: FAT32，exFAT，NTFS</span></span><br><span class="line"><span class="section">Unix: FFS（fast），UFS（unix），JFS2</span></span><br><span class="line"><span class="section">网络文件系统: NFS，CIFS</span></span><br><span class="line"><span class="section">集群文件系统: GFS2，OCFS2（oracle）</span></span><br><span class="line"><span class="section">分布式文件系统: fastdfs，ceph，moosefs，mogilefs，glusterfs，Lustre</span></span><br><span class="line"><span class="section">RAW: 未经处理或者未经格式化产生的文件系统</span></span><br></pre></td></tr></table></figure>
+<h2 id="文件系统分类"><a href="#文件系统分类" class="headerlink" title="文件系统分类"></a>文件系统分类</h2><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">根据其是否支持"journal"功能:</span></span><br><span class="line">   日志型文件系统: ext3，ext4，xfs，...</span><br><span class="line">   非日志型文件系统: ext2，vfat</span><br><span class="line"></span><br><span class="line"><span class="section">文件系统的组成部分:</span></span><br><span class="line">   内核中的模块: ext4，xfs，vfat</span><br><span class="line">   用户空间的管理工具: mkfs.ext4，mkfs.xfs，mkfs.vfat</span><br><span class="line"></span><br><span class="line"><span class="section">Linux的虚拟文件系统: VFS</span></span><br><span class="line">   在用户和文件系统中间，抽象出了一层虚拟文件系统，用户访问的是虚拟文件系统，而不是底层</span><br><span class="line"></span><br><span class="line"><span class="section">查前支持的文件系统: cat /proc/filesystems</span></span><br></pre></td></tr></table></figure>
+<h2 id="创建文件系统"><a href="#创建文件系统" class="headerlink" title="创建文件系统"></a>创建文件系统</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mkfs命令:</span><br><span class="line">(<span class="number">1</span>) mkfs.FS_TYPE <span class="regexp">/dev/</span>DEVICE</span><br><span class="line">   FS_TYPE:</span><br><span class="line">      ext4</span><br><span class="line">      xfs</span><br><span class="line">      btrfs</span><br><span class="line">      vfat</span><br><span class="line">(<span class="number">2</span>) mkfs -t FS_TYPE <span class="regexp">/dev/</span>DEVICE</span><br><span class="line">   -L <span class="string">'LABEL'</span>: 设定卷标</span><br></pre></td></tr></table></figure>
+<h2 id="创建ext文件系统"><a href="#创建ext文件系统" class="headerlink" title="创建ext文件系统"></a>创建ext文件系统</h2><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mke2fs: ext系列文件系统专用管理工具</span><br><span class="line">   -<span class="ruby">t &#123;ext2<span class="params">|ext3|</span>ext4&#125;</span></span><br><span class="line"><span class="ruby">   -b &#123;<span class="number">1024</span><span class="params">|2048|</span><span class="number">4096</span>&#125;</span></span><br><span class="line"><span class="ruby">      注: 在指定块的大小的时候，如果指定的数并不会规定的数据，系统会往下，取最近的数值</span></span><br><span class="line"><span class="ruby">      比如: -b <span class="number">2000</span>  <span class="comment"># 系统会设定为 1024的大小</span></span></span><br><span class="line"><span class="ruby">   -L <span class="string">'LABEL'</span></span></span><br><span class="line"><span class="ruby">   -<span class="symbol">j:</span> 相当于 -t ext3</span></span><br><span class="line"><span class="ruby">      mkfs.ext3 = mkfs -t ext3</span></span><br><span class="line"><span class="ruby">      mke2fs -j = mke2fs -t ext3</span></span><br><span class="line"><span class="ruby">   -i <span class="comment">#: 为数据空间中每多少个字节创建一个inode，此大小不应该小于block的大小</span></span></span><br><span class="line"><span class="ruby">   -N <span class="comment">#: 指定分区中创建多少个inode</span></span></span><br><span class="line"><span class="ruby">   -I 一个inode记录占用的磁盘空间大小，<span class="number">128</span>---<span class="number">4096</span></span></span><br><span class="line"><span class="ruby">   -m <span class="comment">#: 默认5%，为管理人员预留空间占总空间的百分比</span></span></span><br><span class="line"><span class="ruby">   -O FEATURE[,...]: 启用指定特性</span></span><br><span class="line"><span class="ruby">   -O ^<span class="symbol">FEATURE:</span> 关闭指定特性</span></span><br></pre></td></tr></table></figure>
+<h2 id="文件系统标签"><a href="#文件系统标签" class="headerlink" title="文件系统标签"></a>文件系统标签</h2><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">指向设备的另一种方法与设备无关</span><br><span class="line">blkid: 块设备属性信息查看</span><br><span class="line">   blkid [OPTION]... [DEVICE]</span><br><span class="line">   -U UUID: 根据指定的UUID来查找对应的设备</span><br><span class="line">   -L <span class="keyword">LABEL</span><span class="bash">: 根据指定的LABEL来查找对应的设备</span></span><br><span class="line"><span class="bash">e2label: 管理ext系列文件系统的LABEL</span></span><br><span class="line"><span class="bash">   e2label DEVICE [LABEL]</span></span><br><span class="line"><span class="bash">findfs: 查找分区</span></span><br><span class="line"><span class="bash">   findfs [options] LABEL=&lt;label&gt;</span></span><br><span class="line"><span class="bash">   findfs [options] UUID=&lt;uuid&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="tune2fs"><a href="#tune2fs" class="headerlink" title="tune2fs"></a>tune2fs</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">tune2fs</span>: 重新设定ext系列文件系统可调整参数的值</span><br><span class="line">   <span class="attribute">-l</span>: 查看指定文件系统超级块信息，super block</span><br><span class="line">   -L <span class="string">'LABEL'</span>: 修改卷标</span><br><span class="line">   -m #: 修预留给管理员的空间百分比</span><br><span class="line">   <span class="attribute">-j</span>: 将ext2升级为ext3</span><br><span class="line">   <span class="attribute">-O</span>: 文件系统属性启用或禁用，–O ^has_journal</span><br><span class="line">   <span class="attribute">-o</span>: 调整文件系统的默认挂载选项，–o ^acl</span><br><span class="line">   -U <span class="attribute">UUID</span>: 修改UUID号</span><br><span class="line"></span><br><span class="line"><span class="attribute">dumpe2fs</span>:</span><br><span class="line">   块分组管理，<span class="number">32768</span>块</span><br><span class="line">   查看超级块信息，不显示分组信息</span><br><span class="line">      dumpe2fs -h 设备</span><br><span class="line">      tune2fs -l 设备</span><br><span class="line">		</span><br><span class="line"><span class="attribute">uuidgen</span>: 创建一个UUID</span><br><span class="line">   [root<span class="variable">@centos6</span> ~]# uuidgen</span><br><span class="line">   eb582c03-<span class="number">3</span>bea-<span class="number">42</span>ed-a09f-<span class="number">0347</span>c5ad360a</span><br></pre></td></tr></table></figure>
+<h2 id="文件系统检测和修复"><a href="#文件系统检测和修复" class="headerlink" title="文件系统检测和修复"></a>文件系统检测和修复</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">常发生于死机或者非正常关机之后</span><br><span class="line">挂载为文件系统标记为<span class="string">"no clean"</span></span><br><span class="line">注意: 一定不要在挂载状态下修复</span><br><span class="line">fsck: File<span class="built_in"> System </span>Check</span><br><span class="line">   fsck.FS_TYPE</span><br><span class="line">   fsck -t FS_TYPE</span><br><span class="line">   -p: 自动修复错误</span><br><span class="line">   -r: 交互式修复错误</span><br><span class="line">   FS_TYPE一定要与分区上已经文件类型相同</span><br><span class="line"></span><br><span class="line">e2fsck: ext系列文件专用的检测修复工具</span><br><span class="line">   -y: 自动回答为<span class="literal">yes</span></span><br><span class="line">   -f: 强制修复</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="挂载mount"><a href="#挂载mount" class="headerlink" title="挂载mount"></a>挂载mount</h1><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">挂载: 将额外文件系统与根文件系统某现存的目录建立起关联关系，进而使得此目录做为其它文件访问入口的行为</span><br><span class="line">卸载: 为解除此关联关系的过程</span><br><span class="line">把设备关联挂载点: mount Point</span><br><span class="line">   mount</span><br><span class="line">卸载时: 可使用设备，也可以使用挂载点</span><br><span class="line">   umount</span><br><span class="line"><span class="meta"># 挂载点下原有文件在挂载完成后会被临时隐藏</span></span><br><span class="line"><span class="meta"># 挂载点目录一般为空</span></span><br><span class="line"><span class="meta"># 注: 挂载时  事先存在  使用空单闲目录</span></span><br><span class="line"></span><br><span class="line">用mount命令挂载文件系统 </span><br><span class="line">   挂载方法: mount DEVICE MOUNT_POINT</span><br><span class="line">   mount: 通过查看/etc/mtab文件显示当前已挂载的所有设备</span><br><span class="line">   mount [-fnrsvw] [-t vfstype] [-o options] device dir</span><br><span class="line">      device: 指明要挂载的设备</span><br><span class="line">      (<span class="number">1</span>) 设备文件: 例如/dev/sda5</span><br><span class="line">      (<span class="number">2</span>) 卷标: -L <span class="string">'LABEL'</span>，例如 -L <span class="string">'MYDATA'</span></span><br><span class="line">      (<span class="number">3</span>) UUID, -U <span class="string">'UUID'</span>: 例如 -U <span class="string">'0c50523c-43f145e7-85c0-a126711d406e'</span></span><br><span class="line">      (<span class="number">4</span>) 伪文件系统名称: proc，sysfs，devtmpfs，configfs</span><br><span class="line">      dir: 挂载点</span><br><span class="line">         事先存在，建议使用空目录</span><br><span class="line">         进程正在使用中的设备无法被卸载</span><br></pre></td></tr></table></figure>
+<h2 id="mount常用命令选项"><a href="#mount常用命令选项" class="headerlink" title="mount常用命令选项"></a>mount常用命令选项</h2><figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">-t vsftype: 指定要挂载的设备上的文件系统类型</span><br><span class="line">-r: readonly，只读挂载</span><br><span class="line">-w: <span class="keyword">read</span> and write, 读写挂载</span><br><span class="line">-n: 不更新/etc/mtab，mount不可见</span><br><span class="line">-a: 自动挂载所有支持自动挂载的设备(定义在了/etc/fstab 文件中，且挂载选项中有auto功能)</span><br><span class="line">   注: 挂载那些没有挂载的设备，已经挂载的不会去挂载了（比如在里面修改了一些参数，还是不行）</span><br><span class="line">-L <span class="string">'LABEL'</span>: 以卷标指定挂载设备</span><br><span class="line">-U <span class="string">'UUID'</span>: 以UUID指定要挂载的设备</span><br><span class="line">-B, --bind: 绑定目录到另一个目录上</span><br><span class="line">   文件夹 挂 文件夹</span><br><span class="line">   注: 相同设备点的时候，并不是硬链接，大小虽然相同，但是它的链接数并不会递增。</span><br><span class="line">   注: 比如 bind-chroot</span><br><span class="line">	</span><br><span class="line">查看内核追踪到的已挂载的所有设备</span><br><span class="line">   cat /<span class="keyword">proc</span>/mounts （最全的信息）</span><br><span class="line">		</span><br><span class="line">-o<span class="title"> options:</span> (挂载文件系统的选项)，多个选项使用逗号分隔</span><br><span class="line"><span class="title">   async:</span> 异步模式</span><br><span class="line"><span class="title">   sync:</span> 同步模式,内存更改时，同时写磁盘</span><br><span class="line"><span class="title">   atime/noatime:</span> 包含目录和文件</span><br><span class="line">      例: 服务器的访问时间，不需要更新  从而得到优化性能</span><br><span class="line">      注:<span class="title"> chattr</span> +A 的功能一样</span><br><span class="line"><span class="title">   diratime/nodiratime:</span> 目录的访问时间戳</span><br><span class="line"><span class="title">   auto/noauto:</span> 是否支持自动挂载,是否支持-a选项</span><br><span class="line"><span class="title">   exec/noexec:</span> 是否支持将文件系统上运行应用程序</span><br><span class="line"><span class="title">   dev/nodev:</span> 是否支持在此文件系统上使用设备文件</span><br><span class="line"><span class="title">   suid/nosuid:</span> 不否支持suid和sgid权限</span><br><span class="line"><span class="title">   remount:</span> 重新挂载</span><br><span class="line"><span class="title">   ro:</span> 只读</span><br><span class="line"><span class="title">   rw:</span> 读写</span><br><span class="line"><span class="title">   user/nouser:</span> 是否允许普通用户挂载此设备，/etc/fstab使用</span><br><span class="line"><span class="title">   acl:</span> 启用此文件系统上的acl功能</span><br><span class="line"><span class="title">   loop:</span> 使用loop设备</span><br><span class="line">   注: 6和7上有点差别，比如6，只支持8个，如果超过，则自己手动创建（mknod）而7上，系统自动分配，没有限制。</span><br><span class="line">   注: 如果在6上非要使用多个loop设备，可以自己指定数量。</span><br><span class="line">      在 /boot/grub/grub.conf中<span class="title"> kernel的变量中加入</span> max_loop=指定的数量（重启不丢失）</span><br><span class="line">      或者在系统启动的时候，按a 进入内核设置 到kernel的那一行中，添加max_loop=数量（重启丢失）</span><br><span class="line">defaults: 相当于rw，nosuid，dev，exec，auto，nouser，async</span><br></pre></td></tr></table></figure>
+<h2 id="卸载命令"><a href="#卸载命令" class="headerlink" title="卸载命令"></a>卸载命令</h2><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">   查看挂载情况</span><br><span class="line">      findmnt MOUNT_POINT | device</span><br><span class="line">      -<span class="ruby">s 判断挂载点是不是在/etc/fstab里实施了挂载</span></span><br><span class="line"><span class="ruby">例<span class="symbol">:</span></span></span><br><span class="line"><span class="ruby">   查看/etc/fstab中是否有挂载记录</span></span><br><span class="line"><span class="ruby">      findmnt -s /dev/sdb1</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">   查看该设备是否挂载</span></span><br><span class="line"><span class="ruby">      findmnt /dev/sdb1</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">   查看正在访问指定文件系统的进程</span></span><br><span class="line"><span class="ruby">      lsof MOUNT_POINT</span></span><br><span class="line"><span class="ruby">      fuser -v MOUNT_POINT</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">   终止所有在正访问指定的文件系统的进程</span></span><br><span class="line"><span class="ruby">      fuser -km MOUNT_POINT</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">   卸载</span></span><br><span class="line"><span class="ruby">      umount DEVICE</span></span><br><span class="line"><span class="ruby">      umount MOUNT_POINT</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">注: 多个设备不能同时挂载（同一个时间点）</span></span><br><span class="line"><span class="ruby">   一个点上 --&gt; 只能生效一个</span></span><br><span class="line"><span class="ruby">   单个设备可以挂多个挂载点上</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby"><span class="symbol">fuser:</span> 可以显示出当前哪个程序在使用磁盘上的某个文件、挂载点、甚至网络端口，并给出程序进程的详细信息</span></span><br><span class="line"><span class="ruby">   -v 详细模式，输出似ps命令的输出，包含PID，USER，COMMAND等许多域，如果是内核访问的那么PID为kernel</span></span><br><span class="line"><span class="ruby">   -a 显示所有命令行中指定的文件，默认情况下被访问的文件才会被显示</span></span><br><span class="line"><span class="ruby">   -k 杀掉访问文件的进程，如果没有指定-signal就会发送SIGKILL信号</span></span><br><span class="line"><span class="ruby">   -i 杀掉进程之前询问用户，如果没有-k这个选项会被忽略</span></span><br><span class="line"><span class="ruby">   -l 列出所有已知的信号名称</span></span><br><span class="line"><span class="ruby">   -m name 指定一个挂载文件系统上的文件或者被挂载的块设备（名称name） 这样所有访问这个文件或者文件系统的进程都会被列出来</span></span><br><span class="line"><span class="ruby">   -n space 指定一个不同的命名空间(space).这里支持不同的空间文件（文件名，此处默认）、tcp（本地tcp端口）、udp（本地udp端口）</span></span><br><span class="line"><span class="ruby">例: fuser -km <span class="symbol">mount_point:</span> 终止正在访问此挂载点的所有进程</span></span><br></pre></td></tr></table></figure>
+<h2 id="挂载点和-etc-fstab"><a href="#挂载点和-etc-fstab" class="headerlink" title="挂载点和/etc/fstab"></a>挂载点和/etc/fstab</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">配置文件系统体系</span><br><span class="line">	</span><br><span class="line">被mount、fsck和其它程序使用</span><br><span class="line">	</span><br><span class="line">系统重启时保留文件系统体系</span><br><span class="line">	</span><br><span class="line">可以在设备栏使用文件系统卷标</span><br><span class="line">	</span><br><span class="line">使用mount -<span class="selector-tag">a</span> 命令挂载 /etc/fstab中的所有文件系统</span><br></pre></td></tr></table></figure>
+<h2 id="文件挂载配置文件"><a href="#文件挂载配置文件" class="headerlink" title="文件挂载配置文件"></a>文件挂载配置文件</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta-keyword">/etc/</span>fstab每行定义一个要挂载的文件系统 </span><br><span class="line">要挂载的设备或伪文件系统</span><br><span class="line">   设备文件</span><br><span class="line"><span class="symbol">   LABEL:</span> LABEL=<span class="string">""</span></span><br><span class="line"><span class="symbol">   UUID:</span> UUID=<span class="string">""</span></span><br><span class="line">   伪文件系统名称: proc，sysfs</span><br><span class="line"></span><br><span class="line">挂载点</span><br><span class="line">文件系统类型</span><br><span class="line">挂载选项: defaults</span><br><span class="line">转储频率: <span class="number">0</span>: 不做备份 <span class="number">1</span>: 每天转储 <span class="number">2</span>: 每隔一天转储</span><br><span class="line">自检次序: <span class="number">0</span>: 不自检   <span class="number">1</span>: 首先自检，一般只有rootfs才用 <span class="number">1</span></span><br><span class="line"></span><br><span class="line">如果在<span class="meta-keyword">/etc/</span>fstab中文件出错，进入救援模式中，进行修改，（当修改的时候，文件无法操作，只读，需要重新挂载）</span><br><span class="line">注: 在使用一些网络资源的时候，网络不通（在<span class="meta-keyword">/etc/</span>fstab中进行了配置开机检查）不会导致系统出错，起不了系统</span><br></pre></td></tr></table></figure>
+<h2 id="处理交换文件和分区swap"><a href="#处理交换文件和分区swap" class="headerlink" title="处理交换文件和分区swap"></a>处理交换文件和分区swap</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">交换分区是系统RAM的补充</span><br><span class="line">基本设置包括:</span><br><span class="line">   创建交换分区或者文件</span><br><span class="line">   使用mkswap写入特殊签名</span><br><span class="line">   在<span class="regexp">/etc/</span>fstab文件中添加适当的条目</span><br><span class="line">   使用swapon -a 激活交换空间</span><br><span class="line"></span><br><span class="line">挂载交换分区</span><br><span class="line">   启用: swapon</span><br><span class="line">   swapon [OPTION]... [DEVICE]</span><br><span class="line">      -<span class="string">a:</span> 激活所有的交换分区</span><br><span class="line">      -p <span class="string">PRIORITY:</span> 指定优先级</span><br><span class="line">      <span class="regexp">/etc/</span><span class="string">fstab:</span>pri=value</span><br><span class="line"></span><br><span class="line">cat <span class="regexp">/proc/</span>swaps查看的信息</span><br><span class="line">禁用: swapoff [OPTION]... [DEVICE]</span><br></pre></td></tr></table></figure>
+<h2 id="SWAP的优先级"><a href="#SWAP的优先级" class="headerlink" title="SWAP的优先级"></a>SWAP的优先级</h2><p>可以指定swap分区0到32767的优先级，值越大优先级越高<br>如果用户没有指定，那么核心会自动给swap指定一个优先级，这个优先级从-1开始，每加入一个新的没有用户指定优先级的swap，会给这个优先级减一<br>先添加的swap的缺省优先级比较高，除非用户自己指定一个优先级，而用户指定的优先级（是正数）永远高于核心缺省指定的优先级（是负数）<br>优化性能: 分布存放，高性能磁盘存放</p>
+<h1 id="移动介质"><a href="#移动介质" class="headerlink" title="移动介质"></a>移动介质</h1><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">挂载意味着使外来的文件系统看起来如同是主目录树的一部分</span><br><span class="line"></span><br><span class="line">访问前，介质必须被挂载</span><br><span class="line">摘除时，介质必须被卸载</span><br><span class="line"></span><br><span class="line">按照默认设置，非根用户只能挂载某些设备（光盘、DVD、软盘、USB等等）</span><br><span class="line">挂载点通常在<span class="string">/media</span> 或<span class="string">/mnt</span>下</span><br></pre></td></tr></table></figure>
+<h2 id="使用光盘"><a href="#使用光盘" class="headerlink" title="使用光盘"></a>使用光盘</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">在图形环境下自动启动挂载<span class="meta-keyword">/run/</span>media/<span class="params">&lt;user&gt;</span>/<span class="params">&lt;label&gt;</span></span><br><span class="line"></span><br><span class="line">否则就必须被手工挂载</span><br><span class="line">   mount <span class="meta-keyword">/dev/</span>cdrom <span class="meta-keyword">/mnt/</span></span><br><span class="line">	</span><br><span class="line">eject命令卸载或弹出磁盘</span><br><span class="line"></span><br><span class="line">创建ISO文件</span><br><span class="line">   cp <span class="meta-keyword">/dev/</span>cdrom <span class="meta-keyword">/root/</span>centos7.iso</span><br><span class="line">   mkisofs -r -o <span class="meta-keyword">/root/</span>etc.iso /etc</span><br><span class="line"></span><br><span class="line">刻录光盘</span><br><span class="line">   wodim –v –eject centos.iso</span><br></pre></td></tr></table></figure>
+<h2 id="挂载USB"><a href="#挂载USB" class="headerlink" title="挂载USB"></a>挂载USB</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">查看USB设备是否识别</span><br><span class="line">   lsusb</span><br><span class="line"></span><br><span class="line">被内核探测为SCSI设备</span><br><span class="line">   <span class="meta-keyword">/dev/</span>sdaX、<span class="meta-keyword">/dev/</span>sdbX、或类似的设备文件</span><br><span class="line"></span><br><span class="line">在图形环境中自动挂载</span><br><span class="line">   图标在[计算机]窗口中创建</span><br><span class="line">   挂载在<span class="meta-keyword">/run/</span>media/<span class="params">&lt;user&gt;</span>/<span class="params">&lt;label&gt;</span></span><br><span class="line"></span><br><span class="line">手动挂载</span><br><span class="line">   mount <span class="meta-keyword">/dev/</span>sdb1 /mnt</span><br></pre></td></tr></table></figure>
+<h1 id="常见工具"><a href="#常见工具" class="headerlink" title="常见工具"></a>常见工具</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">内存空间使用状态:</span><br><span class="line">   free [OPTION] （查看的时候，如果小于1的话，会显示为0）</span><br><span class="line">      -<span class="ruby"><span class="symbol">m:</span> 以MB为单位</span></span><br><span class="line"><span class="ruby">      -<span class="symbol">g:</span> 以GB为单位</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">文件系统空间占用等信息的查看工具<span class="symbol">:</span></span></span><br><span class="line"><span class="ruby">   df [OPTION]... [FILE]...</span></span><br><span class="line"><span class="ruby">      -H 以<span class="number">1000</span>为单位</span></span><br><span class="line"><span class="ruby">      -T 文件系统类型</span></span><br><span class="line"><span class="ruby">      -<span class="symbol">h:</span> human-readable</span></span><br><span class="line"><span class="ruby">      -<span class="symbol">i:</span> inodes instead of blocks</span></span><br><span class="line"><span class="ruby">      -<span class="symbol">P:</span> 以Posix兼容的格式输出</span></span><br><span class="line"><span class="ruby">	</span></span><br><span class="line"><span class="ruby">查看某目录总体空间占用状态<span class="symbol">:</span></span></span><br><span class="line"><span class="ruby">   du [OPTION]... DIR</span></span><br><span class="line"><span class="ruby">      -<span class="symbol">h:</span> human-readable 人类易读的方式显示,只显示目录不显示文件</span></span><br><span class="line"><span class="ruby">      -<span class="symbol">s:</span> summary 以汇总的方法显示</span></span><br></pre></td></tr></table></figure>
+<h1 id="dd命令"><a href="#dd命令" class="headerlink" title="dd命令"></a>dd命令</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">dd命令: convert <span class="keyword">and</span> copy a file</span><br><span class="line">用法:</span><br><span class="line">   dd <span class="attribute">if</span>=/PATH/FROM/SRC <span class="attribute">of</span>=/PATH/TO/DEST</span><br><span class="line">   <span class="attribute">bs</span>=#: block size，复制单元大小</span><br><span class="line">   <span class="attribute">count</span>=#: 复制多少个bs</span><br><span class="line"></span><br><span class="line"><span class="attribute">of</span>=file 写到所命名的文件而不是到标准输出</span><br><span class="line"><span class="attribute">if</span>=file 从所命名文件读取而不是从标准输入</span><br><span class="line"><span class="attribute">bs</span>=size 指定块大小（既是是ibs也是obs) </span><br><span class="line"><span class="attribute">ibs</span>=size 一次读size个byte</span><br><span class="line"><span class="attribute">obs</span>=size 一次写size个byte</span><br><span class="line"><span class="attribute">cbs</span>=size 一次转化size个byte</span><br><span class="line"><span class="attribute">skip</span>=blocks 从开头忽略blocks个ibs大小的块</span><br><span class="line"><span class="attribute">seek</span>=blocks 从开头忽略blocks个obs大小的块</span><br><span class="line"><span class="attribute">count</span>=n 只拷贝n个记录</span><br><span class="line"></span><br><span class="line"><span class="attribute">conv</span>=conversion[,conversion<span class="built_in">..</span>.] 用指定的参数转换文件</span><br><span class="line">转换参数:</span><br><span class="line">ascii 转换 EBCDIC 为 ASCII</span><br><span class="line">ebcdic 转换 ASCII 为 EBCDIC</span><br><span class="line">lcase 把大写字符转换为小写字符</span><br><span class="line">ucase 把小写字符转换为大写字符</span><br><span class="line">nocreat 不创建输出文件</span><br><span class="line">noerror 出错时不停止</span><br><span class="line">notrunc 不截短输出文件</span><br><span class="line">sync 把每个输入块填充到ibs个字节，不足部分用空(NUL)字符补齐</span><br><span class="line"></span><br><span class="line">例: 有一个大与2K的二进制文件fileA，现在想从第64个字节位置开始读取，需要读取的大小是128Byts，又有fileB，想把上面读取到的128Bytes写到</span><br><span class="line">  第32个字节开始的位置，替换 128Bytes，实现如下:</span><br><span class="line"> </span><br><span class="line">dd <span class="attribute">if</span>=fileA <span class="attribute">of</span>=fileB <span class="attribute">bs</span>=1 <span class="attribute">count</span>=128 <span class="attribute">skip</span>=63 <span class="attribute">seek</span>=31 <span class="attribute">conv</span>=notrunc</span><br><span class="line"><span class="comment"># 63开始地址从0开始算，开始读取if文件中的数据，31开始地址从0开始算，忽略掉of文件开头的32个，128一共读取多少个</span></span><br><span class="line"></span><br><span class="line">备份MBR:</span><br><span class="line">dd <span class="attribute">if</span>=/dev/sda <span class="attribute">of</span>=/tmp/mbr.bak <span class="attribute">bs</span>=512 <span class="attribute">count</span>=1</span><br><span class="line"></span><br><span class="line">破坏MBR中的bootloader:</span><br><span class="line">dd <span class="attribute">if</span>=/dev/zero <span class="attribute">of</span>=/dev/sda <span class="attribute">bs</span>=64 <span class="attribute">count</span>=1 <span class="attribute">seek</span>=446</span><br><span class="line"></span><br><span class="line">有一个大与2K的二进制文件fileA，现在想从第64个字节位置开始读取，需要读取的大小是128Byts，又有fileB，想把上面读取到的128Bytes写到</span><br><span class="line">  第32个字节开始的位置，替换128Bytes，实现如下:</span><br><span class="line">dd <span class="attribute">if</span>=fileA <span class="attribute">of</span>=fileB <span class="attribute">bs</span>=1 <span class="attribute">count</span>=128 <span class="attribute">skip</span>=63 <span class="attribute">seek</span>=31 <span class="attribute">conv</span>=notrunc</span><br><span class="line"></span><br><span class="line">备份:</span><br><span class="line">   dd <span class="attribute">if</span>=/dev/sdx <span class="attribute">of</span>=/dev/sdy</span><br><span class="line">   将本地的/dev/sdx整盘备份到/dev/sd</span><br><span class="line"></span><br><span class="line">   dd <span class="attribute">if</span>=/dev/sdx <span class="attribute">of</span>=/path/to/image</span><br><span class="line">   将/dev/sdx全盘数据备份到指定路径的image文件</span><br><span class="line"></span><br><span class="line">   dd <span class="attribute">if</span>=/dev/sdx | gzip &gt;/path/<span class="keyword">to</span>/image.gz</span><br><span class="line">   备份/dev/sdx全盘数据，并利用gzip压缩，保存到指定路径</span><br><span class="line"></span><br><span class="line">恢复:</span><br><span class="line">   dd <span class="attribute">if</span>=/path/to/image <span class="attribute">of</span>=/dev/sdx</span><br><span class="line">   将备份文件恢复到指定盘</span><br><span class="line"></span><br><span class="line">   gzip -dc /path/<span class="keyword">to</span>/image.gz | dd <span class="attribute">of</span>=/dev/sdx</span><br><span class="line">   将压缩的备份文件恢复到指定盘</span><br><span class="line"></span><br><span class="line">拷贝内存资料到硬盘</span><br><span class="line">   dd <span class="attribute">if</span>=/dev/mem <span class="attribute">of</span>=/root/mem.bin <span class="attribute">bs</span>=1024</span><br><span class="line">   将内存里的数据拷贝到root目录下的mem.bin文件从光盘拷贝iso镜像</span><br><span class="line"></span><br><span class="line">   dd <span class="attribute">if</span>=/dev/cdrom <span class="attribute">of</span>=/root/cd.iso</span><br><span class="line">   拷贝光盘数据到root文件夹下，并保存为cd.iso文件</span><br><span class="line"></span><br><span class="line">销毁磁盘数据</span><br><span class="line">   dd <span class="attribute">if</span>=/dev/urandom <span class="attribute">of</span>=/dev/sda1</span><br><span class="line">   利用随机的数据填充硬盘，在某些必要的场合可以用来销毁数据，执行此操作以后，</span><br><span class="line">  /dev/sda1将无法挂载，创建和拷贝操作无法执行</span><br><span class="line"></span><br><span class="line">得到最恰当的block size</span><br><span class="line">   dd <span class="attribute">if</span>=/dev/zero <span class="attribute">bs</span>=1024 <span class="attribute">count</span>=1000000 <span class="attribute">of</span>=/root/1Gb.file</span><br><span class="line">   dd <span class="attribute">if</span>=/dev/zero <span class="attribute">bs</span>=2048 <span class="attribute">count</span>=500000 <span class="attribute">of</span>=/root/1Gb.file</span><br><span class="line">   dd <span class="attribute">if</span>=/dev/zero <span class="attribute">bs</span>=4096 <span class="attribute">count</span>=250000 <span class="attribute">of</span>=/root/1Gb.file</span><br><span class="line">通过比较dd指令输出中所显示的命令执行时间，即可确定系统最佳的block size大小</span><br><span class="line"></span><br><span class="line">测试硬盘写速度</span><br><span class="line">   dd <span class="attribute">if</span>=/dev/zero <span class="attribute">of</span>=/root/1Gb.file <span class="attribute">bs</span>=1024 <span class="attribute">count</span>=1000000</span><br><span class="line"></span><br><span class="line">测试硬盘读速度</span><br><span class="line">   dd <span class="attribute">if</span>=/root/1Gb.file <span class="attribute">bs</span>=64k | dd <span class="attribute">of</span>=/dev/null</span><br><span class="line"></span><br><span class="line">修复硬盘</span><br><span class="line">   dd <span class="attribute">if</span>=/dev/sda <span class="attribute">of</span>=/dev/sda</span><br><span class="line">当硬盘较长时间（比如1，2年）放置不使用后，磁盘上会产生消磁点。当磁头读到这些区域时会遇到困难，</span><br><span class="line">  并可能导致I/O错误，当这种情况影响到硬盘的第一个扇区时，可能导致硬盘报废，上边的命令有可能使</span><br><span class="line">  这些数据起死回生,且这个过程是安全高效的</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/disk/" rel="tag"># disk</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/06/linux/基础/软件包管理和编译安装实现/" rel="next" title="软件包管理和编译安装实验">
+                <i class="fa fa-chevron-left"></i> 软件包管理和编译安装实验
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/08/linux/基础/高级文件系统管理/" rel="prev" title="高级文件系统管理">
+                高级文件系统管理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">93</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#设备文件"><span class="nav-number">1.</span> <span class="nav-text">设备文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CHS和LBA"><span class="nav-number">2.</span> <span class="nav-text">CHS和LBA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#磁盘分区"><span class="nav-number">3.</span> <span class="nav-text">磁盘分区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#BIOS-MBR与UEFI-GPT"><span class="nav-number">3.1.</span> <span class="nav-text">BIOS+MBR与UEFI+GPT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#管理分区"><span class="nav-number">3.2.</span> <span class="nav-text">管理分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parted命令"><span class="nav-number">3.3.</span> <span class="nav-text">parted命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分区工具fdisk和gdisk"><span class="nav-number">3.4.</span> <span class="nav-text">分区工具fdisk和gdisk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步分区表"><span class="nav-number">3.5.</span> <span class="nav-text">同步分区表</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文件系统"><span class="nav-number">4.</span> <span class="nav-text">文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#支持的文件系统"><span class="nav-number">4.1.</span> <span class="nav-text">支持的文件系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件系统类型"><span class="nav-number">4.2.</span> <span class="nav-text">文件系统类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件系统分类"><span class="nav-number">4.3.</span> <span class="nav-text">文件系统分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建文件系统"><span class="nav-number">4.4.</span> <span class="nav-text">创建文件系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建ext文件系统"><span class="nav-number">4.5.</span> <span class="nav-text">创建ext文件系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件系统标签"><span class="nav-number">4.6.</span> <span class="nav-text">文件系统标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tune2fs"><span class="nav-number">4.7.</span> <span class="nav-text">tune2fs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件系统检测和修复"><span class="nav-number">4.8.</span> <span class="nav-text">文件系统检测和修复</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#挂载mount"><span class="nav-number">5.</span> <span class="nav-text">挂载mount</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#mount常用命令选项"><span class="nav-number">5.1.</span> <span class="nav-text">mount常用命令选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卸载命令"><span class="nav-number">5.2.</span> <span class="nav-text">卸载命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#挂载点和-etc-fstab"><span class="nav-number">5.3.</span> <span class="nav-text">挂载点和/etc/fstab</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件挂载配置文件"><span class="nav-number">5.4.</span> <span class="nav-text">文件挂载配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理交换文件和分区swap"><span class="nav-number">5.5.</span> <span class="nav-text">处理交换文件和分区swap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SWAP的优先级"><span class="nav-number">5.6.</span> <span class="nav-text">SWAP的优先级</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#移动介质"><span class="nav-number">6.</span> <span class="nav-text">移动介质</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用光盘"><span class="nav-number">6.1.</span> <span class="nav-text">使用光盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#挂载USB"><span class="nav-number">6.2.</span> <span class="nav-text">挂载USB</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常见工具"><span class="nav-number">7.</span> <span class="nav-text">常见工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dd命令"><span class="nav-number">8.</span> <span class="nav-text">dd命令</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

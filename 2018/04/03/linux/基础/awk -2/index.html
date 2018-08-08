@@ -1,0 +1,843 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic|Iosevka:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="awk," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="awk控制语句123456789101112awk控制语句   &amp;#123; statements; ...&amp;#125; 组合语句   if(condition) &amp;#123;statements; ...&amp;#125;   if(condition) &amp;#123;statements; ...&amp;#125; else &amp;#123;statements; ...&amp;#125;   while(condi">
+<meta name="keywords" content="awk">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AWK -2">
+<meta property="og:url" content="http://yoursite.com/2018/04/03/linux/基础/awk -2/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="awk控制语句123456789101112awk控制语句   &amp;#123; statements; ...&amp;#125; 组合语句   if(condition) &amp;#123;statements; ...&amp;#125;   if(condition) &amp;#123;statements; ...&amp;#125; else &amp;#123;statements; ...&amp;#125;   while(condi">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-07T08:19:03.539Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AWK -2">
+<meta name="twitter:description" content="awk控制语句123456789101112awk控制语句   &amp;#123; statements; ...&amp;#125; 组合语句   if(condition) &amp;#123;statements; ...&amp;#125;   if(condition) &amp;#123;statements; ...&amp;#125; else &amp;#123;statements; ...&amp;#125;   while(condi">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/03/linux/基础/awk -2/"/>
+
+
+
+
+
+  <title> AWK -2 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home Page
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux1">
+          <a href="/categories/LinuxBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux2">
+          <a href="/categories/LinuxServices" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Services
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python1">
+          <a href="/categories/PythonBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python2">
+          <a href="/categories/PythonCase" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Case
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question1">
+          <a href="/categories/CommonQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Common Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question2">
+          <a href="/categories/InterviewQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Interview Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/03/linux/基础/awk -2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                AWK -2
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-03T00:00:00+08:00">
+                2018-04-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LinuxBasics/" itemprop="url" rel="index">
+                    <span itemprop="name">LinuxBasics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="awk控制语句"><a href="#awk控制语句" class="headerlink" title="awk控制语句"></a>awk控制语句</h1><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">awk控制语句</span><br><span class="line">   &#123; statements; ...&#125; 组合语句</span><br><span class="line">   <span class="keyword">if</span>(condition) &#123;statements; ...&#125;</span><br><span class="line">   <span class="keyword">if</span>(condition) &#123;statements; ...&#125; <span class="keyword">else</span> &#123;statements; ...&#125;</span><br><span class="line">   <span class="keyword">while</span>(conditon) &#123;statments; ...&#125;</span><br><span class="line">   <span class="keyword">do</span> &#123;statements; ...&#125; <span class="keyword">while</span>(condition)</span><br><span class="line">   <span class="keyword">for</span>(expr1;expr2;expr3) &#123;statements; ...&#125;</span><br><span class="line">   <span class="keyword">break</span></span><br><span class="line">   <span class="keyword">continue</span></span><br><span class="line">   <span class="keyword">delete</span> array[index]</span><br><span class="line">   <span class="keyword">delete</span> array</span><br><span class="line">   <span class="keyword">exit</span></span><br></pre></td></tr></table></figure>
+<h2 id="awk控制语句（if-else）"><a href="#awk控制语句（if-else）" class="headerlink" title="awk控制语句（if-else）"></a>awk控制语句（if-else）</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">语法: <span class="keyword">if</span>(condition)&#123;statement; ...&#125;[<span class="keyword">else</span> statement]</span><br><span class="line">   <span class="keyword">if</span>(condition1)&#123;statement1&#125; <span class="keyword">else</span> <span class="keyword">if</span>(condition2)&#123;statement2&#125; <span class="keyword">else</span>&#123;statement3&#125;</span><br><span class="line"></span><br><span class="line">使用场景: 对awk取得的整行或某个字段做条件判断</span><br><span class="line">例:</span><br><span class="line">   awk -F: '&#123;<span class="keyword">if</span>(<span class="variable">$3</span>&gt;=1000)<span class="keyword">print</span> <span class="variable">$1</span>,<span class="variable">$3&#125;</span>' /etc/passwd</span><br><span class="line"></span><br><span class="line">   awk -F: '&#123;<span class="keyword">if</span>(<span class="variable">$NF</span>==<span class="string">"/bin/bash"</span>) <span class="keyword">print</span> <span class="variable">$1&#125;</span>' /etc/passwd</span><br><span class="line"></span><br><span class="line">   awk '&#123;<span class="keyword">if</span>(NF&gt;5) <span class="keyword">print</span> <span class="variable">$0&#125;</span>' /etc/fstab</span><br><span class="line"></span><br><span class="line">   awk -F: '&#123;<span class="keyword">if</span>(<span class="variable">$3</span>&gt;=1000) &#123;printf <span class="string">"Common user: %s\n"</span>,<span class="variable">$1&#125;</span> <span class="keyword">else</span> &#123;printf <span class="string">"root or Sysuser: %s\n"</span>,<span class="variable">$1&#125;</span>&#125;' /etc/passwd</span><br><span class="line"></span><br><span class="line">   awk -F: '&#123;<span class="keyword">if</span>(<span class="variable">$3</span>&gt;=1000) printf <span class="string">"Common user: %s\n"</span>,<span class="variable">$1</span>; <span class="keyword">else</span> printf <span class="string">"root or Sysuser: %s\n"</span>,<span class="variable">$1&#125;</span>' /etc/passwd</span><br><span class="line"></span><br><span class="line">   df -<span class="keyword">h</span> | awk -F% '/^\/dev/&#123;<span class="keyword">print</span> <span class="variable">$1&#125;</span>' | awk '<span class="variable">$NF</span>&gt;=80&#123;<span class="keyword">print</span> <span class="variable">$1</span>,<span class="variable">$5&#125;</span>'</span><br><span class="line"></span><br><span class="line">   awk 'BEGIN&#123; <span class="keyword">test</span>=100;<span class="keyword">if</span>(<span class="keyword">test</span>&gt;90)&#123;<span class="keyword">print</span> <span class="string">"very good"</span>&#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">test</span>&gt;60)&#123; <span class="keyword">print</span> <span class="string">"good"</span>&#125; <span class="keyword">else</span>&#123;<span class="keyword">print</span> <span class="string">"no pass"</span>&#125;&#125;'</span><br><span class="line"></span><br><span class="line">   awk -F: '&#123;<span class="keyword">if</span>(<span class="variable">$3</span>&lt;20) printf(<span class="string">"%d\n"</span>,<span class="variable">$3</span>); <span class="keyword">else</span> printf(<span class="string">"%s\n"</span>,<span class="variable">$1</span>);&#125;' /etc/passwd</span><br><span class="line">      # <span class="keyword">if</span>要用&#123;&#125;括起来，一条语句用 ;或&#123;&#125; ，多条语句用 &#123;&#125; 结构语法</span><br><span class="line"></span><br><span class="line">tcp      0      0 0.0.0.0:111           0.0.0.0:*             LISTEN     </span><br><span class="line">tcp      0      0 192.168.122.1:53      0.0.0.0:*             LISTEN     </span><br><span class="line">tcp      0      0 0.0.0.0:22            0.0.0.0:*             LISTEN     </span><br><span class="line">tcp      0      0 127.0.0.1:631         0.0.0.0:*             LISTEN     </span><br><span class="line">tcp      0      0 127.0.0.1:25          0.0.0.0:*             LISTEN     </span><br><span class="line">tcp      0     96 172.18.251.225:22     172.18.48.99:56186    ESTABLISHED</span><br><span class="line">tcp6     0      0 :::111                :::*                  LISTEN     </span><br><span class="line">tcp6     0      0 :::22                 :::*                  LISTEN     </span><br><span class="line">tcp6     0      0 ::1:631               :::*                  LISTEN     </span><br><span class="line">tcp6     0      0 ::1:25                :::*                  LISTEN  </span><br><span class="line">[root@centos7 xdg]#netstat -ant |awk -F '[[:space:]:]+' '/^tcp\&gt;/&#123;<span class="keyword">print</span> <span class="variable">$6&#125;</span>'</span><br><span class="line">0.0.0.0</span><br><span class="line">0.0.0.0</span><br><span class="line">0.0.0.0</span><br><span class="line">0.0.0.0</span><br><span class="line">0.0.0.0</span><br><span class="line">172.18.48.99</span><br><span class="line"># [[:space:]:]+: +号必须要有，本来默认是一个或多个空格，现在指定的是一个空格</span><br></pre></td></tr></table></figure>
+<h2 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>循环</span><br><span class="line">   语法</span><br><span class="line">      <span class="keyword">while</span>(condition)&#123;statement; ...&#125;</span><br><span class="line"></span><br><span class="line">   条件<span class="string">"真"</span>，进入循环，条件<span class="string">"假"</span>，退出循环</span><br><span class="line"></span><br><span class="line">   使用场景</span><br><span class="line">      对一行内的多个字段逐一类似处理时使用</span><br><span class="line">      对数组中的各元素逐一处理时使用</span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">   awk '/^[[:space:]]*linux16/&#123;i=1;<span class="keyword">while</span>(i&lt;=NF) &#123;<span class="keyword">print</span> <span class="variable">$i</span>,<span class="built_in">length</span>(<span class="variable">$i</span>); i++&#125;&#125;' /etc/grub2.cfg</span><br><span class="line">   awk '/^[[:space:]]*linux16/&#123;i=1;<span class="keyword">while</span>(i&lt;=NF) &#123;<span class="keyword">if</span>(<span class="built_in">length</span>(<span class="variable">$i</span>)&gt;=10) &#123;<span class="keyword">print</span> <span class="variable">$i</span>,<span class="built_in">length</span>(<span class="variable">$i</span>)&#125;; i++&#125;&#125;' /etc/grub2.cfg</span><br></pre></td></tr></table></figure>
+<h2 id="do-while循环"><a href="#do-while循环" class="headerlink" title="do-while循环"></a>do-while循环</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">语法</span><br><span class="line">   <span class="keyword">do</span> &#123;statement; ...&#125;<span class="keyword">while</span>(condition)  # 无论真假，至少执行一次循环体</span><br><span class="line">例:</span><br><span class="line">   awk 'BEGIN&#123; <span class="keyword">total</span>=0; i=0; <span class="keyword">do</span>&#123; <span class="keyword">total</span>+=i; i++;&#125;<span class="keyword">while</span>(i&lt;=100); <span class="keyword">print</span> <span class="keyword">total</span>&#125;'</span><br></pre></td></tr></table></figure>
+<h2 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h2><figure class="highlight golo"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>  <span class="comment"># 语法</span></span><br><span class="line">   <span class="keyword">for</span>(expr1;expr2;expr3) &#123;statement; ...&#125;</span><br><span class="line">   <span class="comment"># expr1里的初始值只能有一个</span></span><br><span class="line"></span><br><span class="line">常见用法</span><br><span class="line">   <span class="keyword">for</span>(variable assignment; condition; iteration process) &#123;<span class="keyword">for</span>-body&#125;</span><br><span class="line"></span><br><span class="line">能够遍历数组中的元素  <span class="comment"># 语法</span></span><br><span class="line">   <span class="keyword">for</span>(<span class="keyword">var</span> <span class="keyword">in</span> <span class="keyword">array</span>) &#123;<span class="keyword">for</span>-body&#125;</span><br><span class="line">      <span class="keyword">var</span>  <span class="comment"># 变量</span></span><br><span class="line">      <span class="keyword">array</span>  <span class="comment"># 数组</span></span><br><span class="line">例:</span><br><span class="line">   awk '/^[[:space:]]*linux16/&#123;<span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=NF;i++) &#123;<span class="keyword">print</span> $i,length($i)&#125;&#125;' /etc/grub2.cfg</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="switch语句"><a href="#switch语句" class="headerlink" title="switch语句"></a>switch语句</h2><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">语法:</span><br><span class="line">   <span class="keyword">switch</span>(expression) &#123;</span><br><span class="line">      <span class="keyword">case</span> VALUE1 <span class="keyword">or</span> <span class="regexp">/REGEXP/</span>: statement1;</span><br><span class="line">      <span class="keyword">case</span> VALUE2 <span class="keyword">or</span> <span class="regexp">/REGEXP2/</span>: statement2; </span><br><span class="line">      ...;</span><br><span class="line">      default: statementn</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="break、continue、next"><a href="#break、continue、next" class="headerlink" title="break、continue、next"></a>break、continue、next</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">break</span>和<span class="keyword">continue</span></span><br><span class="line">   awk 'BEGIN&#123;<span class="keyword">sum</span>=0; <span class="keyword">for</span>(i=1;i&lt;=100;i++) &#123;<span class="keyword">if</span>(i%2==0)<span class="keyword">continue</span>; <span class="keyword">sum</span>+=i&#125; <span class="keyword">print</span> <span class="keyword">sum</span>&#125;'</span><br><span class="line">   awk 'BEGIN&#123;<span class="keyword">sum</span>=0; <span class="keyword">for</span>(i=1;i&lt;=100;i++) &#123;<span class="keyword">if</span>(i==66)<span class="keyword">break</span>; <span class="keyword">sum</span>+=i&#125; <span class="keyword">print</span> <span class="keyword">sum</span>&#125;'</span><br><span class="line"></span><br><span class="line">next  # 提前结束对本行处理而直接进入下一行处理（awk自身循环）</span><br><span class="line">   awk -F: '&#123;<span class="keyword">if</span>(<span class="variable">$3</span>%2!=0) next; <span class="keyword">print</span> <span class="variable">$1</span>,<span class="variable">$3&#125;</span>' /etc/passwd</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="awk数组"><a href="#awk数组" class="headerlink" title="awk数组"></a>awk数组</h1><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">关联数组: array[index-expression]</span><br><span class="line">   index-expression:</span><br><span class="line">      (<span class="number">1</span>) 可使用任意字符串,字符串要使用双引号括起来</span><br><span class="line">      (<span class="number">2</span>) 如果某数组元素事先不存在，在引用时，awk会自动创建此元素，并将其值初始化为<span class="string">"空串"</span></span><br><span class="line">   若要判断数组中是否存在某元素，要使用<span class="string">"index in array"</span>格式进行遍历</span><br><span class="line">例:</span><br><span class="line">   weekdays[<span class="string">"mon"</span>]=<span class="string">"Monday"</span></span><br><span class="line">   awk 'BEGIN&#123;weekdays[<span class="string">"mon"</span>]=<span class="string">"Monday"</span>; weekdays[<span class="string">"tue"</span>]=<span class="string">"Tuesday"</span>;print weekdays[<span class="string">"mon"</span>]&#125;'</span><br><span class="line">   awk '!arr[<span class="variable">$0</span>]++' dupfile</span><br><span class="line">   awk '&#123;!arr[<span class="variable">$0</span>]++;print <span class="variable">$0</span>, arr[<span class="variable">$0</span>]&#125;'  dupfile</span><br><span class="line"></span><br><span class="line">若要遍历数组中的每个元素，要使用<span class="keyword">for</span>循环</span><br><span class="line">   <span class="keyword">for</span>(var <span class="keyword">in</span> array) &#123;for-body&#125;</span><br><span class="line">   <span class="comment"># var会遍历array的每个索引</span></span><br><span class="line">例:</span><br><span class="line">   awk 'BEGIN&#123;weekdays[<span class="string">"mon"</span>]=<span class="string">"Monday"</span>;weekdays[<span class="string">"tue"</span>] =<span class="string">"Tuesday"</span>;<span class="keyword">for</span>(i <span class="keyword">in</span> weekdays) &#123;print weekdays[i]&#125;&#125;'</span><br><span class="line"></span><br><span class="line">   netstat -tan | awk '/^tcp/&#123;<span class="keyword">state</span>[<span class="variable">$NF</span>]++&#125;END &#123;<span class="keyword">for</span>(i <span class="keyword">in</span> <span class="keyword">state</span>) &#123; print i,<span class="keyword">state</span>[i]&#125;&#125;'</span><br><span class="line"></span><br><span class="line">   awk '&#123;ip[<span class="variable">$1</span>]++&#125;END&#123;<span class="keyword">for</span>(i <span class="keyword">in</span> ip) &#123;print i,ip[i]&#125;&#125;' /var/<span class="keyword">log</span>/httpd/access_log</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="awk函数"><a href="#awk函数" class="headerlink" title="awk函数"></a>awk函数</h1><figure class="highlight golo"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">数值处理</span><br><span class="line">   rand()  <span class="comment"># 返回0和1之间一个随机数</span></span><br><span class="line">      awk 'BEGIN&#123;srand(); <span class="keyword">for</span> (i=<span class="number">1</span>;i&lt;=<span class="number">10</span>;i++)<span class="keyword">print</span> int(rand()*<span class="number">100</span>) &#125;'</span><br><span class="line"></span><br><span class="line">字符串处理</span><br><span class="line">   length([s])  <span class="comment"># 返回指定字符串的长度</span></span><br><span class="line">   [root<span class="meta">@centos</span>7 xdg]<span class="comment">#awk 'BEGIN&#123;print length("xdg")&#125;'</span></span><br><span class="line">   <span class="number">3</span></span><br><span class="line">   <span class="comment"># 也可以写成变量 name=xdg --&gt; length(name)</span></span><br><span class="line"></span><br><span class="line">sub(r,s,[t])  <span class="comment"># 对t字符串进行搜索r表示模式匹配的内容，并将第一个匹配的内容替换为s</span></span><br><span class="line">   echo <span class="string">"2008:08:08 08:08:08"</span> | awk 'sub(/:/,<span class="string">"-"</span>,$<span class="number">1</span>)'</span><br><span class="line">   输出结果: <span class="number">2008</span><span class="number">-08</span>:<span class="number">08</span> <span class="number">08</span>:<span class="number">08</span>:<span class="number">08</span></span><br><span class="line">      $<span class="number">2</span>  <span class="comment"># 2008:08:08 08-08:08</span></span><br><span class="line">      r  <span class="comment"># 模式匹配的内容</span></span><br><span class="line">      s  <span class="comment"># 要替换的内容</span></span><br><span class="line">      t  <span class="comment"># 对哪个进行替换</span></span><br><span class="line">      <span class="comment"># 选择替换的分隔符，还是以系统默认的空格为分隔，（指定FS  OFS）只能替换一个</span></span><br><span class="line"></span><br><span class="line">gsub(r,s,[t])  <span class="comment"># 对t字符串进行搜索r表示模式匹配的内容，并全部替换为s所表示的内容</span></span><br><span class="line">   echo <span class="string">"2008:08:08 08:08:08"</span> | awk ‘gsub(/:/,<span class="string">"-"</span>,$<span class="number">0</span>)'</span><br><span class="line">   替换全部匹配的内容</span><br><span class="line">   <span class="comment"># $1 是替换字段1当中的所有匹配的内容</span></span><br><span class="line"></span><br><span class="line">split(s,<span class="keyword">array</span>,[r])</span><br><span class="line"><span class="comment"># 以r为分隔符，切割字符串s，并将切割后的结果保存至array所表示的数组中，第一个索引值为1，第二个索引值为2，...</span></span><br><span class="line"></span><br><span class="line">   r  <span class="comment"># 以什么为分隔符</span></span><br><span class="line">   s  <span class="comment"># 切割的字符串，或某个字段（字段是，之前以空格为分隔符分隔之后的字段，在进行处理的字段）</span></span><br><span class="line">   <span class="keyword">array</span>  <span class="comment"># 切割完成之后放到某个数组中</span></span><br><span class="line"></span><br><span class="line">netstat -tan | awk '/^tcp\&gt;/&#123;split($<span class="number">5</span>,ip,<span class="string">":"</span>); count[ip[<span class="number">1</span>]]++&#125; END&#123;<span class="keyword">for</span> (i <span class="keyword">in</span> count) &#123;<span class="keyword">print</span> i,count[i]&#125;&#125;'</span><br><span class="line"></span><br><span class="line">tcp    <span class="number">0</span>   <span class="number">96</span> <span class="number">172.18</span><span class="number">.251</span><span class="number">.225</span>:<span class="number">22</span>    <span class="number">172.18</span><span class="number">.48</span><span class="number">.99</span>:<span class="number">51095</span>    ESTABLISHED</span><br><span class="line">   输出的结果:  <span class="number">172.18</span><span class="number">.48</span><span class="number">.99</span>的数量</span><br><span class="line">   <span class="comment"># ip[1]是分割字符串组ip中的第一个元素</span></span><br></pre></td></tr></table></figure>
+<h2 id="自定义函数"><a href="#自定义函数" class="headerlink" title="自定义函数"></a>自定义函数</h2><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">格式:</span><br><span class="line">   function name ( parameter, parameter,  ... ) &#123;</span><br><span class="line">      statements</span><br><span class="line">      <span class="keyword">return</span> expression</span><br><span class="line">   &#125;</span><br><span class="line">例:</span><br><span class="line">   # cat <span class="function"><span class="keyword">fun</span>.awk</span></span><br><span class="line">   function max(v1,v2) &#123;</span><br><span class="line">      v1&gt;v2?<span class="keyword">var</span>=v1:<span class="keyword">var</span>=v2</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">var</span></span><br><span class="line">   &#125;</span><br><span class="line">   BEGIN&#123;a=<span class="number">3</span>;b=<span class="number">2</span>;print max(a,b)&#125;</span><br><span class="line"></span><br><span class="line">   # awk –f <span class="function"><span class="keyword">fun</span>.awk</span></span><br><span class="line">   # 这时候，用awk -f <span class="function"><span class="keyword">fun</span>.awk  2 3，用位置参数是不可能，无法识别，具体的传参数看下面</span></span><br><span class="line">   # 不支持参数</span><br></pre></td></tr></table></figure>
+<h2 id="awk中调用shell命令"><a href="#awk中调用shell命令" class="headerlink" title="awk中调用shell命令"></a>awk中调用shell命令</h2><figure class="highlight scilab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">system</span>命令</span><br><span class="line">   空格是awk中的字符串连接符，如果<span class="built_in">system</span>中需要使用awk中的变量可以使用空格分隔，或者说除了awk的变量外，其他一律用<span class="string">""</span>引用起来</span><br><span class="line"></span><br><span class="line">   awk BEGIN'&#123;<span class="built_in">system</span>(<span class="string">"hostname"</span>) &#125;<span class="string">'</span></span><br><span class="line"><span class="string">   awk '</span>BEGIN&#123;score=<span class="number">100</span>; <span class="built_in">system</span>(<span class="string">"echo  your score is "</span> score) &#125;<span class="string">'</span></span><br><span class="line"><span class="string">      # "</span>命令<span class="string">" score ，中间的空格不能少，语法要求</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">例:</span></span><br><span class="line"><span class="string">   awk '</span>BEGIN&#123;name=<span class="string">"-a"</span>; <span class="built_in">system</span>(<span class="string">"ifconfig "</span> name) &#125;<span class="string">'</span></span><br><span class="line"><span class="string">   # 显示出当前系统的ifconifg -a的信息</span></span><br><span class="line"><span class="string">   # 前面和后面是有联系的（注意"</span><span class="string">"t "</span><span class="string">"外边的空格在有，不然格式出错）</span></span><br></pre></td></tr></table></figure>
+<h2 id="awk脚本"><a href="#awk脚本" class="headerlink" title="awk脚本"></a>awk脚本</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">将awk程序写成脚本，直接调用或执行</span><br><span class="line">例:</span><br><span class="line">   cat f1.awk</span><br><span class="line">      &#123; <span class="keyword">if</span>(<span class="variable">$3</span>&gt;=1000)<span class="builtin-name">print</span> <span class="variable">$1</span>,<span class="variable">$3</span> &#125;</span><br><span class="line">   # awk -F: -f f1.awk /etc/passwd</span><br><span class="line"></span><br><span class="line">   cat f2.awk</span><br><span class="line">      #!/bin/awk –f</span><br><span class="line">      #this is a awk script</span><br><span class="line">      &#123; <span class="keyword">if</span>(<span class="variable">$3</span>&gt;=1000)<span class="builtin-name">print</span> <span class="variable">$1</span>,<span class="variable">$3</span> &#125;</span><br><span class="line">   # chmod +x f2.awk</span><br><span class="line">   # f2.awk –F:  /etc/passwd</span><br><span class="line"></span><br><span class="line">向awk脚本传递参数</span><br><span class="line">   格式:</span><br><span class="line">      awkfile  <span class="attribute">var</span>=value <span class="attribute">var2</span>=value2... Inputfile      </span><br><span class="line">   # 在BEGIN过程中不可用,直到首行输入完成以后，变量才可用,可以通过 -v参数，让awk在执行BEGIN之前得到变量的值，命令行中每一个指定的变量都需要一个 -v参数</span><br><span class="line">例:</span><br><span class="line">   # cat  test.awk</span><br><span class="line">      #!/bin/awk –f</span><br><span class="line">      &#123; <span class="keyword">if</span>(<span class="variable">$3</span> &gt;=min &amp;&amp; <span class="variable">$3</span>&lt;=max)<span class="builtin-name">print</span> <span class="variable">$1</span>,<span class="variable">$3</span> &#125;</span><br><span class="line">   # chmod +x test.awk</span><br><span class="line">   # test.awk -F: <span class="attribute">min</span>=100 <span class="attribute">max</span>=200  /etc/passwd</span><br><span class="line"></span><br><span class="line">   # mm.awk</span><br><span class="line">      #!/bin/awk -f   # 必须要指定shebang机制</span><br><span class="line">      &#123;</span><br><span class="line">         a&gt;b?<span class="attribute">var</span>=a:var=b</span><br><span class="line">         <span class="builtin-name">print</span> var</span><br><span class="line">      &#125;</span><br><span class="line">   # ./mm.awk <span class="attribute">a</span>=4 <span class="attribute">b</span>=1 test</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat test</span></span><br><span class="line">   <span class="attribute">xiaoming</span>   <span class="number">55</span></span><br><span class="line">   xiaohong   <span class="number">66</span></span><br><span class="line">   xiaotian   <span class="number">99</span></span><br><span class="line"><span class="comment"># cat test1</span></span><br><span class="line">   xiaoming   <span class="number">1</span></span><br><span class="line">   xiaohong   <span class="number">2</span></span><br><span class="line">   xiaotian   <span class="number">3</span></span><br><span class="line"><span class="comment"># 把两个文件合并为一个文件输出: xiaoming   55   1</span></span><br><span class="line"></span><br><span class="line">   awk <span class="string">'NR==FNR&#123;a[<span class="variable">$1</span>]=<span class="variable">$2</span>&#125;NR&gt;FNR&#123;print <span class="variable">$0</span>,a[<span class="variable">$1</span>]&#125;'</span>  test1  test  <span class="comment"># 利用行号</span></span><br><span class="line">   <span class="comment"># a[$1]=$2 :把后面的值赋给名字，来做为数组变量，与下面文件中的字体来作为参数输出值</span></span><br><span class="line"></span><br><span class="line">   awk <span class="string">'NR==FNR&#123;a[<span class="variable">$1</span>]=<span class="variable">$2</span>;next&#125;&#123;print <span class="variable">$0</span>,a[<span class="variable">$1</span>]&#125;'</span> test1 test  <span class="comment"># 利用next</span></span><br><span class="line">   <span class="comment"># 把前面的值先赋值，结束本行，直到不等的时候，输出本身加前的赋值</span></span><br></pre></td></tr></table></figure>
+<p>1、统计/etc/fstab文件中每个文件系统类型出现的次数<br><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">awk '! (/^#/ |<span class="type">| /^$/)' /etc</span>/fstab  # 除去其它的行</span><br><span class="line">[root@ xdg]# awk '! (/^#/ |<span class="type">| /^$/)&#123;tt</span>[$<span class="number">3</span>]++;&#125; END&#123;<span class="keyword">for</span>(i <span class="built_in">in</span> tt)&#123;print i,tt[i]&#125;&#125;' /etc/fstab</span><br><span class="line"><span class="built_in">swap</span> <span class="number">1</span></span><br><span class="line">xfs <span class="number">3</span></span><br></pre></td></tr></table></figure></p>
+<p>2、统计/etc/fstab文件中每个单词出现的次数<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">awk '<span class="string">"\&lt;[[:alpha:]]+\&gt;"</span>&#123;<span class="keyword">for</span>(i=1;i&lt;=NF;i++) mm[<span class="variable">$i</span>]++&#125;END&#123;<span class="keyword">for</span>(j <span class="keyword">in</span> mm) &#123;<span class="keyword">print</span> j,mm[j]&#125;&#125;' /etc/fstab</span><br><span class="line">   # 是以默认空格是分隔符</span><br><span class="line"></span><br><span class="line">awk '&#123;gsub(/[^[:<span class="keyword">alpha</span>:]]/,<span class="string">" "</span>,<span class="variable">$0</span>);<span class="keyword">for</span>(i=1;i&lt;=NF;i++)mm[<span class="variable">$i</span>]++&#125;END&#123;<span class="keyword">for</span>(i <span class="keyword">in</span> mm)&#123;<span class="keyword">print</span> i,mm[i]&#125;&#125;' /etc/fstab</span><br><span class="line">   # 按单词次数分，<span class="keyword">sort</span> -nr -t <span class="string">" "</span> -k 2  排序</span><br></pre></td></tr></table></figure></p>
+<p>3、提取出字符串Yd$C@M05MB%9&amp;Bdh7dq+YVixp3vpw中的所有数字<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">echo</span> <span class="string">"Yd<span class="variable">$C</span><span class="variable">@M05MB</span>%9&amp;Bdh7dq+YVixp3vpw"</span> | awk -F <span class="string">""</span> <span class="string">'&#123;print <span class="variable">$1</span>&#125;'</span></span><br><span class="line">   或  echo <span class="string">"Yd<span class="variable">$C</span><span class="variable">@M05MB</span>%9&amp;Bdh7dq+YVixp3vpw"</span> | awk -v FS=<span class="string">""</span> <span class="string">'&#123;print <span class="variable">$1</span>&#125;'</span></span><br><span class="line"><span class="comment"># 取出单个字符 -F ""之间必须有空格</span></span><br><span class="line"></span><br><span class="line"><span class="number">1</span>. echo <span class="string">"Yd<span class="variable">$C</span><span class="variable">@M05MB</span>%9&amp;Bdh7dq+YVixp3vpw"</span> | awk -v FS=<span class="string">""</span> <span class="string">'&#123;for(i=1;i&lt;=NF;i++) &#123;if(<span class="variable">$i</span> ~ /[0-9]/)&#123;print <span class="variable">$i</span>&#125;&#125;&#125;'</span></span><br><span class="line"><span class="number">2</span>. echo <span class="string">"Yd<span class="variable">$C</span><span class="variable">@M05MB</span>%9&amp;Bdh7dq+YVixp3vpw"</span> | awk <span class="string">'&#123;gsub(/[^[:digit:]]/," ",<span class="variable">$0</span>);&#125;END&#123;print <span class="variable">$0</span>&#125;'</span></span><br></pre></td></tr></table></figure></p>
+<p>4、解决DOS攻击生产案例：根据web日志或者或者网络连接数，监控当某个IP并发连接数或者短时内PV达到100，即调用防火墙命令封掉对应的IP，监控频率每隔5分钟。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">防火墙命令为: iptables　-A　<span class="keyword">INPUT</span>　-s　IP　-j　REJECT</span><br><span class="line"></span><br><span class="line">netstat -nt | awk -F '[[:space:]:]+'  '/^tcp/&#123;ip[<span class="variable">$6</span>]++&#125;END&#123;<span class="keyword">for</span>(i <span class="keyword">in</span> ip)&#123;<span class="keyword">if</span>(ip[i]&gt;=100)&#123;iptables -A <span class="keyword">INPUT</span> -s i -j REJECT&#125;&#125;&#125;'</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/awk/" rel="tag"># awk</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/02/linux/基础/awk -1/" rel="next" title="AWK -1">
+                <i class="fa fa-chevron-left"></i> AWK -1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/04/linux/基础/systemd/" rel="prev" title="systemd">
+                systemd <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">93</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#awk控制语句"><span class="nav-number">1.</span> <span class="nav-text">awk控制语句</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#awk控制语句（if-else）"><span class="nav-number">1.1.</span> <span class="nav-text">awk控制语句（if-else）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#while循环"><span class="nav-number">1.2.</span> <span class="nav-text">while循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#do-while循环"><span class="nav-number">1.3.</span> <span class="nav-text">do-while循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#for循环"><span class="nav-number">1.4.</span> <span class="nav-text">for循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#switch语句"><span class="nav-number">1.5.</span> <span class="nav-text">switch语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#break、continue、next"><span class="nav-number">1.6.</span> <span class="nav-text">break、continue、next</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#awk数组"><span class="nav-number">2.</span> <span class="nav-text">awk数组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#awk函数"><span class="nav-number">3.</span> <span class="nav-text">awk函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义函数"><span class="nav-number">3.1.</span> <span class="nav-text">自定义函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#awk中调用shell命令"><span class="nav-number">3.2.</span> <span class="nav-text">awk中调用shell命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#awk脚本"><span class="nav-number">3.3.</span> <span class="nav-text">awk脚本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例"><span class="nav-number">4.</span> <span class="nav-text">示例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

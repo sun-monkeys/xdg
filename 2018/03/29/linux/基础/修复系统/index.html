@@ -1,0 +1,829 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic|Iosevka:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="修复系统," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="修复系统MBR的数据被破坏，系统无法开机启动，如果有光盘，会自动启动光盘，在检查的时候，认为是没有硬盘设备123456789dd if=/dev/zero of=/dev/sda bs=1 count=446  # 模拟环境的命令1. 进入光盘的救援模式中2. 切根  chroot /mnt/sysimage/，再使用 grub-install /dev/sda   光盘自动启动的时候会，自动挂载">
+<meta name="keywords" content="修复系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="修复系统">
+<meta property="og:url" content="http://yoursite.com/2018/03/29/linux/基础/修复系统/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="修复系统MBR的数据被破坏，系统无法开机启动，如果有光盘，会自动启动光盘，在检查的时候，认为是没有硬盘设备123456789dd if=/dev/zero of=/dev/sda bs=1 count=446  # 模拟环境的命令1. 进入光盘的救援模式中2. 切根  chroot /mnt/sysimage/，再使用 grub-install /dev/sda   光盘自动启动的时候会，自动挂载">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-07T07:32:19.625Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="修复系统">
+<meta name="twitter:description" content="修复系统MBR的数据被破坏，系统无法开机启动，如果有光盘，会自动启动光盘，在检查的时候，认为是没有硬盘设备123456789dd if=/dev/zero of=/dev/sda bs=1 count=446  # 模拟环境的命令1. 进入光盘的救援模式中2. 切根  chroot /mnt/sysimage/，再使用 grub-install /dev/sda   光盘自动启动的时候会，自动挂载">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/29/linux/基础/修复系统/"/>
+
+
+
+
+
+  <title> 修复系统 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home Page
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux1">
+          <a href="/categories/LinuxBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux2">
+          <a href="/categories/LinuxServices" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Services
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python1">
+          <a href="/categories/PythonBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python2">
+          <a href="/categories/PythonCase" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Case
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question1">
+          <a href="/categories/CommonQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Common Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question2">
+          <a href="/categories/InterviewQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Interview Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/29/linux/基础/修复系统/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                修复系统
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-29T00:00:00+08:00">
+                2018-03-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LinuxBasics/" itemprop="url" rel="index">
+                    <span itemprop="name">LinuxBasics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="修复系统"><a href="#修复系统" class="headerlink" title="修复系统"></a>修复系统</h1><h2 id="MBR的数据被破坏，系统无法开机启动，如果有光盘，会自动启动光盘，在检查的时候，认为是没有硬盘设备"><a href="#MBR的数据被破坏，系统无法开机启动，如果有光盘，会自动启动光盘，在检查的时候，认为是没有硬盘设备" class="headerlink" title="MBR的数据被破坏，系统无法开机启动，如果有光盘，会自动启动光盘，在检查的时候，认为是没有硬盘设备"></a>MBR的数据被破坏，系统无法开机启动，如果有光盘，会自动启动光盘，在检查的时候，认为是没有硬盘设备</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="keyword">if</span>=<span class="string">/dev/zero</span> of=<span class="string">/dev/sda</span> bs=1 count=446  <span class="comment"># 模拟环境的命令</span></span><br><span class="line"></span><br><span class="line">1. 进入光盘的救援模式中</span><br><span class="line">2. 切根  chroot <span class="string">/mnt/sysimage/</span>，再使用 grub-install <span class="string">/dev/sda</span></span><br><span class="line">   光盘自动启动的时候会，自动挂载到自己的根上，并不是系统的根，所以要切根</span><br><span class="line">   grub-install 这个工具是系统工具，所以还是要切根</span><br><span class="line">   grub-install <span class="string">/dev/sda</span> 这个工具不仅仅修复1阶段，还修复1.5、2通通都给你修复（如果没有也会生成）</span><br><span class="line">   <span class="comment"># 修复的时候，有时候会出现bug，进去重复修复一边</span></span><br><span class="line">   <span class="comment"># 修复完成之后 sync 同步一下</span></span><br></pre></td></tr></table></figure>
+<h2 id="第1-5、2阶段的数据被破坏"><a href="#第1-5、2阶段的数据被破坏" class="headerlink" title="第1.5、2阶段的数据被破坏"></a>第1.5、2阶段的数据被破坏</h2><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="attr">if=/dev/zero</span> <span class="attr">of=/dev/sda</span> <span class="attr">bs=1</span> <span class="attr">count=10240</span> <span class="attr">skip=512</span> <span class="attr">seek=512</span>  <span class="comment"># 模拟环境的命令</span></span><br><span class="line"></span><br><span class="line"><span class="number">1</span>. 破坏之后，<span class="number">1.5</span>，<span class="number">2</span>进入系统只有黑屏，是能进去的，前<span class="number">512</span>个字节没有被破坏，所有能够识别该硬盘，能进入，但后续的操作就没有了</span><br><span class="line">   安装grub:  <span class="comment"># 光盘自带</span></span><br><span class="line">      (<span class="number">1</span>)grub-install  <span class="comment"># 安装grub stage1和stage1_5到/dev/DISK磁盘上，并复制GRUB相关文件到DIR/boot目录下</span></span><br><span class="line">         grub-install <span class="attr">--root-directory=DIR</span> /dev/DISK</span><br><span class="line">      (<span class="number">2</span>)grub</span><br><span class="line">         grub&gt; root (hd<span class="comment">#,#)</span></span><br><span class="line">         grub&gt; setup (hd<span class="comment">#)</span></span><br><span class="line">   <span class="comment"># 在执行grub修复的1.5，2阶段的时候，依赖/dev/grub/* 的文件，不然无法执行</span></span><br><span class="line"><span class="number">2</span>. chroot /mnt/sysimage/</span><br><span class="line"><span class="number">3</span>. grub</span><br><span class="line"><span class="number">4</span>. grub&gt; root (hd0,<span class="number">0</span>)</span><br><span class="line"><span class="number">5</span>. grub&gt; setup (hd0)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在初始化的时候（1.5、2阶段没有被破坏之间）在/boot/grub/* 里的多个文件中，只有/boot/grub/grub.conf文件，这时系统是正常启动，没有问题</span></span><br><span class="line"><span class="comment"># 在1.5、2阶段破坏了，修复之后必须要有/boot/grub/* 里的文件不能少，grub下的文件有些依赖的其它主要的stage2文件（有/boot/grub/grub.conf  stage2）即可，但一般还是都有比较好</span></span><br></pre></td></tr></table></figure>
+<h2 id="boot-grub-grub-conf文件被破坏或不存在"><a href="#boot-grub-grub-conf文件被破坏或不存在" class="headerlink" title="/boot/grub/grub.conf文件被破坏或不存在"></a>/boot/grub/grub.conf文件被破坏或不存在</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mv /boot/grub/grub.conf /app/  # 模拟环境的命令</span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 因为系统找不到grub.conf文件，能进入系统，系统会进入grub模式下</span><br><span class="line">   grub&gt;</span><br><span class="line"><span class="number">2.</span> grub&gt; root (hd0,<span class="number">0</span>)</span><br><span class="line"><span class="number">3.</span> grub&gt; kernel /vmlinuz<span class="number">-2.6</span><span class="number">.32</span><span class="number">-696.</span>el6.x86_64  root=/dev/sda2  # root=/dev/sda2 指的是根在哪</span><br><span class="line"><span class="number">4.</span> grub&gt; initrd /initramfs<span class="number">-2.6</span><span class="number">.32</span><span class="number">-696.</span>el6.x86_64.img</span><br><span class="line"><span class="number">5.</span> grub&gt; boot  # boot启动</span><br><span class="line">   # 这只是在命令中修改并没有写入文件当中，所以启动之后必须写入文件当中去</span><br></pre></td></tr></table></figure>
+<h2 id="boot-grub-里面的文件全都没有，系统启动时候找不到启动项，会出错！出现：Error-15（黑屏）"><a href="#boot-grub-里面的文件全都没有，系统启动时候找不到启动项，会出错！出现：Error-15（黑屏）" class="headerlink" title="/boot/grub/* 里面的文件全都没有，系统启动时候找不到启动项，会出错！出现：Error 15（黑屏）"></a>/boot/grub/* 里面的文件全都没有，系统启动时候找不到启动项，会出错！出现：Error 15（黑屏）</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">mv <span class="string">/boot/grub/</span>*  <span class="string">/app/</span>  <span class="comment"># 模拟环境的命令</span></span><br><span class="line"></span><br><span class="line">1. 进入救援模式</span><br><span class="line">2. chroot  <span class="string">/mnt/sysimage/</span> </span><br><span class="line">3. grub-install  <span class="string">/dev/sda</span>  <span class="comment"># 修复 1，1.5，2阶段</span></span><br><span class="line">   <span class="comment"># 这时/boot/grub/里的文件除了/boot/grub/grub.conf文件没有都有了</span></span><br><span class="line">4. vim  <span class="string">/boot/grub/grub.conf</span></span><br><span class="line">   default=0</span><br><span class="line">   timeout=5</span><br><span class="line">   title xdg_linux</span><br><span class="line">   kernel <span class="string">/vmlinuz-2.6.32-696.el6.x86_64</span>  root=<span class="string">/dev/sda2</span>  <span class="comment"># /dev/sda2 代表根</span></span><br><span class="line">   initrd <span class="string">/initramfs-2.6.32-696.el6.x86_64.img</span></span><br><span class="line">   <span class="comment"># 最简的写法了</span></span><br><span class="line">5. sync</span><br><span class="line">   sync</span><br><span class="line">   exit</span><br><span class="line">   exit</span><br><span class="line">   reboot</span><br></pre></td></tr></table></figure>
+<h2 id="boot-里面的文件全部删除了"><a href="#boot-里面的文件全部删除了" class="headerlink" title="/boot/ 里面的文件全部删除了"></a>/boot/ 里面的文件全部删除了</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">rm -rf <span class="string">/boot/</span>  <span class="comment"># 模拟环境的命令</span></span><br><span class="line"></span><br><span class="line">1. 进入救援模式</span><br><span class="line">2. chroot <span class="string">/mnt/sysimage/</span></span><br><span class="line">3. 这时 <span class="string">/boot</span>里面的文件全部都没有了（grub，vmlinuz，initramfs主要的三个文件）</span><br><span class="line">   mount <span class="string">/dev/sr0</span> <span class="string">/mnt/</span></span><br><span class="line">   <span class="comment"># 在光盘当中有vmlinuz的内核文件（其实在系统安装的时候就是从光盘当中复制过去的）在isolinux文件中叫vmlinuz的文件（没有内核信息，后面的2.6.32...）</span></span><br><span class="line">   <span class="keyword">cd</span> <span class="string">/mnt/isolinux/</span></span><br><span class="line">   cp vmlinuz <span class="string">/boot/</span></span><br><span class="line">4. mkinitrd <span class="string">/boot/initramfs.img</span> `uname -r`  <span class="comment"># 内核版本没有写了，uname -r是必须要指定的</span></span><br><span class="line">   <span class="comment"># 生成initramfs文件</span></span><br><span class="line">5. grub-install <span class="string">/dev/sda</span></span><br><span class="line">   <span class="comment"># 生成grub里的文件信息（1，1.5，2三个阶段的内容信息）</span></span><br><span class="line">6. vi <span class="string">/boot/grub/grub.conf</span>  <span class="comment"># 编写grub.conf的配置文件信息</span></span><br><span class="line">   default=0</span><br><span class="line">   timeout=5</span><br><span class="line">   title xdg_linux</span><br><span class="line">   kernel <span class="string">/vmlinuz</span> root=<span class="string">/dev/sda2</span></span><br><span class="line">   initrd <span class="string">/initramfs.img</span></span><br><span class="line">7. 重新启动</span><br></pre></td></tr></table></figure>
+<h2 id="init（-sbin-init-被破坏、损坏）"><a href="#init（-sbin-init-被破坏、损坏）" class="headerlink" title="init（/sbin/init 被破坏、损坏）"></a>init（/sbin/init 被破坏、损坏）</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">mv <span class="string">/sbin/init</span> <span class="string">/app/</span>  <span class="comment"># 模拟环境的命令</span></span><br><span class="line">   <span class="comment"># 移动过后，系统重新启时候，无法进入系统，停在内核启动过程中</span></span><br><span class="line">   <span class="comment"># 提示: sh:no job control in this shell，这时候，sh这个程序无法正常运行，怎么输都没有用</span></span><br><span class="line"></span><br><span class="line">[root@centos6 xdg]<span class="comment">#which init</span></span><br><span class="line"><span class="string">/sbin/init</span></span><br><span class="line">[root@centos6 xdg]<span class="comment">#rpm -qf /sbin/init</span></span><br><span class="line">upstart-0.6.5-16.el6.x86_64</span><br><span class="line"></span><br><span class="line">1. 进入系统时，选择菜单 --&gt; 进入grub模式的kernel的一行中，在后面添加一行 init=<span class="string">/bin/bash</span></span><br><span class="line">   <span class="comment"># 表示系统启动时，不用init进程来启动，用bash来启动，而bash当中内置了一些内部命令</span></span><br><span class="line">2. 重新启动系统时，进入的时候会用bash启动，进入后，安装init程序</span><br><span class="line">   <span class="comment"># 这时是只读方式的文件系统，需要重新挂载一下   </span></span><br><span class="line">      mount -o remount,rw  /  <span class="comment"># 这时就可以了</span></span><br><span class="line">3. mount <span class="string">/dev/sr0</span> <span class="string">/mnt/</span>  <span class="comment"># 挂载光盘，安装里的rpm包</span></span><br><span class="line">4. rpm -ivh <span class="string">/mnt/Packages/upstart-0.6.5-16.el6.x86_64</span>  <span class="params">--force</span>  </span><br><span class="line">   <span class="comment"># 因数之前安装过，要强制安装一个，避免出现问题</span></span><br><span class="line">   <span class="comment"># 安装后，查看一个是否安装 which init</span></span><br><span class="line">5. 重启</span><br><span class="line"></span><br><span class="line">或者 进入救援模式，直接安装init包</span><br><span class="line">或者 拷贝其它主机上的程序包（必须相同的）</span><br></pre></td></tr></table></figure>
+<h2 id="删除设备文件和boot"><a href="#删除设备文件和boot" class="headerlink" title="删除设备文件和boot"></a>删除设备文件和boot</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">rm -rf <span class="string">/etc/fstab</span>  <span class="comment"># 模拟环境的命令</span></span><br><span class="line">rm -rf <span class="string">/boot</span></span><br><span class="line"></span><br><span class="line">1. 进入救援模式中，这时光盘找不到根系统,无法挂载到<span class="string">/mnt/sysimage/</span>里</span><br><span class="line">   <span class="comment"># 进入bash中</span></span><br><span class="line">      df查看挂载情况  <span class="comment"># 无法查看</span></span><br><span class="line">      fdisk <span class="string">/dev/sda</span>  <span class="comment"># 还可以看</span></span><br><span class="line">      blkid  <span class="comment"># 还可以看格式化的文件系统</span></span><br><span class="line">2. 这时，进入bash当中只能自己手动挂载了，根据上面的信息，可以看到大概设备的信息，分析出几个有可能是根的分区，</span><br><span class="line">  然后每个挂载上去 mount  <span class="string">/dev/sda2</span>  <span class="string">/mnt/</span> --&gt; 挂载之后 <span class="keyword">ls</span> <span class="string">/mnt/</span> 里的内容查看是不是根（相关目录信息）</span><br><span class="line"></span><br><span class="line">3. 编辑、创建<span class="string">/etc/fstab</span>文件相关信息</span><br><span class="line">   vi <span class="string">/mnt/etc/fstab</span></span><br><span class="line">      <span class="string">/dev/sda1</span>  <span class="string">/boot</span>  ext4  defaults 0 0</span><br><span class="line">      <span class="string">/dev/sda2</span>  /      ext4  defaults 0 0</span><br><span class="line">      <span class="string">/dev/sda5</span>  swap   swap  defaults 0 0</span><br><span class="line">4. 重启</span><br><span class="line">5. 进入救援模式中</span><br><span class="line">   chroot</span><br><span class="line">   再修复<span class="string">/boot/</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="修复系统-——-逻辑卷系统"><a href="#修复系统-——-逻辑卷系统" class="headerlink" title="修复系统 —— 逻辑卷系统"></a>修复系统 —— 逻辑卷系统</h1><h2 id="用网络安装的系统（逻辑方式）"><a href="#用网络安装的系统（逻辑方式）" class="headerlink" title="用网络安装的系统（逻辑方式）"></a>用网络安装的系统（逻辑方式）</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">mv <span class="string">/etc/fstab</span>  <span class="string">/root/xdg</span></span><br><span class="line">mv <span class="string">/boot</span>  <span class="string">/root/xdg</span></span><br><span class="line"><span class="comment"># 逻辑卷是不能当作boot来用的</span></span><br><span class="line"></span><br><span class="line">mount <span class="string">/dev/VoIGroup/lv_home</span>  <span class="string">/mnt/</span></span><br><span class="line">   <span class="comment"># 这时候无法挂载上去，因为逻辑卷处于非活动状态（pvdisplay  查看）</span></span><br><span class="line">   <span class="comment"># 在开机的时候脚本 /etc/rc.d/rc.sysinit 中激活了逻辑卷（所以目前是非正常启动）</span></span><br><span class="line"></span><br><span class="line">1. vgchange -ay  <span class="comment"># 激活</span></span><br><span class="line">   查看 lvscan 是否激活</span><br><span class="line">      <span class="comment"># 激活之后，逻辑卷就可以使用，也就可以挂载了</span></span><br><span class="line">   lvscan  <span class="comment"># 扫描查看一下，逻辑卷的状态</span></span><br><span class="line"></span><br><span class="line">2. mount <span class="string">/dev/VoIGroup/lv_root</span>   <span class="string">/mnt/cdrom/</span></span><br><span class="line">   挂载之后，进入根，编辑、创建<span class="string">/etc/fstab</span>文件当中的配置信息</span><br><span class="line">      <span class="string">/dev/sda</span>  <span class="string">/boot</span>  ext4  defaults  0 0</span><br><span class="line">      <span class="string">/dev/mapper/VoIGroup-lv_root</span>  /  ext4 defaults 0  0</span><br><span class="line">   存盘退出</span><br><span class="line"></span><br><span class="line">3. 再次进入救援模式  <span class="comment"># 这时系统就可以识别/etc/fstab里的内容挂载上去了</span></span><br><span class="line">   grub-install <span class="string">/dev/sda</span>  <span class="comment"># 修复1、1.5、2阶段的内容</span></span><br><span class="line">   挂载光盘  <span class="comment"># 从光盘当中拷贝vmlinuz(内核文件)</span></span><br><span class="line">      cp  <span class="string">/mnt/isolinux/vmlinuz</span>   <span class="string">/boot/</span></span><br><span class="line">   mkinitrd  initramfs.img  `uname -r`</span><br><span class="line">      生成虚拟文件系统 --&gt; initramfs.img</span><br><span class="line"></span><br><span class="line">4. 编辑<span class="string">/boot/grub/grub.conf</span>文件</span><br><span class="line">   default=0</span><br><span class="line">   timeout=5</span><br><span class="line">   title xdg</span><br><span class="line">   kernle <span class="string">/vmlinuz</span> root=<span class="string">/dev/sda2</span></span><br><span class="line">   initrd <span class="string">/initramfs.img</span> </span><br><span class="line">保存，退出</span><br><span class="line"></span><br><span class="line">5. sync</span><br><span class="line">   sync</span><br><span class="line">   重启 --&gt; OK</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在救援模式当中，进入的时候，会有显示是否启用带网络功能的,可以开启带有网络功能的，配置完成之后，用scp 把远程的主机上的文件传送过来，也是可以的</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/修复系统/" rel="tag"># 修复系统</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/28/linux/基础/自制linux系统和内核编译/" rel="next" title="自制linux系统和内核编译">
+                <i class="fa fa-chevron-left"></i> 自制linux系统和内核编译
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/30/linux/基础/SELinux/" rel="prev" title="SELinux">
+                SELinux <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">93</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#修复系统"><span class="nav-number">1.</span> <span class="nav-text">修复系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MBR的数据被破坏，系统无法开机启动，如果有光盘，会自动启动光盘，在检查的时候，认为是没有硬盘设备"><span class="nav-number">1.1.</span> <span class="nav-text">MBR的数据被破坏，系统无法开机启动，如果有光盘，会自动启动光盘，在检查的时候，认为是没有硬盘设备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第1-5、2阶段的数据被破坏"><span class="nav-number">1.2.</span> <span class="nav-text">第1.5、2阶段的数据被破坏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#boot-grub-grub-conf文件被破坏或不存在"><span class="nav-number">1.3.</span> <span class="nav-text">/boot/grub/grub.conf文件被破坏或不存在</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#boot-grub-里面的文件全都没有，系统启动时候找不到启动项，会出错！出现：Error-15（黑屏）"><span class="nav-number">1.4.</span> <span class="nav-text">/boot/grub/* 里面的文件全都没有，系统启动时候找不到启动项，会出错！出现：Error 15（黑屏）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#boot-里面的文件全部删除了"><span class="nav-number">1.5.</span> <span class="nav-text">/boot/ 里面的文件全部删除了</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#init（-sbin-init-被破坏、损坏）"><span class="nav-number">1.6.</span> <span class="nav-text">init（/sbin/init 被破坏、损坏）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除设备文件和boot"><span class="nav-number">1.7.</span> <span class="nav-text">删除设备文件和boot</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修复系统-——-逻辑卷系统"><span class="nav-number">2.</span> <span class="nav-text">修复系统 —— 逻辑卷系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#用网络安装的系统（逻辑方式）"><span class="nav-number">2.1.</span> <span class="nav-text">用网络安装的系统（逻辑方式）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

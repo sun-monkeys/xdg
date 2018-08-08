@@ -1,0 +1,830 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic|Iosevka:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="字符集,时间," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="字符集　　字符（Character）是各种文字和符号的总称，包括各国家文字、标点符号、图形符号、数字等。字符集（Character set）是多个字符的集合，字符集种类较多，每个字符集包含的字符个数不同，常见字符集名称：ASCII字符集、GB2312字符集、BIG5字符集、 GB18030字符集、Unicode字符集等。计算机要准确的处理各种字符集文字，需要进行字符编码，以便计算机能够识别和存储各">
+<meta name="keywords" content="字符集,时间">
+<meta property="og:type" content="article">
+<meta property="og:title" content="修改系统字符集和时区">
+<meta property="og:url" content="http://yoursite.com/2018/02/23/question/common question/修改系统字符集和时区/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="字符集　　字符（Character）是各种文字和符号的总称，包括各国家文字、标点符号、图形符号、数字等。字符集（Character set）是多个字符的集合，字符集种类较多，每个字符集包含的字符个数不同，常见字符集名称：ASCII字符集、GB2312字符集、BIG5字符集、 GB18030字符集、Unicode字符集等。计算机要准确的处理各种字符集文字，需要进行字符编码，以便计算机能够识别和存储各">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-19T06:53:11.303Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="修改系统字符集和时区">
+<meta name="twitter:description" content="字符集　　字符（Character）是各种文字和符号的总称，包括各国家文字、标点符号、图形符号、数字等。字符集（Character set）是多个字符的集合，字符集种类较多，每个字符集包含的字符个数不同，常见字符集名称：ASCII字符集、GB2312字符集、BIG5字符集、 GB18030字符集、Unicode字符集等。计算机要准确的处理各种字符集文字，需要进行字符编码，以便计算机能够识别和存储各">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/23/question/common question/修改系统字符集和时区/"/>
+
+
+
+
+
+  <title> 修改系统字符集和时区 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home Page
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux1">
+          <a href="/categories/LinuxBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux2">
+          <a href="/categories/LinuxServices" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Services
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python1">
+          <a href="/categories/PythonBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python2">
+          <a href="/categories/PythonCase" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Case
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question1">
+          <a href="/categories/CommonQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Common Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question2">
+          <a href="/categories/InterviewQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Interview Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/23/question/common question/修改系统字符集和时区/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                修改系统字符集和时区
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-23T00:00:00+08:00">
+                2018-02-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CommonQuestion/" itemprop="url" rel="index">
+                    <span itemprop="name">CommonQuestion</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="字符集"><a href="#字符集" class="headerlink" title="字符集"></a>字符集</h1><p>　　字符（Character）是各种文字和符号的总称，包括各国家文字、标点符号、图形符号、数字等。字符集（Character set）是多个字符的集合，字符集种类较多，每个字符集包含的字符个数不同，常见字符集名称：ASCII字符集、GB2312字符集、BIG5字符集、 GB18030字符集、Unicode字符集等。计算机要准确的处理各种字符集文字，需要进行字符编码，以便计算机能够识别和存储各种文字。中文文字数目大，而且还分为简体中文和繁体中文两种不同书写规则的文字，而计算机最初是按英语单字节字符设计的，因此，对中文字符进行编码，是中文信息交流的技术基础。</p>
+<p>例如:<br>　　ASCII（American Standard Code for Information Interchange，美国信息互换标准编码）是基于罗马字母表的一套电脑编码系统。<br>　　GB2312又称为GB2312-80字符集，全称为《信息交换用汉字编码字符集·基本集》，GB2312收录简化汉字及一般符号、序号、数字、拉丁字母、日文假名、希腊字母、俄文字母、汉语拼音符号、汉语注音字母，共 7445 个图形字符。其中包括6763个汉字，其中一级汉字3755个，二级汉字3008个<br>　　Unicode字符集编码是 Universal Multiple-Octet Coded Character Set 通用多八位编码字符集的简称，是由一个名为 Unicode 学术学会（Unicode Consortium）的机构制订的字符编码系统，支持现今世界各种不同语言的书面文本的交换、处理及显示。<br>　　UTF-8是Unicode的其中一个使用方式，UTF是 Unicode Tranformation Format，即把Unicode转做某种格式的意思。</p>
+<h1 id="查看系统当前所使用的字符集编码"><a href="#查看系统当前所使用的字符集编码" class="headerlink" title="查看系统当前所使用的字符集编码"></a>查看系统当前所使用的字符集编码</h1><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@xdg ~]#<span class="keyword">env</span> | grep LANG  # <span class="keyword">env</span>是系统当中环境变量的一个集合</span><br><span class="line">LANG=en_US.UTF<span class="number">-8</span></span><br><span class="line"></span><br><span class="line">[root@xdg ~]#echo $LANG  # 指定查看LANG环境变量</span><br><span class="line">en_US.UTF<span class="number">-8</span></span><br></pre></td></tr></table></figure>
+<h1 id="由于部分用户使用的是中文字符集可能会导致有些提示信息出现乱码的情况"><a href="#由于部分用户使用的是中文字符集可能会导致有些提示信息出现乱码的情况" class="headerlink" title="由于部分用户使用的是中文字符集可能会导致有些提示信息出现乱码的情况"></a>由于部分用户使用的是中文字符集可能会导致有些提示信息出现乱码的情况</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">解决办法: 修改默认字符集。</span><br><span class="line">   vim /etc/sysconfig/i18n </span><br><span class="line">      <span class="attribute">LANG</span>=en_US.UTF-8</span><br><span class="line">      <span class="attribute">SYSFONT</span>=<span class="string">"latarcyrheb-sun16"</span></span><br><span class="line">   改为: <span class="attribute">LANG</span>=en_US.UTF-8 </span><br><span class="line"></span><br><span class="line">其它问题: 有些配置参数已经修改完成，但还是无法正常显示（出现乱码）</span><br><span class="line">例: env (环境变量)</span><br><span class="line">   <span class="attribute">LANG</span>=en_US.UTF-8</span><br><span class="line">   <span class="attribute">LANGUAGE</span>=zh_CN.UTF-8:zh_CN.GB2312:zh_CN  # 其它相关变量的影响导致的</span><br><span class="line"></span><br><span class="line">解决办法: 因为在echo <span class="variable">$LANG</span>显示的是单个变量，但是由于其它变量的影响无法看到，还是会导致显示乱码</span><br><span class="line">   vim /etc/sysconfig/i18n </span><br><span class="line">      <span class="attribute">LANG</span>=en_US.UTF-8</span><br><span class="line">      <span class="attribute">LANGUAGE</span>=<span class="string">"en_US:en"</span>  # 这里覆盖之前定义的字符，如果有其它的变量也是如此，具体设定什么变量要自己其查了</span><br><span class="line">      <span class="attribute">SYSFONT</span>=<span class="string">"latarcyrheb-sun16"</span></span><br><span class="line">   注: 把相关的变量也进行修改</span><br><span class="line"></span><br><span class="line">最后: source /etc/sysconfig/i18n  # 生效配置文件</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="centos7-修改中文字符集"><a href="#centos7-修改中文字符集" class="headerlink" title="centos7 修改中文字符集"></a>centos7 修改中文字符集</h1><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> CentOS <span class="number">7</span>字符集的问题与<span class="number">6</span>有点区别，会出现下面问题，查看是中文，vi进入就变成乱码了</span><br><span class="line">[root<span class="symbol">@node3</span> ]<span class="meta">#cat /etc/locale.conf </span></span><br><span class="line">LANG=<span class="string">"zh_CN.UTF-8"</span>  <span class="meta"># 改为中文</span></span><br><span class="line"></span><br><span class="line"><span class="number">2.</span> 查看语言包</span><br><span class="line">[root<span class="symbol">@node3</span> ]<span class="meta">#locale</span></span><br><span class="line"></span><br><span class="line">安装中文语言包</span><br><span class="line">yum install kde-l10n-Chinese</span><br><span class="line">yum reinstall glibc-common</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span> 修改配置文件</span><br><span class="line">vim /etc/locale.conf</span><br><span class="line">   LANG=<span class="string">"zh_CN.GB18030"</span>  <span class="meta"># 原来的 LANG=<span class="string">"en_US.UTF-8"</span></span></span><br><span class="line"></span><br><span class="line"><span class="number">4.</span> 生效配置文件</span><br><span class="line">[root<span class="symbol">@node3</span> ]<span class="meta">#source /etc/locale.conf</span></span><br><span class="line"></span><br><span class="line"><span class="number">5.</span> 测试，查看中文是否正常显示</span><br><span class="line">[root<span class="symbol">@node3</span> ]<span class="meta">#cat test.txt  # 我是谁</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="修改时区"><a href="#修改时区" class="headerlink" title="修改时区"></a>修改时区</h1><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">CentOS和Ubuntu的时区文件是<span class="meta-keyword">/etc/</span>localtime，但是在CentOS7以后localtime以及变成了一个链接文件</span><br><span class="line">[root@XDG ~]<span class="meta"># ll /etc/localtime</span></span><br><span class="line">lrwxrwxrwx. <span class="number">1</span> root root <span class="number">33</span> Jul <span class="number">13</span> <span class="number">11</span>:<span class="number">18</span> <span class="meta-keyword">/etc/</span>localtime -&gt; <span class="meta-keyword">/usr/</span>share<span class="meta-keyword">/zoneinfo/</span>Asia/Shanghai</span><br><span class="line"></span><br><span class="line">如果采用直接cp的方法修改系统时区，那么就会把它所链接的文件修改掉，例如把美国的时区文件内容修改成了上海的时区内容，</span><br><span class="line">  有可能会导致有些编程语言或程序在读取系统时区的时候发生错误，因此正确的修改方法是:</span><br><span class="line"><span class="symbol">CentOS6:</span></span><br><span class="line">   cp <span class="meta-keyword">/usr/</span>share<span class="meta-keyword">/zoneinfo/</span>Asia/Shanghai <span class="meta-keyword">/etc/</span>localtime</span><br><span class="line"></span><br><span class="line"><span class="symbol">CentOS7:</span>  <span class="meta"># 最好的方法是使用timedatectl命令</span></span><br><span class="line">   [root@XDG ~]<span class="meta"># timedatectl list-timezones | grep Shanghai  # 查找中国时区的完整名称</span></span><br><span class="line">   Asia/Shanghai</span><br><span class="line">   [root@XDG ~]<span class="meta"># timedatectl set-timezone Asia/Shanghai  # 设置</span></span><br><span class="line"></span><br><span class="line">或者直接手动创建软链接</span><br><span class="line">   ln -sf <span class="meta-keyword">/usr/</span>share<span class="meta-keyword">/zoneinfo/</span>Asia/Shanghai <span class="meta-keyword">/etc/</span>localtime</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/字符集/" rel="tag"># 字符集</a>
+          
+            <a href="/tags/时间/" rel="tag"># 时间</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/22/linux/基础/重定向和管道/" rel="next" title="重定向和管道">
+                <i class="fa fa-chevron-left"></i> 重定向和管道
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/23/linux/基础/用户组和权限管理 -1/" rel="prev" title="用户组和权限管理 -1">
+                用户组和权限管理 -1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">93</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#字符集"><span class="nav-number">1.</span> <span class="nav-text">字符集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#查看系统当前所使用的字符集编码"><span class="nav-number">2.</span> <span class="nav-text">查看系统当前所使用的字符集编码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#由于部分用户使用的是中文字符集可能会导致有些提示信息出现乱码的情况"><span class="nav-number">3.</span> <span class="nav-text">由于部分用户使用的是中文字符集可能会导致有些提示信息出现乱码的情况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#centos7-修改中文字符集"><span class="nav-number">4.</span> <span class="nav-text">centos7 修改中文字符集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修改时区"><span class="nav-number">5.</span> <span class="nav-text">修改时区</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

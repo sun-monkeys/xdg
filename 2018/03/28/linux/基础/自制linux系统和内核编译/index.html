@@ -1,0 +1,890 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic|Iosevka:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="proc,sys,kernel," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="自制linux系统分区并创建文件系统1234567891011121314151617fdisk  /dev/sdb   分两个必要的分区      /dev/sdb1对应  # /boot       /dev/sdb2对应  # 根 /   mkfs.ext4 /dev/sdb1   mkfs.ext4 /dev/sdb2挂载boot   mkdir /mnt/boot  # 子目录必须为bo">
+<meta name="keywords" content="proc,sys,kernel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自制linux系统和内核编译">
+<meta property="og:url" content="http://yoursite.com/2018/03/28/linux/基础/自制linux系统和内核编译/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="自制linux系统分区并创建文件系统1234567891011121314151617fdisk  /dev/sdb   分两个必要的分区      /dev/sdb1对应  # /boot       /dev/sdb2对应  # 根 /   mkfs.ext4 /dev/sdb1   mkfs.ext4 /dev/sdb2挂载boot   mkdir /mnt/boot  # 子目录必须为bo">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-07T07:19:42.728Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自制linux系统和内核编译">
+<meta name="twitter:description" content="自制linux系统分区并创建文件系统1234567891011121314151617fdisk  /dev/sdb   分两个必要的分区      /dev/sdb1对应  # /boot       /dev/sdb2对应  # 根 /   mkfs.ext4 /dev/sdb1   mkfs.ext4 /dev/sdb2挂载boot   mkdir /mnt/boot  # 子目录必须为bo">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/28/linux/基础/自制linux系统和内核编译/"/>
+
+
+
+
+
+  <title> 自制linux系统和内核编译 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home Page
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux1">
+          <a href="/categories/LinuxBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux2">
+          <a href="/categories/LinuxServices" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Services
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python1">
+          <a href="/categories/PythonBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python2">
+          <a href="/categories/PythonCase" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Case
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question1">
+          <a href="/categories/CommonQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Common Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question2">
+          <a href="/categories/InterviewQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Interview Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/28/linux/基础/自制linux系统和内核编译/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                自制linux系统和内核编译
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-28T00:00:00+08:00">
+                2018-03-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LinuxBasics/" itemprop="url" rel="index">
+                    <span itemprop="name">LinuxBasics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="自制linux系统"><a href="#自制linux系统" class="headerlink" title="自制linux系统"></a>自制linux系统</h1><h2 id="分区并创建文件系统"><a href="#分区并创建文件系统" class="headerlink" title="分区并创建文件系统"></a>分区并创建文件系统</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">fdisk  <span class="string">/dev/sdb</span></span><br><span class="line">   分两个必要的分区</span><br><span class="line">      <span class="string">/dev/sdb1</span>对应  <span class="comment"># /boot </span></span><br><span class="line">      <span class="string">/dev/sdb2</span>对应  <span class="comment"># 根 /</span></span><br><span class="line">   mkfs.ext4 <span class="string">/dev/sdb1</span></span><br><span class="line">   mkfs.ext4 <span class="string">/dev/sdb2</span></span><br><span class="line"></span><br><span class="line">挂载boot</span><br><span class="line">   mkdir <span class="string">/mnt/boot</span>  <span class="comment"># 子目录必须为boot</span></span><br><span class="line">   mount <span class="string">/dev/sdb1</span>  <span class="comment"># /mnt/boot</span></span><br><span class="line"></span><br><span class="line">安装grub</span><br><span class="line">   grub-install <span class="params">--root-directory=/mnt</span> <span class="string">/dev/sdb</span></span><br><span class="line"></span><br><span class="line">恢复内核和initramfs文件</span><br><span class="line">   cp <span class="string">/boot/vmlinuz-2.6.32-642.el6.x86_64</span>  <span class="string">/mnt/boot/</span></span><br><span class="line">   cp <span class="string">/boot/initramfs-2.6.32-642.el6.x86_64.img</span>  <span class="string">/mnt/boot</span></span><br></pre></td></tr></table></figure>
+<h2 id="建立grub-conf"><a href="#建立grub-conf" class="headerlink" title="建立grub.conf"></a>建立grub.conf</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">vim /mnt/boot/grub.conf</span><br><span class="line">   <span class="attribute">defalut</span>=0</span><br><span class="line">   <span class="attribute">timeout</span>=5</span><br><span class="line">   title mini_linux</span><br><span class="line">   root (hd0,0)</span><br><span class="line">   kernel /vmlinuz-2.6.32-642.el6.x86_64 <span class="attribute">root</span>=/dev/sda2  <span class="attribute">selinux</span>=0 <span class="attribute">init</span>=/bin/bash</span><br><span class="line">   initrd /initramfs-2.6.32-642.el6.x86_64.img</span><br><span class="line">   # <span class="attribute">root</span>=/dev/sda2，当前是/dev/sdb2 因为到时候移动过后就变成了/dev/sda2</span><br><span class="line">   # 在后期网卡和地址在一开机的时候就自动配置完成</span><br><span class="line">   # 把改成 init= # 一个脚本，在脚本中启动，bash和网卡的加载，ip的配置等</span><br><span class="line"></span><br><span class="line">chroot /mnt/sysroot  # 切根</span><br></pre></td></tr></table></figure>
+<h2 id="创建一级目录"><a href="#创建一级目录" class="headerlink" title="创建一级目录"></a>创建一级目录</h2><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">mkdir /mnt/sysroot</span><br><span class="line">mount /dev/sdb2  /mnt/sysroot</span><br><span class="line">mkdir –pv /mnt/sysroot/&#123;etc,<span class="class"><span class="keyword">lib</span>,<span class="title">lib64</span>,<span class="title">bin</span>,<span class="title">sbin</span>,<span class="title">tmp</span>,<span class="title">var</span>,<span class="title">usr</span>,<span class="title">sys</span>,<span class="title">proc</span>,<span class="title">opt</span>,<span class="title">home</span>,<span class="title">root</span>,<span class="title">boot</span>,<span class="title">dev</span>,<span class="title">mnt</span>,<span class="title">media</span>&#125;</span></span><br><span class="line"></span><br><span class="line">复制bash和相关库文件  <span class="comment"># 脚本</span></span><br><span class="line"></span><br><span class="line">复制相关命令及相关库文件</span><br><span class="line"><span class="comment"># 如: ls，cat，vim，reboot，hostname等</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果要启动时带有网络功能的话</span></span><br><span class="line">   insmod   <span class="comment"># 加载驱动程序</span></span><br><span class="line">   网卡文件: e1000</span><br><span class="line">   <span class="comment">#  modinfo e1000，第一行有路径，拷贝过去</span></span><br><span class="line"></span><br><span class="line">例: 之前把相关的网卡模块，复制过去（cp ... /lib64/e1000.ko ）</span><br><span class="line">   系统进入之后</span><br><span class="line">      insmod /lib64/e1000.ko</span><br><span class="line">      ifconfig -a（默认是关闭的）</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="proc目录"><a href="#proc目录" class="headerlink" title="/proc目录"></a>/proc目录</h1><figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">内核把自己内部状态信息及统计信息，以及可配置参数通过<span class="keyword">proc</span>伪文件系统加以输出</span><br><span class="line">参数:</span><br><span class="line">   只读: 输出信息</span><br><span class="line">   可写: 可接受用户指定"新值"来实现对内核某功能或特性的配置</span><br><span class="line"></span><br><span class="line">/<span class="keyword">proc</span>/sys</span><br><span class="line">   (1)sysctl命令用于查看或设定此目录中诸多参数</span><br><span class="line"><span class="title">      sysctl</span> -w<span class="title"> path.to.parameter=VALUE</span></span><br><span class="line"><span class="title"></span> <span class="title">     sysctl</span> -w<span class="title"> kernel.hostname=mail.xdg.com</span></span><br><span class="line"><span class="title"></span></span><br><span class="line"><span class="title"></span>   (2)echo命令通过重定向方式也可以修改大多数参数的值</span><br><span class="line"><span class="title">      echo</span> "VALUE" &gt; /<span class="keyword">proc</span>/sys/path/to/parameter</span><br><span class="line"><span class="title">      echo</span> "websrv"  &gt; /<span class="keyword">proc</span>/sys/kernel/hostname</span><br><span class="line"></span><br><span class="line">sysctl命令</span><br><span class="line">   默认配置文件: /etc/sysctl.conf</span><br><span class="line">   (1)设置某参数</span><br><span class="line"><span class="title">      sysctl</span> -w<span class="title"> parameter=VALUE</span></span><br><span class="line"><span class="title"></span> <span class="title">     sysctl</span> -w<span class="title"> net.ipv4.icmp_echo_ignore_all=0</span></span><br><span class="line"><span class="title"></span>   (2)通过读取配置文件设置参数</span><br><span class="line"><span class="title">      sysctl</span> -p [/path/to/conf_file]</span><br><span class="line">   (3)查看所有生效参数</span><br><span class="line"><span class="title">      sysctl</span> -a</span><br><span class="line"></span><br><span class="line">   常用的几个参数:</span><br><span class="line"><span class="title">      net.ipv4.ip_forward</span>  # 转发功能</span><br><span class="line"><span class="title">      net.ipv4.icmp_echo_ignore_all</span>  #<span class="title"> ping是否启用</span></span><br><span class="line"><span class="title"></span> <span class="title">     vm.drop_caches</span>  # 强迫释放缓存空间</span><br><span class="line"># 在修改的时候，之后是禁用掉了，但是删除之后，是保持之前的状态信息，如果要开启的话（重启，设定为开启）</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="sys目录"><a href="#sys目录" class="headerlink" title="/sys目录"></a>/sys目录</h1><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">sysfs</span>: 为用户使用的伪文件系统，输出内核识别出的各硬件设备的相关属性信息，也有内核对硬件特性的设定信息，有些参数是可以修改的，用于调整硬件工作特性</span><br><span class="line"></span><br><span class="line">   <span class="attribute">udev通过此路径下输出的信息动态为各设备创建所需要设备文件，udev是运行用户空间程序</span></span><br><span class="line">      专用工具: udevadmin，hotplug udev</span><br><span class="line">   # 为设备创建设备文件时，会读取其事先定义好的规则文件，一般在/etc/udev/rules.d及/usr/lib/udev/rules.d目录下</span><br><span class="line"></span><br><span class="line">例: 系统当中的网卡的信息配置 /etc/udev/rules.d/70-persistent-net.rules</span><br><span class="line">   # PCI device 0x8086:0x100f (e1000)</span><br><span class="line">   SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR&#123;address&#125;=="00:50:56:2e:57:4f",ATTR&#123;type&#125;=="1", KERNEL=="eth*", NAME="eth0"</span><br><span class="line"></span><br><span class="line">   # 手动配置的信息</span><br><span class="line">   SUBSYSTEM=="block",KERNEL=="sdb",NAME="my_usb",SYMLINK="xdg_usb"</span><br><span class="line">   # 块设置，内核识别的是sdb成设备，名字叫 my_usb，软链接叫 xdg_usb( /dev/xdg_usb )</span><br><span class="line">   # 完成之后重启或者，重读配置文件 --&gt; udevadmin trigger</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="内核编译"><a href="#内核编译" class="headerlink" title="内核编译"></a>内核编译</h1><h2 id="内核组成部分"><a href="#内核组成部分" class="headerlink" title="内核组成部分"></a>内核组成部分</h2><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">单内核体系设计、但充分借鉴了微内核设计体系的优点，为内核引入模块化机制</span><br><span class="line"><span class="symbol">kernel:</span> 内核核心，一般为bzImage，通常在/boot目录下，名称为vmlinuz-VERSION-RELEASE</span><br><span class="line">kernel <span class="symbol">object:</span> 内核对象，一般放置于 /<span class="class"><span class="keyword">lib</span>/<span class="title">modules</span>/<span class="title">VERSION</span>-<span class="title">RELEASE</span>/</span></span><br><span class="line">   [ ]: N  <span class="comment"># 不需要</span></span><br><span class="line">   [M]: M  <span class="comment"># 存入/lib64/modules/目录里，后面使用，有的选项并不支持</span></span><br><span class="line">   [*]: Y  <span class="comment"># 启用（会打入vmlinuz内核文件中去，关键的）不会存入/lib64/modules/目录里</span></span><br><span class="line">   辅助文件: ramdisk</span><br><span class="line">   initrd</span><br><span class="line">   initramfs</span><br><span class="line"><span class="comment"># 查看相应内核开启的功能 cat /boot/config-2.6.32-696.el6.x86_64 (uname -r)</span></span><br><span class="line"></span><br><span class="line">运行中的内核</span><br><span class="line">   uname命令:</span><br><span class="line">      uname - print system information</span><br><span class="line">      uname [OPTION] ...</span><br><span class="line">         -<span class="symbol">n:</span> 显示节点名称</span><br><span class="line">         -<span class="symbol">r:</span> 显示VERSION-RELEASE</span><br><span class="line">         -<span class="symbol">a:</span> 显示所有信息</span><br></pre></td></tr></table></figure>
+<h2 id="内核模块命令"><a href="#内核模块命令" class="headerlink" title="内核模块命令"></a>内核模块命令</h2><figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">lsmod命令</span><br><span class="line">   显示由核心已经装载的内核模块，显示的内容来自于: /<span class="keyword">proc</span>/modules文件</span><br><span class="line"></span><br><span class="line">modinfo命令</span><br><span class="line">   显示模块的详细描述信息</span><br><span class="line"><span class="title">   modinfo</span> [ -k<span class="title"> kernel</span> ]  [<span class="title"> modulename|filename</span> ... ]</span><br><span class="line">      -n: 只显示模块文件路径</span><br><span class="line">      -p: 显示模块参数</span><br><span class="line">      -a:<span class="title"> author</span></span><br><span class="line"><span class="title"></span>      -d:<span class="title"> description</span></span><br><span class="line"><span class="title"></span>      -l:<span class="title"> license</span></span><br><span class="line"><span class="title"></span> <span class="title">  lsmod</span> |<span class="title"> grep</span> xfs;<span class="title"> modinfo</span> xfs</span><br></pre></td></tr></table></figure>
+<h2 id="内核模块管理"><a href="#内核模块管理" class="headerlink" title="内核模块管理"></a>内核模块管理</h2><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">modprobe命令: 装载或卸载内核模块</span><br><span class="line">   modprobe <span class="string">[ -C config-file ]</span>  <span class="string">[ modulename ]</span>  <span class="string">[ module parame-ters... ]</span></span><br><span class="line">   配置文件</span><br><span class="line">      /etc/modprobe.conf, /etc/modprobe.d/*.conf</span><br><span class="line">   modprobe <span class="string">[ -r ]</span> modulename ...</span><br><span class="line"></span><br><span class="line">depmod命令: 内核模块依赖关系文件及系统信息映射文件的生成工具</span><br><span class="line">   装载或卸载内核模块:</span><br><span class="line">      insmod命令: 指定模块文件，不自动解决依赖模块</span><br><span class="line">      insmod <span class="string">[ filename ]</span>  <span class="string">[ module options... ]</span></span><br><span class="line">      insmod `modinfo –n exportfs`</span><br><span class="line">      insmod `modinfo –n xfs`</span><br><span class="line"></span><br><span class="line">rmmod命令: 卸载模块</span><br><span class="line">   rmmod <span class="string">[ modulename ]</span></span><br><span class="line">      rmmod xfs</span><br><span class="line">      rmmod exportfs</span><br></pre></td></tr></table></figure>
+<h2 id="编译内核"><a href="#编译内核" class="headerlink" title="编译内核"></a>编译内核</h2><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">前提</span><br><span class="line">   (1) 准备好开发环境</span><br><span class="line">   (2) 获取目标主机上硬件设备的相关信息</span><br><span class="line">   (3) 获取目标主机系统功能的相关信息  如: 需要启用相应的文件系统</span><br><span class="line">   (4) 获取内核源代码包 www.kernel.org</span><br><span class="line"></span><br><span class="line">开发环境准备</span><br><span class="line">   包组(CentOS 6):</span><br><span class="line">      Server Platform</span><br><span class="line">      Development Development Tools</span><br><span class="line">   目标主机硬件设备相关信息:</span><br><span class="line">      CPU:</span><br><span class="line">         # cat /proc/cpuinfo</span><br><span class="line">         # x86info -a</span><br><span class="line">         # lscpu</span><br><span class="line">   硬件设备</span><br><span class="line">      PCI设备:</span><br><span class="line">         lspci</span><br><span class="line">            -<span class="ruby">v</span></span><br><span class="line"><span class="ruby">            -vv  <span class="comment"># 更详细</span></span></span><br><span class="line"><span class="ruby">         lsusb</span></span><br><span class="line"><span class="ruby">            -v</span></span><br><span class="line"><span class="ruby">            -vv  <span class="comment"># 更详细</span></span></span><br><span class="line"><span class="ruby">      lsblk  <span class="comment"># 显示设备</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="内核编译安装系统"><a href="#内核编译安装系统" class="headerlink" title="内核编译安装系统"></a>内核编译安装系统</h2><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">安装开发包组</span><br><span class="line">   下载源码文件</span><br><span class="line">   .config  <span class="comment"># 准备文本配置文件</span></span><br><span class="line">      <span class="comment"># cp /boot/config-2.6.32-696.el6.x86_64   /app/linux/linux-4.12.10/.config</span></span><br><span class="line">      <span class="comment"># 前是当前系统的内核config内核（里面胡当前内核所选择的功能）</span></span><br><span class="line">      <span class="comment"># 后是存在内核文件目录路径</span></span><br><span class="line"></span><br><span class="line">   make menuconfig  <span class="comment"># 配置内核选项</span></span><br><span class="line">      <span class="comment"># 这时可能需要一个工具包，安装一下</span></span><br><span class="line">      例: yum <span class="keyword">install </span>ncurses-devel Development Tools</span><br><span class="line"></span><br><span class="line">   make [-<span class="keyword">j </span><span class="comment">#]</span></span><br><span class="line">      make -<span class="keyword">j </span><span class="number">4</span>  <span class="comment"># 4线程进行编译</span></span><br><span class="line">      make modules_install  <span class="comment"># 安装模块</span></span><br><span class="line">      <span class="comment"># 生成/lib64/modules/*  相关模块</span></span><br><span class="line"></span><br><span class="line">   make <span class="keyword">install </span> <span class="comment"># 安装内核相关文件</span></span><br><span class="line">      安装<span class="keyword">bzImage为/boot/vmlinuz-VERSION-RELEASE</span></span><br><span class="line"><span class="keyword"> </span>     生成initramfs文件</span><br><span class="line">      编辑grub的配置文件</span><br></pre></td></tr></table></figure>
+<h2 id="编译安装内核示例"><a href="#编译安装内核示例" class="headerlink" title="编译安装内核示例"></a>编译安装内核示例</h2><pre><code>tar xf linux-3.10.67.tar.xz -C /usr/src
+cd /usr/src
+ln -sv linux-3.10.67 linux
+cd /usr/src/linux
+cp /boot/config-$(uname -r)   ./.config
+make help
+make menuconfig
+make -j 2
+make modules_install
+make install
+reboot
+
+(1) 配置内核选项 支持&quot;更新&quot;模式进行配置: make help
+   (a) make config  # 基于命令行以遍历的方式去配置内核 中可配置的每个选项
+   (b) make menuconfig  # 基于curses的文本窗口界面
+   (c) make gconfig  # 基于GTK (GNOME）环境窗口界面
+   (d) make xconfig  # 基于QT(KDE)环境的窗口界面
+   支持&quot;全新配置&quot;模式进行配置
+      (a) make defconfig  # 基于内核为目标平台提供的&quot;默认&quot;配置进行配置
+      (b) make allyesconfig  # 所有选项均回答为&quot;yes&quot;
+      (c) make allnoconfig  # 所有选项均回答为&quot;no&quot;
+(2) 编译
+   全编译: make [-j #]
+   编译内核的一部分功能:
+      (a)只编译某子目录中的相关代码
+         cd /usr/src/linux
+         make dir/
+      (b)只编译一个特定的模块
+         cd /usr/src/linux
+         make  dir/file.ko
+      如: 只为e1000编译驱动
+         make drivers/net/ethernet/intel/e1000/e1000.ko
+         # 在/app/linux/linux-4.12.10/这个目录下执行
+
+如何交叉编译内核
+   编译的目标平台与当前平台不相同
+      make ARCH=arch_name
+   要获取特定目标平台的使用帮助
+      make ARCH=arch_name help
+      make ARCH=arm help
+
+在已经执行过编译操作的内核源码树做重新编译，需要事先清理操作
+   # 在目录/app/linux/linux-4.12.10/下执行
+   make clean  # 清理大多数编译生成的文件，但会保留 config文件等
+   make mrproper  # 清理所有编译生成的文件、config及某些备份文件
+   make distclean  # mrproper、patches以及编辑器备份文件
+
+卸载内核
+   删除/lib/modules/目录下不需要的内核库文件
+   删除/usr/src/linux/目录下不需要的内核源码
+   删除/boot目录下启动的内核和内核映像文件
+   更改grub的配置文件，删除不需要的内核启动列表
+</code></pre>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/proc/" rel="tag"># proc</a>
+          
+            <a href="/tags/sys/" rel="tag"># sys</a>
+          
+            <a href="/tags/kernel/" rel="tag"># kernel</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/27/linux/基础/启动和内核管理/" rel="next" title="启动和内核管理">
+                <i class="fa fa-chevron-left"></i> 启动和内核管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/29/linux/基础/修复系统/" rel="prev" title="修复系统">
+                修复系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">93</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#自制linux系统"><span class="nav-number">1.</span> <span class="nav-text">自制linux系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分区并创建文件系统"><span class="nav-number">1.1.</span> <span class="nav-text">分区并创建文件系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立grub-conf"><span class="nav-number">1.2.</span> <span class="nav-text">建立grub.conf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建一级目录"><span class="nav-number">1.3.</span> <span class="nav-text">创建一级目录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#proc目录"><span class="nav-number">2.</span> <span class="nav-text">/proc目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sys目录"><span class="nav-number">3.</span> <span class="nav-text">/sys目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内核编译"><span class="nav-number">4.</span> <span class="nav-text">内核编译</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#内核组成部分"><span class="nav-number">4.1.</span> <span class="nav-text">内核组成部分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内核模块命令"><span class="nav-number">4.2.</span> <span class="nav-text">内核模块命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内核模块管理"><span class="nav-number">4.3.</span> <span class="nav-text">内核模块管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译内核"><span class="nav-number">4.4.</span> <span class="nav-text">编译内核</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内核编译安装系统"><span class="nav-number">4.5.</span> <span class="nav-text">内核编译安装系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译安装内核示例"><span class="nav-number">4.6.</span> <span class="nav-text">编译安装内核示例</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

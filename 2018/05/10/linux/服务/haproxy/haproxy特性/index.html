@@ -48,17 +48,35 @@
   
 
   
+    
+      
+    
 
+    
   
 
+  
+    
+      
+    
+
+    
   
 
   
 
   
     
+      
     
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic|Iosevka:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
   
 
 
@@ -208,37 +226,67 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            首页
+            Home Page
           </a>
         </li>
       
         
-        <li class="menu-item menu-item-linux">
-          <a href="/categories/Linux" rel="section">
+        <li class="menu-item menu-item-linux1">
+          <a href="/categories/LinuxBasics" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
             
-            Linux
+            Linux Basics
           </a>
         </li>
       
         
-        <li class="menu-item menu-item-python">
-          <a href="/categories/Python" rel="section">
+        <li class="menu-item menu-item-linux2">
+          <a href="/categories/LinuxServices" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Services
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python1">
+          <a href="/categories/PythonBasics" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
             
-            Python
+            Python Basics
           </a>
         </li>
       
         
-        <li class="menu-item menu-item-question">
-          <a href="/categories/Question" rel="section">
+        <li class="menu-item menu-item-python2">
+          <a href="/categories/PythonCase" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Case
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question1">
+          <a href="/categories/CommonQuestion" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
             
-            Question
+            Common Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question2">
+          <a href="/categories/InterviewQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Interview Question
           </a>
         </li>
       
@@ -248,7 +296,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            归档
+            Archives
           </a>
         </li>
       
@@ -258,7 +306,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
-            标签
+            Tags
           </a>
         </li>
       
@@ -398,7 +446,7 @@
 <h2 id="path"><a href="#path" class="headerlink" title="path"></a>path</h2><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">path : string</span><br><span class="line"><span class="comment"># 提取请求的URL路径，该路径从第一个斜杠开始，并在问号之前结束（无主机部分） </span></span><br><span class="line"><span class="variable">&lt;scheme&gt;</span>://<span class="variable">&lt;user&gt;</span>:<span class="variable">&lt;password&gt;</span>@<span class="variable">&lt;host&gt;</span>:<span class="variable">&lt;port&gt;</span>/<span class="variable">&lt;path&gt;</span>;<span class="variable">&lt; params&gt;</span>?<span class="variable">&lt;query&gt;</span><span class="comment">#&lt;frag&gt;</span></span><br><span class="line"><span class="comment"># /&lt;path&gt;;&lt; params&gt;</span></span><br><span class="line">   path     : exact string <span class="built_in">match</span></span><br><span class="line">   path_beg : prefix <span class="built_in">match</span></span><br><span class="line">例:</span><br><span class="line">   acl  adminpath  path_beg  -i  /admin</span><br><span class="line">   <span class="built_in">block</span>  if  adminpath</span><br><span class="line">   <span class="comment"># 路径的开始如果是/admin（不区别大小写）就拒绝访问--&gt; 403</span></span><br><span class="line">   path_dir : subdir <span class="built_in">match</span></span><br><span class="line">   path_dom : domain <span class="built_in">match</span></span><br><span class="line">   path_end : suffix <span class="built_in">match</span></span><br><span class="line">例:</span><br><span class="line">   acl imagefile path_end  .jpg .png .gif</span><br><span class="line">   path_len : length <span class="built_in">match</span></span><br><span class="line">   path_reg : regex <span class="built_in">match</span></span><br><span class="line">   path_sub : substring <span class="built_in">match</span></span><br></pre></td></tr></table></figure>
 <h2 id="url"><a href="#url" class="headerlink" title="url"></a>url</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">url : string</span><br><span class="line"><span class="comment"># 提取请求中的URL。一个典型的应用是具有预取能力的缓存，以及需要从数据库聚合多个信息</span></span><br><span class="line"><span class="comment">#   并将它们保存在缓存中的网页门户入口</span></span><br><span class="line"><span class="comment"># 整个的url全部都检查</span></span><br><span class="line">   url : exact string match</span><br><span class="line">   url_beg :<span class="built_in"> prefix </span>match</span><br><span class="line">   url_dir : subdir match</span><br><span class="line">   url_dom : domain match</span><br><span class="line">   url_end : suffix match</span><br><span class="line">   url_len : length match</span><br><span class="line">   url_reg : regex match</span><br><span class="line">   url_sub : substring match</span><br></pre></td></tr></table></figure>
 <h2 id="req-hdr"><a href="#req-hdr" class="headerlink" title="req.hdr"></a>req.hdr</h2><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">req.hdr(<span class="meta">[&lt;name&gt;[,&lt;occ&gt;]</span>]) : string</span><br><span class="line"># 提取在一个HTTP请求报文的首部</span><br><span class="line">hdr(<span class="meta">[&lt;name&gt;[,&lt;occ&gt;]</span>]) : exact string <span class="keyword">match</span>  # 这是精确匹配</span><br><span class="line">例:</span><br><span class="line">   acl imagehost hdr(host) -i imgaes.magedu.com</span><br><span class="line">   use_backend imageweb <span class="keyword">if</span> imagehost</span><br><span class="line"># 如果访问的目标主机是 imgaes.magedu.com就往，imageweb的服务器上调度</span><br><span class="line">   hdr_beg(<span class="meta">[&lt;name&gt;[,&lt;occ&gt;]</span>]) : prefix <span class="keyword">match</span></span><br><span class="line">   hdr_dir(<span class="meta">[&lt;name&gt;[,&lt;occ&gt;]</span>]) : subdir <span class="keyword">match</span></span><br><span class="line">   hdr_dom(<span class="meta">[&lt;name&gt;[,&lt;occ&gt;]</span>]) : domain <span class="keyword">match</span></span><br><span class="line">   hdr_end(<span class="meta">[&lt;name&gt;[,&lt;occ&gt;]</span>]) : suffix <span class="keyword">match</span></span><br><span class="line">   hdr_len(<span class="meta">[&lt;name&gt;[,&lt;occ&gt;]</span>]) : length <span class="keyword">match</span></span><br><span class="line">   hdr_reg(<span class="meta">[&lt;name&gt;[,&lt;occ&gt;]</span>]) : regex <span class="keyword">match</span></span><br><span class="line">   hdr_sub(<span class="meta">[&lt;name&gt;[,&lt;occ&gt;]</span>]) : substring <span class="keyword">match</span></span><br><span class="line">例:</span><br><span class="line">   acl  bad_curl  hdr_sub(User-Agent) -i curl</span><br><span class="line">   block  <span class="keyword">if</span>  bad_curl</span><br><span class="line">   # 如果用curl命令访问，就拒绝</span><br></pre></td></tr></table></figure>
-<h2 id="status"><a href="#status" class="headerlink" title="status"></a>status</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">status : <span class="built_in">integer</span></span><br><span class="line"><span class="comment"># 返回在响应报文中的状态码</span></span><br></pre></td></tr></table></figure>
+<h2 id="status"><a href="#status" class="headerlink" title="status"></a>status</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">status : <span class="built_in">integer</span></span><br><span class="line"><span class="comment"># 返回在响应报文中的状态码</span></span><br></pre></td></tr></table></figure>
 <h1 id="预定义ACL"><a href="#预定义ACL" class="headerlink" title="预定义ACL"></a>预定义ACL</h1><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ACL</span>名称         等价于                        说明</span><br><span class="line"><span class="type">TRUE</span>            always_true                   总是匹配</span><br><span class="line"><span class="type">FALSE</span>           always_false                  从不匹配</span><br><span class="line"><span class="type">HTTP</span>            req_proto_http                匹配<span class="type">HTTP</span>协议 </span><br><span class="line"><span class="type">HTTP_1</span>.<span class="number">0</span>        req_ver <span class="number">1</span>.<span class="number">0</span>                   匹配<span class="type">HTTP</span>协议<span class="number">1</span>.<span class="number">0</span></span><br><span class="line"><span class="type">HTTP_1</span>.<span class="number">1</span>        req_ver <span class="number">1</span>.<span class="number">1</span>                   匹配<span class="type">HTTP</span>协议<span class="number">1</span>.<span class="number">1</span></span><br><span class="line"><span class="type">HTTP_CONTENT</span>    hdr_val(content-length) gt <span class="number">0</span>  匹配已存在内容长度</span><br><span class="line"><span class="type">HTTP_URL_ABS</span>    url_reg ^[^/:]*://            匹配<span class="type">URL</span>绝对路径</span><br><span class="line"><span class="type">HTTP_URL_SLASH</span>  url_beg /                     匹配<span class="type">URL</span>相对路径</span><br><span class="line"><span class="type">HTTP_URL_STAR</span>   url *                         匹配 <span class="type">URL</span> 等于 <span class="string">"*"</span></span><br><span class="line"><span class="type">LOCALHOST</span>       src  <span class="number">127</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span>/<span class="number">8</span>              匹配从localhost来的连接</span><br><span class="line"><span class="type">METH_CONNECT</span>    <span class="keyword">method</span> <span class="type">CONNECT</span>                匹配<span class="type">HTTP</span> <span class="type">CONNECT</span>方法</span><br><span class="line"></span><br><span class="line"><span class="type">METH_GET</span>         <span class="keyword">method</span>   <span class="type">GET</span>  <span class="type">HEAD</span>  match  <span class="type">HTTP</span>   <span class="type">GET</span> <span class="keyword">or</span> <span class="type">HEAD</span> <span class="keyword">method</span></span><br><span class="line"><span class="type">METH_HEAD</span>        <span class="keyword">method</span>   <span class="type">HEAD</span>       match  <span class="type">HTTP</span>   <span class="type">HEAD</span>        <span class="keyword">method</span></span><br><span class="line"><span class="type">METH_OPTIONS</span>     <span class="keyword">method</span>   <span class="type">OPTIONS</span>    match  <span class="type">HTTP</span>   <span class="type">OPTIONS</span>     <span class="keyword">method</span></span><br><span class="line"><span class="type">METH_POST</span>        <span class="keyword">method</span>   <span class="type">POST</span>       match  <span class="type">HTTP</span>   <span class="type">POST</span>        <span class="keyword">method</span></span><br><span class="line"><span class="type">METH_TRACE</span>       <span class="keyword">method</span>   <span class="type">TRACE</span>      match  <span class="type">HTTP</span>   <span class="type">TRACE</span>       <span class="keyword">method</span></span><br><span class="line"><span class="type">RDP_COOKIE</span>       req_rdp_cookie_cnt gt <span class="number">0</span> match  presence <span class="keyword">of</span> an <span class="type">RDP</span>    cookie</span><br><span class="line"><span class="type">REQ_CONTENT</span>      req_len gt <span class="number">0</span>            match  data <span class="keyword">in</span> the request   buffer</span><br><span class="line"><span class="type">WAIT_ENDwait_end</span>  wait <span class="keyword">for</span> <span class="keyword">end</span> <span class="keyword">of</span> content analysis</span><br><span class="line"></span><br><span class="line">例:</span><br><span class="line">   acl deny_method  <span class="keyword">method</span> <span class="type">HEAD</span></span><br><span class="line">   <span class="keyword">block</span> <span class="keyword">if</span> deny_metmod</span><br><span class="line">   <span class="comment"># 如果请求方法是HEAD就拒绝访问</span></span><br></pre></td></tr></table></figure>
 <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">use_backend &lt;backend&gt; [&#123;<span class="keyword">if</span> | unless&#125; &lt;condition&gt;]</span><br><span class="line"><span class="comment"># 当if/unless一个基于ACL的条件匹配时切换指定backend</span></span><br><span class="line">   block &#123; <span class="keyword">if</span> | unless &#125; &lt;condition&gt;</span><br><span class="line">   # 阻止7层请求<span class="keyword">if</span>/unless一个条件匹配</span><br><span class="line">例:</span><br><span class="line">   frontend</span><br><span class="line">      acl invalid_src src 172.18.48.100</span><br><span class="line">      use_backend  web2  <span class="keyword">if</span>  invalid_src</span><br><span class="line">   # 如果源ip地址来访问的时候，会一直调度到web2的后端服务上去（也可以有多个机器）</span><br><span class="line">   backend  web1</span><br><span class="line">      balance roundrobin</span><br><span class="line">     <span class="built_in"> server </span>http  172.18.48.100:80 check  maxconn 5000</span><br><span class="line">   backend  web2</span><br><span class="line">      balance roundrobin</span><br><span class="line">     <span class="built_in"> server </span>nginx 172.18.48.200:80 check weight 2</span><br><span class="line"></span><br><span class="line">http-request &#123; allow | deny |add-header &lt;name&gt; &lt;fmt&gt; |set-header &lt;name&gt; &lt;fmt&gt; &#125; </span><br><span class="line">  [ &#123; <span class="keyword">if</span> | unless &#125; &lt;condition&gt; ]</span><br><span class="line"><span class="comment"># 对7层请求的访问控制</span></span><br><span class="line">例:</span><br><span class="line">   acl nagios src 192.168.129.3</span><br><span class="line">   acl local_net src 192.168.0.0/16</span><br><span class="line">   acl auth_ok http_auth(L1)</span><br><span class="line"></span><br><span class="line">   http-request allow <span class="keyword">if</span> nagios</span><br><span class="line">   http-request allow <span class="keyword">if</span> local_net auth_ok</span><br><span class="line">   http-request auth realm Gimme <span class="keyword">if</span> local_net auth_ok</span><br><span class="line">   http-request deny</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">tcp-request<span class="built_in"> connection </span>&#123;accept|reject&#125;  [&#123;<span class="keyword">if</span> | unless&#125; &lt;condition&gt;]</span><br><span class="line"><span class="comment"># 根据第4层条件对传入连接执行操作</span></span><br><span class="line">例:</span><br><span class="line">   listen ssh</span><br><span class="line">      bind :22022</span><br><span class="line">      balance leastconn</span><br><span class="line"></span><br><span class="line">      acl invalid_src src 172.16.200.2</span><br><span class="line">      tcp-request<span class="built_in"> connection </span>reject <span class="keyword">if</span> invalid_src</span><br><span class="line">      # 如果源ip地址是172.16.200.2拒绝</span><br><span class="line">      # 默认是允许的</span><br><span class="line">      # 上面两行也其实不用写，也可以</span><br><span class="line"></span><br><span class="line">      mode tcp</span><br><span class="line">     <span class="built_in"> server </span>sshsrv1 172.16.100.6:22 check</span><br><span class="line">     <span class="built_in"> server </span>sshsrv2 172.16.100.7:22 check backup</span><br></pre></td></tr></table></figure>
 <h1 id="基于ACL的动静分离"><a href="#基于ACL的动静分离" class="headerlink" title="基于ACL的动静分离"></a>基于ACL的动静分离</h1><figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">frontend  web *:80</span><br><span class="line">   acl  url_static  path_beg  -i  /static  /images  /javascript  /stylesheets</span><br><span class="line">   acl  url_static  path_end  -i  .jpg .gif .png .css .js .html .txt .htm</span><br><span class="line">   use_backend  <span class="keyword"> static</span>srvs   <span class="built_in"> if </span> url_static</span><br><span class="line">   default_backend     appsrvs</span><br><span class="line">backend <span class="keyword"> static</span>srvs</span><br><span class="line">   balance  roundrobin</span><br><span class="line">   server   stcsrv1 172.16.100.6:80 check</span><br><span class="line">backend  appsrvs</span><br><span class="line">   balance  roundrobin</span><br><span class="line">   server  app1 172.16.100.7:80 check</span><br><span class="line">   server  app1 172.16.100.7:8080 check</span><br><span class="line">listen stats</span><br><span class="line">   bind<span class="keyword"> :9091</span></span><br><span class="line">   stats enable</span><br><span class="line">   stats auth admin:admin</span><br><span class="line">   stats admin<span class="built_in"> if </span>TRUE</span><br></pre></td></tr></table></figure>
@@ -528,7 +576,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-count">97</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -539,7 +587,7 @@
             
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               
             </div>
@@ -550,7 +598,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-count">93</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

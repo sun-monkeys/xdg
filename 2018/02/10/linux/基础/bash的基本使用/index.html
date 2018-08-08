@@ -1,0 +1,854 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic|Iosevka:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="bash," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="用户登录root 用户123一个特殊的管理帐户，也被称为超级管理员root 用户拥有所有系统权限除非必要，不要登录为 root 普通用户1权限有限， 造成损害的能力比较有限  终端设备终端1键盘、鼠标、显示器 物理终端（/dev/console）1控制台 Console 虚拟终端（tty: teletypewriters，/dev/tty#  # 为[1-6]）1tty 可有n个，Ctrl+Alt">
+<meta name="keywords" content="bash">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bash的基本使用">
+<meta property="og:url" content="http://yoursite.com/2018/02/10/linux/基础/bash的基本使用/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="用户登录root 用户123一个特殊的管理帐户，也被称为超级管理员root 用户拥有所有系统权限除非必要，不要登录为 root 普通用户1权限有限， 造成损害的能力比较有限  终端设备终端1键盘、鼠标、显示器 物理终端（/dev/console）1控制台 Console 虚拟终端（tty: teletypewriters，/dev/tty#  # 为[1-6]）1tty 可有n个，Ctrl+Alt">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-18T05:51:58.523Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bash的基本使用">
+<meta name="twitter:description" content="用户登录root 用户123一个特殊的管理帐户，也被称为超级管理员root 用户拥有所有系统权限除非必要，不要登录为 root 普通用户1权限有限， 造成损害的能力比较有限  终端设备终端1键盘、鼠标、显示器 物理终端（/dev/console）1控制台 Console 虚拟终端（tty: teletypewriters，/dev/tty#  # 为[1-6]）1tty 可有n个，Ctrl+Alt">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/10/linux/基础/bash的基本使用/"/>
+
+
+
+
+
+  <title> Bash的基本使用 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home Page
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux1">
+          <a href="/categories/LinuxBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux2">
+          <a href="/categories/LinuxServices" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Services
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python1">
+          <a href="/categories/PythonBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python2">
+          <a href="/categories/PythonCase" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Case
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question1">
+          <a href="/categories/CommonQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Common Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question2">
+          <a href="/categories/InterviewQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Interview Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/10/linux/基础/bash的基本使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Bash的基本使用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-10T00:00:00+08:00">
+                2018-02-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LinuxBasics/" itemprop="url" rel="index">
+                    <span itemprop="name">LinuxBasics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h1><h2 id="root-用户"><a href="#root-用户" class="headerlink" title="root 用户"></a>root 用户</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">一个特殊的管理帐户，也被称为超级管理员</span><br><span class="line">root 用户拥有所有系统权限</span><br><span class="line">除非必要，不要登录为 root</span><br></pre></td></tr></table></figure>
+<h2 id="普通用户"><a href="#普通用户" class="headerlink" title="普通用户"></a>普通用户</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">权限有限， 造成损害的能力比较有限</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="终端"><a href="#终端" class="headerlink" title="终端"></a>终端</h1><h2 id="设备终端"><a href="#设备终端" class="headerlink" title="设备终端"></a>设备终端</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">键盘、鼠标、显示器</span><br></pre></td></tr></table></figure>
+<h2 id="物理终端（-dev-console）"><a href="#物理终端（-dev-console）" class="headerlink" title="物理终端（/dev/console）"></a>物理终端（/dev/console）</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">控制台 <span class="built_in">Console</span></span><br></pre></td></tr></table></figure>
+<h2 id="虚拟终端（tty-teletypewriters，-dev-tty-为-1-6-）"><a href="#虚拟终端（tty-teletypewriters，-dev-tty-为-1-6-）" class="headerlink" title="虚拟终端（tty: teletypewriters，/dev/tty#  # 为[1-6]）"></a>虚拟终端（tty: teletypewriters，/dev/tty#  # 为[1-6]）</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tty 可有n个，Ctrl+Alt+F[<span class="number">1</span><span class="number">-6</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="图形终端（-dev-tty7-）startx，xwindows"><a href="#图形终端（-dev-tty7-）startx，xwindows" class="headerlink" title="图形终端（/dev/tty7 ）startx，xwindows"></a>图形终端（/dev/tty7 ）startx，xwindows</h2><figure class="highlight ldif"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">CentOS 6</span>: Ctrl + Alt + F7</span><br><span class="line"><span class="attribute">CentOS 7</span>: 在哪个终端启动，即位于哪个虚拟终端</span><br></pre></td></tr></table></figure>
+<h2 id="串行终端（-dev-tty-）"><a href="#串行终端（-dev-tty-）" class="headerlink" title="串行终端（/dev/tty#）"></a>串行终端（/dev/tty#）</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> tty</span></span><br></pre></td></tr></table></figure>
+<h2 id="伪终端（pty-pseudo-tty，-dev-pts-）"><a href="#伪终端（pty-pseudo-tty，-dev-pts-）" class="headerlink" title="伪终端（pty: pseudo-tty，/dev/pts/#）"></a>伪终端（pty: pseudo-tty，/dev/pts/#）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pty，SSH远程连接</span><br></pre></td></tr></table></figure>
+<h2 id="查看当前的终端设备"><a href="#查看当前的终端设备" class="headerlink" title="查看当前的终端设备"></a>查看当前的终端设备</h2><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="symbol">@node1</span> ~]<span class="meta">#tty</span></span><br><span class="line">/dev/pts/<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="命令提示符"><a href="#命令提示符" class="headerlink" title="命令提示符"></a>命令提示符</h1><h2 id="命令提示符（prompt）"><a href="#命令提示符（prompt）" class="headerlink" title="命令提示符（prompt）"></a>命令提示符（prompt）</h2><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="symbol">@node1</span> ~]<span class="meta">#</span></span><br><span class="line"><span class="meta">#: 管理员  $: 普通用户</span></span><br></pre></td></tr></table></figure>
+<h2 id="显示提示符格式"><a href="#显示提示符格式" class="headerlink" title="显示提示符格式"></a>显示提示符格式</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@node1 ~]#echo $PS1</span><br><span class="line">\[<span class="string">\e[31m\</span>][<span class="symbol">\u@\h \W</span>]\$\[\e[0m\]</span><br></pre></td></tr></table></figure>
+<h2 id="修改提示符格式"><a href="#修改提示符格式" class="headerlink" title="修改提示符格式"></a>修改提示符格式</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim  ~/.bashrc</span><br><span class="line">PS1='\[<span class="string">\e[31m\</span>][<span class="symbol">\u@\h \W</span>]\\$\[\e[0m\]'  # 添加至文件中，只对当前用户有效</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="执行命令"><a href="#执行命令" class="headerlink" title="执行命令"></a>执行命令</h1><h2 id="在shell中可执行的命令有两类"><a href="#在shell中可执行的命令有两类" class="headerlink" title="在shell中可执行的命令有两类"></a>在shell中可执行的命令有两类</h2><h3 id="内部命令-由shell自带的，而且通过某命令形式提供"><a href="#内部命令-由shell自带的，而且通过某命令形式提供" class="headerlink" title="内部命令: 由shell自带的，而且通过某命令形式提供"></a>内部命令: 由shell自带的，而且通过某命令形式提供</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">help  <span class="comment"># 内部命令列表</span></span><br><span class="line">enable <span class="keyword">cmd</span><span class="bash">  <span class="comment"># 启用内部命令</span></span></span><br><span class="line"><span class="bash"><span class="built_in">enable</span> –n cmd  <span class="comment"># 禁用内部命令</span></span></span><br><span class="line"><span class="bash"><span class="built_in">enable</span> –n  <span class="comment"># 查看所有禁用的内部命令</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="外部命令-在文件系统路径下有对应的可执行程序文件"><a href="#外部命令-在文件系统路径下有对应的可执行程序文件" class="headerlink" title="外部命令: 在文件系统路径下有对应的可执行程序文件"></a>外部命令: 在文件系统路径下有对应的可执行程序文件</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">查看路径: which -a | --skip-alias</span><br><span class="line">查看帮助手册: whereis</span><br><span class="line">区别指定的命令是内部或外部命令:<span class="built_in"> type </span>COMMAND</span><br></pre></td></tr></table></figure>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@node1 ~]#<span class="keyword">which</span> -a <span class="keyword">ls</span>  # 显示命令路径，包括别名</span><br><span class="line">alias <span class="keyword">ls</span>='<span class="keyword">ls</span> --color=auto'</span><br><span class="line">   /usr/bin/<span class="keyword">ls</span></span><br><span class="line"></span><br><span class="line">[root@node1 ~]#<span class="keyword">which</span> --skip-alias <span class="keyword">ls</span> # 只显示命令路径</span><br><span class="line">/usr/bin/<span class="keyword">ls</span></span><br><span class="line"></span><br><span class="line">[root@node1 ~]#whereis <span class="keyword">ls</span>  # 命令的帮助文档，可以用<span class="keyword">man</span>命令去访问</span><br><span class="line"><span class="keyword">ls</span>: /usr/bin/<span class="keyword">ls</span> /usr/share/<span class="keyword">man</span>/man1/<span class="keyword">ls</span>.1.gz /usr/share/<span class="keyword">man</span>/man1p/<span class="keyword">ls</span>.1p.gz</span><br><span class="line"></span><br><span class="line">[root@node1 ~]#<span class="keyword">type</span> echo # 命令类型，内部命令</span><br><span class="line">echo is a <span class="keyword">shell</span> builtin</span><br><span class="line"></span><br><span class="line">[root@node1 ~]#<span class="keyword">type</span> touch</span><br><span class="line">touch is /usr/bin/touch</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="命令别名"><a href="#命令别名" class="headerlink" title="命令别名"></a>命令别名</h1><h2 id="显示当前shell进程所有可用的命令别名"><a href="#显示当前shell进程所有可用的命令别名" class="headerlink" title="显示当前shell进程所有可用的命令别名"></a>显示当前shell进程所有可用的命令别名</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span></span><br></pre></td></tr></table></figure>
+<h2 id="定义别名NAME，其相当于执行命令VALUE"><a href="#定义别名NAME，其相当于执行命令VALUE" class="headerlink" title="定义别名NAME，其相当于执行命令VALUE"></a>定义别名NAME，其相当于执行命令VALUE</h2><figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alias</span> <span class="keyword">NAME</span>=<span class="string">'VALUE'</span></span><br></pre></td></tr></table></figure>
+<h2 id="在命令行中定义的别名，仅对当前shell进程有效"><a href="#在命令行中定义的别名，仅对当前shell进程有效" class="headerlink" title="在命令行中定义的别名，仅对当前shell进程有效"></a>在命令行中定义的别名，仅对当前shell进程有效</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">如果想永久有效，要定义在配置文件中</span><br><span class="line">仅对当前用户: ~<span class="string">/.bashrc</span></span><br><span class="line">对所有用户有效: <span class="string">/etc/bashrc</span></span><br></pre></td></tr></table></figure>
+<h2 id="编辑配置给出的新配置不会立即生效"><a href="#编辑配置给出的新配置不会立即生效" class="headerlink" title="编辑配置给出的新配置不会立即生效"></a>编辑配置给出的新配置不会立即生效</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bash进程需要重新读取配置文件</span><br><span class="line">source　/path/<span class="keyword">to</span>/config_file</span><br><span class="line">.　/path/<span class="keyword">to</span>/config_file  <span class="comment"># .(点)必须要有且有空格格开</span></span><br></pre></td></tr></table></figure>
+<h2 id="撤消别名（unalias）"><a href="#撤消别名（unalias）" class="headerlink" title="撤消别名（unalias）"></a>撤消别名（unalias）</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unalias [-a] <span class="built_in">name</span> [<span class="built_in">name</span> ...]  <span class="comment"># -a 取消所有别名</span></span><br></pre></td></tr></table></figure>
+<h2 id="如果别名同原命令同名，如果要执行原命令，可使用"><a href="#如果别名同原命令同名，如果要执行原命令，可使用" class="headerlink" title="如果别名同原命令同名，如果要执行原命令，可使用"></a>如果别名同原命令同名，如果要执行原命令，可使用</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"\COMMAND"</span></span><br><span class="line"><span class="string">'COMMAND'</span></span><br><span class="line"><span class="regexp">/PATH/</span>COMMAND  <span class="comment"># 外部命令</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="hash缓存表"><a href="#hash缓存表" class="headerlink" title="hash缓存表"></a>hash缓存表</h1><p>系统初始hash表为空，当外部命令执行时，默认会从PATH路径下寻找该命令，找到后会将这条命令的路径记录到hash表中，当再次使用该命令时，shell解释器首先会查看hash表，存在将执行之，如果不存在，将会去PATH路径下寻找，利用hash缓存表可大大提高命令的调用速率。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">hash</span>  <span class="comment"># 显示hash缓存</span></span><br><span class="line"><span class="built_in">hash</span> –l  <span class="comment"># 显示hash缓存，可作为输入使用</span></span><br><span class="line"><span class="built_in">hash</span> –p path name  <span class="comment"># 将命令全路径path起别名为name</span></span><br><span class="line"><span class="built_in">hash</span> –t name  <span class="comment"># 打印缓存中name的路径</span></span><br><span class="line"><span class="built_in">hash</span> –d name  <span class="comment"># 清除name缓存</span></span><br><span class="line"><span class="built_in">hash</span> –r  <span class="comment"># 清除缓存</span></span><br></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="tab键"><a href="#tab键" class="headerlink" title="tab键"></a>tab键</h1><h2 id="命令补全"><a href="#命令补全" class="headerlink" title="命令补全"></a>命令补全</h2><p>bash根据PATH环境变量定义的路径，自左而右在每个路径搜寻以给定命令名命名的文件，第一次找到的命令，即为要执行的命令，用户给定的字符串只有一条惟一对应的命令，直接补全，否则，再次Tab会给出列表。</p>
+<h2 id="路径补全"><a href="#路径补全" class="headerlink" title="路径补全"></a>路径补全</h2><p>把用户给出的字符串当做路径开头，并在其指定上级目录下搜索以指定的字符串开头的文件名，如果惟一：则直接补全，否则：再次Tab给出列表。</p>
+<h2 id="双击Tab键"><a href="#双击Tab键" class="headerlink" title="双击Tab键"></a>双击Tab键</h2><figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">command2Tab  <span class="meta"># 所有子命令或文件补全</span></span><br><span class="line">string2Tab  <span class="meta"># 以string开头命令</span></span><br><span class="line">~<span class="number">2</span><span class="built_in">Tab</span>  <span class="meta"># 所有用户列表</span></span><br><span class="line">$<span class="number">2</span><span class="built_in">Tab</span>  <span class="meta"># 所有变量</span></span><br><span class="line">./<span class="number">2</span><span class="built_in">Tab</span>  <span class="meta"># 当前目录下子目录，包括隐藏目录</span></span><br><span class="line">*<span class="number">2</span><span class="built_in">Tab</span>  <span class="meta"># 当前目录下子目录，不包括隐藏目录</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="命令行历史"><a href="#命令行历史" class="headerlink" title="命令行历史"></a>命令行历史</h1><p>保存你输入的命令历史，可以用它来重复执行命令<br>登录shell时，会读取命令历史文件中记录下的命令 ~/.bash_history<br>登录进shell后新执行的命令只会记录在缓存中，这些命令会用户退出时”追加”至命令历史文件中</p>
+<h2 id="执行历史命令及相关参数"><a href="#执行历史命令及相关参数" class="headerlink" title="执行历史命令及相关参数"></a>执行历史命令及相关参数</h2><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">重复前一个命令使用上方向键，并回车执行</span><br><span class="line">按 !!　并回车执行</span><br><span class="line">输入 !-<span class="number">1</span>　并回车执行</span><br><span class="line">按 Ctrl+p　并回车执行</span><br><span class="line">!<span class="symbol">:</span><span class="number">0</span>  <span class="comment"># 执行前一条命令（去除参数）</span></span><br><span class="line">Ctrl + j  <span class="comment"># 执行当前命令</span></span><br><span class="line">!n  <span class="comment"># 执行history命令输出对应序号n的命令</span></span><br><span class="line">!-n  <span class="comment"># 执行history历史中倒数第n个命令</span></span><br><span class="line">!string  <span class="comment"># 重复前一个以“string”开头的命令</span></span><br><span class="line">!?string  <span class="comment"># 重复前一个包含string的命令</span></span><br><span class="line">!<span class="symbol">string:</span>p  <span class="comment"># 仅打印命令历史，而不执行</span></span><br><span class="line">!<span class="variable">$ </span> <span class="comment"># （上一条命令的最后一个参数）的内容</span></span><br><span class="line">!<span class="variable">$:</span>p  <span class="comment"># 打印输出上一条命令的最后一个参数</span></span><br><span class="line">!*  <span class="comment"># （上一条命令的所有参数）的内容</span></span><br><span class="line">!*<span class="symbol">:p</span>  <span class="comment"># 打印输出</span></span><br><span class="line">^string  <span class="comment"># 删除上一条命令中的第一个string</span></span><br><span class="line">^string1^string2  <span class="comment"># 将上一条命令中的第一个string1替换为string2</span></span><br><span class="line">!<span class="symbol">:gs/string1/string2</span>  <span class="comment"># 将上一条命令中所有的string1都替换为string2</span></span><br><span class="line">使用up（向上）和down（向下）键来上下浏览从前输入的命令</span><br></pre></td></tr></table></figure>
+<h2 id="要重新调用前一个命令中最后一个参数"><a href="#要重新调用前一个命令中最后一个参数" class="headerlink" title="要重新调用前一个命令中最后一个参数"></a>要重新调用前一个命令中最后一个参数</h2><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">!$</span><br><span class="line">Esc , .  <span class="comment"># （点击Esc键后松开，然后点击 . 键）</span></span><br><span class="line">Alt + .  <span class="comment"># （按住Alt键的同时点击 . 键，有的终端上键位冲突可能没用作用）</span></span><br></pre></td></tr></table></figure>
+<h2 id="调用历史参数"><a href="#调用历史参数" class="headerlink" title="调用历史参数"></a>调用历史参数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">command</span> !^  <span class="comment"># 利用上一个命令的第一个参数做cmd的参数</span></span><br><span class="line"><span class="built_in">command</span> !$  <span class="comment"># 利用上一个命令的最后一个参数做cmd的参数</span></span><br><span class="line"><span class="built_in">command</span> !*  <span class="comment"># 利用上一个命令的全部参数做cmd的参数</span></span><br><span class="line"><span class="built_in">command</span> !:n  <span class="comment"># 利用上一个命令的第n个参数做cmd的参数</span></span><br><span class="line"><span class="built_in">command</span> !n:^  <span class="comment"># 调用第n条命令的第一个参数</span></span><br><span class="line"><span class="built_in">command</span> !n:$  <span class="comment"># 调用第n条命令的最后一个参数</span></span><br><span class="line"><span class="built_in">command</span> !n:m  <span class="comment"># 调用第n条命令的第m个参数</span></span><br><span class="line"><span class="built_in">command</span> !n:*  <span class="comment"># 调用第n条命令的所有参数</span></span><br><span class="line"><span class="built_in">command</span> !string:^  <span class="comment"># 从命令历史中搜索以 string开头的命令，并获取它的第一个参数</span></span><br><span class="line"><span class="built_in">command</span> !string:$  <span class="comment"># 从命令历史中搜索以 string开头的命令，并获取它的最后一个参数</span></span><br><span class="line"><span class="built_in">command</span> !string:n  <span class="comment"># 从命令历史中搜索以 string开头的命令，并获取它的第n个参数</span></span><br><span class="line"><span class="built_in">command</span> !string:*  <span class="comment"># 从命令历史中搜索以 string开头的命令，并获取它的所有参数</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="bash的快捷键"><a href="#bash的快捷键" class="headerlink" title="bash的快捷键"></a>bash的快捷键</h1><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + l  <span class="comment"># 清屏，相当于clear命令</span></span><br><span class="line">Ctrl + o  <span class="comment"># 执行当前命令，并重新显示本命令</span></span><br><span class="line">Ctrl + s  <span class="comment"># 阻止屏幕输出，锁定(只是没有显示出来，但还是会在终端上，命令也会执行)</span></span><br><span class="line">Ctrl + q  <span class="comment"># 允许屏幕输出</span></span><br><span class="line">Ctrl + c  <span class="comment"># 终止命令</span></span><br><span class="line">Ctrl + z  <span class="comment"># 挂起命令</span></span><br><span class="line">Ctrl + <span class="keyword">a</span>  <span class="comment"># 光标移到命令行首，相当于Home </span></span><br><span class="line">Ctrl + e  <span class="comment"># 光标移到命令行尾，相当于End</span></span><br><span class="line">Ctrl + f  <span class="comment"># 光标向右移动一个字符</span></span><br><span class="line">Ctrl + b  <span class="comment"># 光标向左移动一个字符</span></span><br><span class="line">Ctrl + xx  <span class="comment"># 光标在命令行首和光标之间移动</span></span><br><span class="line">Ctrl + u  <span class="comment"># 从光标处删除至命令行首</span></span><br><span class="line">Ctrl + k  <span class="comment"># 从光标处删除至命令行尾</span></span><br><span class="line">Ctrl + w  <span class="comment"># 从光标处向左删除至单词首</span></span><br><span class="line">Alt + d  <span class="comment"># 从光标处向右删除至单词尾</span></span><br><span class="line">Ctrl + d  <span class="comment"># 删除光标处的一个字符</span></span><br><span class="line">Ctrl + h  <span class="comment"># 删除光标前的一个字符</span></span><br><span class="line">Ctrl + y  <span class="comment"># 将删除的字符粘贴至光标后</span></span><br><span class="line">Ctrl + t  <span class="comment"># 交换光标处和之前的字符位置</span></span><br><span class="line">注: Alt组合快捷键经常和其它软件冲突</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/bash/" rel="tag"># bash</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/11/linux/基础/文件管理/" rel="prev" title="文件管理">
+                文件管理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">93</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#用户登录"><span class="nav-number">1.</span> <span class="nav-text">用户登录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#root-用户"><span class="nav-number">1.1.</span> <span class="nav-text">root 用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#普通用户"><span class="nav-number">1.2.</span> <span class="nav-text">普通用户</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#终端"><span class="nav-number">2.</span> <span class="nav-text">终端</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#设备终端"><span class="nav-number">2.1.</span> <span class="nav-text">设备终端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#物理终端（-dev-console）"><span class="nav-number">2.2.</span> <span class="nav-text">物理终端（/dev/console）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟终端（tty-teletypewriters，-dev-tty-为-1-6-）"><span class="nav-number">2.3.</span> <span class="nav-text">虚拟终端（tty: teletypewriters，/dev/tty#  # 为[1-6]）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图形终端（-dev-tty7-）startx，xwindows"><span class="nav-number">2.4.</span> <span class="nav-text">图形终端（/dev/tty7 ）startx，xwindows</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#串行终端（-dev-tty-）"><span class="nav-number">2.5.</span> <span class="nav-text">串行终端（/dev/tty#）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#伪终端（pty-pseudo-tty，-dev-pts-）"><span class="nav-number">2.6.</span> <span class="nav-text">伪终端（pty: pseudo-tty，/dev/pts/#）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看当前的终端设备"><span class="nav-number">2.7.</span> <span class="nav-text">查看当前的终端设备</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#命令提示符"><span class="nav-number">3.</span> <span class="nav-text">命令提示符</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#命令提示符（prompt）"><span class="nav-number">3.1.</span> <span class="nav-text">命令提示符（prompt）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#显示提示符格式"><span class="nav-number">3.2.</span> <span class="nav-text">显示提示符格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改提示符格式"><span class="nav-number">3.3.</span> <span class="nav-text">修改提示符格式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#执行命令"><span class="nav-number">4.</span> <span class="nav-text">执行命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#在shell中可执行的命令有两类"><span class="nav-number">4.1.</span> <span class="nav-text">在shell中可执行的命令有两类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内部命令-由shell自带的，而且通过某命令形式提供"><span class="nav-number">4.1.1.</span> <span class="nav-text">内部命令: 由shell自带的，而且通过某命令形式提供</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#外部命令-在文件系统路径下有对应的可执行程序文件"><span class="nav-number">4.1.2.</span> <span class="nav-text">外部命令: 在文件系统路径下有对应的可执行程序文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例"><span class="nav-number">4.2.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#命令别名"><span class="nav-number">5.</span> <span class="nav-text">命令别名</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#显示当前shell进程所有可用的命令别名"><span class="nav-number">5.1.</span> <span class="nav-text">显示当前shell进程所有可用的命令别名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义别名NAME，其相当于执行命令VALUE"><span class="nav-number">5.2.</span> <span class="nav-text">定义别名NAME，其相当于执行命令VALUE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在命令行中定义的别名，仅对当前shell进程有效"><span class="nav-number">5.3.</span> <span class="nav-text">在命令行中定义的别名，仅对当前shell进程有效</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编辑配置给出的新配置不会立即生效"><span class="nav-number">5.4.</span> <span class="nav-text">编辑配置给出的新配置不会立即生效</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#撤消别名（unalias）"><span class="nav-number">5.5.</span> <span class="nav-text">撤消别名（unalias）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如果别名同原命令同名，如果要执行原命令，可使用"><span class="nav-number">5.6.</span> <span class="nav-text">如果别名同原命令同名，如果要执行原命令，可使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hash缓存表"><span class="nav-number">6.</span> <span class="nav-text">hash缓存表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tab键"><span class="nav-number">7.</span> <span class="nav-text">tab键</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#命令补全"><span class="nav-number">7.1.</span> <span class="nav-text">命令补全</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#路径补全"><span class="nav-number">7.2.</span> <span class="nav-text">路径补全</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#双击Tab键"><span class="nav-number">7.3.</span> <span class="nav-text">双击Tab键</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#命令行历史"><span class="nav-number">8.</span> <span class="nav-text">命令行历史</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#执行历史命令及相关参数"><span class="nav-number">8.1.</span> <span class="nav-text">执行历史命令及相关参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#要重新调用前一个命令中最后一个参数"><span class="nav-number">8.2.</span> <span class="nav-text">要重新调用前一个命令中最后一个参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调用历史参数"><span class="nav-number">8.3.</span> <span class="nav-text">调用历史参数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bash的快捷键"><span class="nav-number">9.</span> <span class="nav-text">bash的快捷键</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,838 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic|Iosevka:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="基本命令,进程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="进程12345678910111213141516171819202122232425262728293031323334内核的功用:   进程管理、文件系统、网络功能、内存管理、驱动程序、安全功能等Process: 运行中的程序的一个副本，是被载入内存的一个指令集合   进程ID（Process ID，PID）号码被用来标记各个进程   UID、GID、和SELinux语境决定对文件系统的存取和">
+<meta name="keywords" content="基本命令,进程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程">
+<meta property="og:url" content="http://yoursite.com/2018/03/21/linux/基础/进程和计划任务 -1/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="进程12345678910111213141516171819202122232425262728293031323334内核的功用:   进程管理、文件系统、网络功能、内存管理、驱动程序、安全功能等Process: 运行中的程序的一个副本，是被载入内存的一个指令集合   进程ID（Process ID，PID）号码被用来标记各个进程   UID、GID、和SELinux语境决定对文件系统的存取和">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-25T02:47:29.309Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="进程">
+<meta name="twitter:description" content="进程12345678910111213141516171819202122232425262728293031323334内核的功用:   进程管理、文件系统、网络功能、内存管理、驱动程序、安全功能等Process: 运行中的程序的一个副本，是被载入内存的一个指令集合   进程ID（Process ID，PID）号码被用来标记各个进程   UID、GID、和SELinux语境决定对文件系统的存取和">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/21/linux/基础/进程和计划任务 -1/"/>
+
+
+
+
+
+  <title> 进程 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home Page
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux1">
+          <a href="/categories/LinuxBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux2">
+          <a href="/categories/LinuxServices" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Services
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python1">
+          <a href="/categories/PythonBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python2">
+          <a href="/categories/PythonCase" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Case
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question1">
+          <a href="/categories/CommonQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Common Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question2">
+          <a href="/categories/InterviewQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Interview Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/21/linux/基础/进程和计划任务 -1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                进程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-21T00:00:00+08:00">
+                2018-03-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LinuxBasics/" itemprop="url" rel="index">
+                    <span itemprop="name">LinuxBasics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">内核的功用:</span><br><span class="line">   进程管理、文件系统、网络功能、内存管理、驱动程序、安全功能等</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Process</span>: 运行中的程序的一个副本，是被载入内存的一个指令集合</span><br><span class="line">   进程<span class="selector-tag">ID</span>（<span class="selector-tag">Process</span> <span class="selector-tag">ID</span>，<span class="selector-tag">PID</span>）号码被用来标记各个进程</span><br><span class="line">   <span class="selector-tag">UID</span>、<span class="selector-tag">GID</span>、和<span class="selector-tag">SELinux</span>语境决定对文件系统的存取和访问权限，通常从执行进程的用户来继承，存在生命周期</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">task</span> <span class="selector-tag">struct</span>:</span><br><span class="line">   <span class="selector-tag">Linux</span>内核存储进程信息的数据结构格式</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">task</span> <span class="selector-tag">list</span>:</span><br><span class="line">   多个任务的的<span class="selector-tag">task</span> <span class="selector-tag">struct</span>组成的链表</span><br><span class="line"></span><br><span class="line">进程创建:</span><br><span class="line">   <span class="selector-tag">init</span>: 第一个进程  <span class="selector-tag">centos6</span> <span class="selector-tag">--</span>&gt; <span class="selector-tag">centos7</span>上使用的是 <span class="selector-tag">systemd</span></span><br><span class="line">      父子关系</span><br><span class="line">   进程: 都由其父进程创建</span><br><span class="line">      <span class="selector-tag">CoW</span> <span class="selector-tag">fork</span>()，<span class="selector-tag">clone</span>()</span><br><span class="line"></span><br><span class="line">进程优先级:</span><br><span class="line">   系统优先级: 数字越小，优先级越高</span><br><span class="line">      <span class="selector-tag">0-139</span>（<span class="selector-tag">CentOS4</span>，<span class="selector-tag">5</span>）</span><br><span class="line">         各有<span class="selector-tag">140</span>个运行队列和过期队列</span><br><span class="line">      <span class="selector-tag">0-98</span>，<span class="selector-tag">99</span>（<span class="selector-tag">CentOS6</span>）</span><br><span class="line"></span><br><span class="line">   实时优先级:</span><br><span class="line">      <span class="selector-tag">99-0</span>: 值最大优先级最高</span><br><span class="line"></span><br><span class="line">   <span class="selector-tag">nice</span>值:</span><br><span class="line">      <span class="selector-tag">-20</span>到<span class="selector-tag">19</span>:</span><br><span class="line">         对应系统优先级<span class="selector-tag">100-139</span>或<span class="selector-tag">99</span></span><br><span class="line"></span><br><span class="line">   <span class="selector-tag">Big</span> <span class="selector-tag">O</span>: 时间复杂度</span><br><span class="line">      用时和规模的关系 <span class="selector-tag">O</span>(<span class="number">1</span>)，<span class="selector-tag">O</span>(logn)，<span class="selector-tag">O</span>(n)线性，<span class="selector-tag">O</span>(n^<span class="number">2</span>)抛物线，<span class="selector-tag">O</span>(<span class="number">2</span>^n)</span><br></pre></td></tr></table></figure>
+<h2 id="进程内存"><a href="#进程内存" class="headerlink" title="进程内存"></a>进程内存</h2><figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">进程内存</span><br><span class="line">   Page Frame: 页框，用存储页面数据，存储Page <span class="number">4</span>k</span><br><span class="line">   LRU: Least Recently Used 近期最少使用算法，释放内存</span><br><span class="line"></span><br><span class="line">物理地址空间和线性地址空间</span><br><span class="line">   MMU: Memory Management <span class="keyword">Unit</span> 负责转换线性和物理地址</span><br><span class="line">   TLB: Translation Lookaside Buffer 翻译后备缓冲器，用于保存虚拟地址和物理地址映射关系的缓存</span><br><span class="line"></span><br><span class="line">IPC: Inter Process Communication</span><br><span class="line">   同一主机:</span><br><span class="line">      signal: 信号</span><br><span class="line">      shm: shared memory</span><br><span class="line">      semaphore: 信号量，一种计数器</span><br><span class="line">   不同主机:</span><br><span class="line">      rpc: remote <span class="function"><span class="keyword">procedure</span> <span class="title">call</span></span></span><br><span class="line"><span class="function">      <span class="title">socket</span>:</span> IP和端口号</span><br></pre></td></tr></table></figure>
+<h2 id="进程状态"><a href="#进程状态" class="headerlink" title="进程状态"></a>进程状态</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">进程状态</span><br><span class="line">   Linux内核: 抢占式多任务</span><br><span class="line">      进程类型:</span><br><span class="line">         守护进程: daemon，在系统引导过程中启动的进程,和终端无关进程（在终端执行程序不影响，开机自动启动的叫守护进程）</span><br><span class="line">         前台进程: 跟终端相关，通过终端启动的进程（终端被占用，无法进行其它操作）</span><br><span class="line">         <span class="comment"># 两者可相互转化</span></span><br><span class="line">      进程状态:</span><br><span class="line">         运行态: <span class="built_in">running</span></span><br><span class="line">         就绪态: ready</span><br><span class="line">         睡眠态:</span><br><span class="line">            可中断: interruptable</span><br><span class="line">            不可中断: uninterruptable</span><br><span class="line">         停止态: stopped，暂停于内存，但不会被调度，除非手动启动</span><br><span class="line">         僵死态: zombie，结束进程，父进程结束前，子进程不关闭</span><br></pre></td></tr></table></figure>
+<h2 id="进程分类"><a href="#进程分类" class="headerlink" title="进程分类"></a>进程分类</h2><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">进程的分类</span><br><span class="line">   CPU-Bound: CPU密集型，非交互</span><br><span class="line">   IO-Bound: IO密集型，交互</span><br><span class="line"></span><br><span class="line">Linux系统状态的查看及管理工具</span><br><span class="line">   pstree，ps，pidof，pgrep，top，htop，glance，pmap，vmstat，dstat，<span class="built_in">kill</span>，pkill，job，bg，fg，nohup</span><br><span class="line"></span><br><span class="line">pstree命令:</span><br><span class="line">   pstree: display <span class="keyword">a</span> tree <span class="keyword">of</span> processes</span><br><span class="line"></span><br><span class="line">ps: <span class="built_in">process</span> state</span><br><span class="line">   ps: report <span class="keyword">a</span> snapshot <span class="keyword">of</span> <span class="keyword">the</span> current processes</span><br><span class="line">   Linux系统各进程的相关信息均保存在/proc/PID目录下的各文件中（每PID代表每一个进程）</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">ps</span> <span class="string">[OPTION]</span> <span class="string">...</span>  <span class="comment"># 查看进程进程</span></span><br><span class="line"><span class="string">支持三种选项:</span></span><br><span class="line">   <span class="string">UNIX选项</span> <span class="string">如:</span> <span class="bullet">-A</span> <span class="bullet">-e</span></span><br><span class="line">   <span class="string">BSD选项</span> <span class="string">如:</span> <span class="string">a</span></span><br><span class="line">   <span class="string">GNU选项</span> <span class="string">如:</span> <span class="bullet">--help</span></span><br><span class="line"></span><br><span class="line"><span class="string">选项:</span> <span class="string">默认显示当前终端中的进程</span></span><br><span class="line">   <span class="string">a</span> <span class="string">选项包括所有终端中的进程</span></span><br><span class="line">   <span class="string">x</span> <span class="string">选项包括不链接终端的进程</span></span><br><span class="line">   <span class="string">u</span> <span class="string">选项显示进程所有者的信息</span></span><br><span class="line">   <span class="string">f</span> <span class="string">选项显示进程的父进程</span></span><br><span class="line">   <span class="string">k</span> <span class="string">| --sort 属性  对属性排序</span></span><br><span class="line"><span class="string">   o 属性... 选项显示定制的信息</span></span><br><span class="line"><span class="string">      pid、comm、%cpu、%mem、state、tty、euser、ruser</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">进程管理工具</span></span><br><span class="line"><span class="string"></span><span class="attr">   VSZ:</span> <span class="string">Virtual</span> <span class="string">memory</span> <span class="string">SiZe，虚拟内存集，线性内存，指操作系统承诺给你分配多少内存</span></span><br><span class="line"><span class="attr">   RSS:</span> <span class="string">ReSident</span> <span class="string">Size，常驻内存集，指真正物理内存分配出来的大小</span></span><br><span class="line"><span class="attr">   STAT:</span> <span class="string">进程状态</span></span><br><span class="line"><span class="attr">      R:</span> <span class="string">running</span></span><br><span class="line"><span class="attr">      S:</span> <span class="string">interruptable</span> <span class="string">sleeping</span> <span class="string">可中断的休眠</span></span><br><span class="line"><span class="attr">      D:</span> <span class="string">uninterruptable</span> <span class="string">sleeping</span></span><br><span class="line"><span class="attr">      T:</span> <span class="string">stopped</span></span><br><span class="line"><span class="attr">      Z:</span> <span class="string">zombie</span></span><br><span class="line">      <span class="string">+:</span> <span class="string">前台进程</span></span><br><span class="line"><span class="attr">      l:</span> <span class="string">多线程进程</span></span><br><span class="line"><span class="attr">      L:</span> <span class="string">内存分页并带锁</span></span><br><span class="line"><span class="attr">      N:</span> <span class="string">低优先级进程</span></span><br><span class="line">      <span class="string">&lt;:</span> <span class="string">高优先级进程</span></span><br><span class="line"><span class="attr">      s:</span> <span class="string">session</span> <span class="string">leader，会话（子进程）发起者</span></span><br><span class="line"></span><br><span class="line"><span class="string">常用组合:</span> <span class="bullet">-ef</span></span><br><span class="line"><span class="attr">   -e:</span> <span class="string">显示所有进程</span></span><br><span class="line"><span class="attr">   -f:</span> <span class="string">显示完整格式程序信息</span></span><br><span class="line"></span><br><span class="line"><span class="string">常用组合:</span> <span class="bullet">-eFH</span></span><br><span class="line"><span class="attr">   -F:</span> <span class="string">显示更完整格式的进程信息</span></span><br><span class="line"><span class="attr">   -H:</span> <span class="string">以进程层级格式显示进程相关信息</span></span><br><span class="line"></span><br><span class="line"><span class="string">常用组合:</span> <span class="string">自定义</span></span><br><span class="line"><span class="bullet">   -</span><span class="string">eo</span> <span class="string">pid,tid,class,rtprio,ni,pri,psr,pcpu,stat,comm</span></span><br><span class="line">   <span class="string">axo</span> <span class="string">stat,euid,ruid,tty,tpgid,sess,pgrp,ppid,pid,pcpu,comm</span></span><br><span class="line">   <span class="comment"># euid 正在执行的用户（SUID实别不出来）</span></span><br><span class="line">   <span class="comment"># ruid 真正执行的用户（SUID实别出来）</span></span><br><span class="line"></span><br><span class="line"><span class="string">进程优先级</span></span><br><span class="line"><span class="attr">   ni:</span> <span class="string">nice值</span></span><br><span class="line"><span class="attr">   pri:</span> <span class="string">priority</span> <span class="string">优先级</span></span><br><span class="line"><span class="attr">   psr:</span> <span class="string">processor</span> <span class="string">CPU编号</span></span><br><span class="line"><span class="attr">   rtprio:</span> <span class="string">实时优先级</span></span><br><span class="line">   <span class="string">示例:</span> <span class="string">ps</span> <span class="string">axo</span> <span class="string">pid,cmd,psr,ni,pri,rtprio</span></span><br><span class="line">   <span class="comment"># pri nice优先级 默认19</span></span><br><span class="line">   <span class="comment"># psi 系统优先级 默认0</span></span><br><span class="line"></span><br><span class="line"><span class="string">进程优先级调整:</span> </span><br><span class="line">   <span class="string">静态优先级:</span> <span class="number">100</span><span class="bullet">-139</span></span><br><span class="line">   <span class="string">进程默认启动时的nice值为0，优先级为120</span></span><br><span class="line">   <span class="string">只有根用户才能降低nice值（提高优先性）</span></span><br><span class="line"></span><br><span class="line">   <span class="string">nice命令:</span> <span class="string">nice</span> <span class="string">[OPTION]</span> <span class="string">[COMMAND</span> <span class="string">[ARG]...]</span></span><br><span class="line">   <span class="string">renice命令:</span> <span class="string">renice</span> <span class="string">[-n]</span> <span class="string">priority</span> <span class="string">pid...</span></span><br><span class="line">      <span class="string">例:</span> <span class="string">renice</span> <span class="bullet">-n</span> <span class="number">10</span> <span class="string">pid</span></span><br><span class="line">      <span class="comment"># root用户可以随意调整大小，基本用户调整，只能调大</span></span><br><span class="line">   <span class="string">查看:</span> <span class="string">ps</span> <span class="string">axo</span> <span class="string">pid,comm,ni</span></span><br><span class="line">   <span class="string">例:</span> <span class="string">nice</span> <span class="bullet">-n</span> <span class="number">5</span>  <span class="string">vim</span> <span class="string">xdg</span>  <span class="comment"># 可以在创建文件时，直接给定优先级</span></span><br><span class="line"></span><br><span class="line"><span class="string">搜索进程</span></span><br><span class="line">   <span class="string">最灵活:</span> <span class="string">ps</span> <span class="string">选项</span> <span class="string">| 其它命令</span></span><br><span class="line"><span class="string">   按预定义的模式: pgrep</span></span><br><span class="line"><span class="string">      pgrep [options] pattern</span></span><br><span class="line"><span class="string">         -u uid: effective user 生效者</span></span><br><span class="line"><span class="string">         -U uid: real user 真正发起运行命令者</span></span><br><span class="line"><span class="string">         -t terminal: 与指定终端相关的进程</span></span><br><span class="line"><span class="string"></span><span class="attr">         -l:</span> <span class="string">显示进程名</span></span><br><span class="line"><span class="attr">         -a:</span> <span class="string">显示完整格式的进程名</span></span><br><span class="line"><span class="bullet">         -</span><span class="string">P</span> <span class="attr">pid:</span> <span class="string">显示指定进程的子进程</span></span><br><span class="line">      <span class="string">示例:</span> <span class="string">pgrep</span> <span class="bullet">-lu</span> <span class="string">wang</span>  <span class="comment"># u 后面要直接跟用户（顺序不能换）</span></span><br><span class="line"></span><br><span class="line">   <span class="string">按确切的程序名称:</span> <span class="string">/sbin/pidof</span></span><br><span class="line">      <span class="string">pidof</span> <span class="string">bash</span>  <span class="comment"># 查看bash的PID</span></span><br><span class="line"></span><br><span class="line">   <span class="string">例:</span> <span class="string">ps</span> <span class="bullet">-C</span> <span class="string">f1.sh</span> <span class="bullet">-C</span> <span class="string">f2.sh</span>  <span class="string">o</span>  <span class="string">pid,cmd,%cpu,%mem</span></span><br><span class="line">   <span class="comment"># -C 指定文件名 --&gt; 显示某个或多个文件的使用情况或 ps -C bash  o  ...（显示的参数）显示bash的使用情况（指定参数显示出来）</span></span><br><span class="line"></span><br><span class="line">   <span class="string">注:</span> <span class="string">在脚本当中，shebang机制</span> <span class="bullet">--&gt;</span> <span class="comment">#!/bin/bash</span></span><br><span class="line">   <span class="comment"># 要加入，不加的话，在ps查看进程的时候，查看不到f1.sh这个名字，只能看到bash</span></span><br><span class="line">   <span class="string">示例:</span></span><br><span class="line">      <span class="string">/bin/bash</span> <span class="string">./f1.sh</span>  <span class="comment"># 添加shebang机制</span></span><br><span class="line"><span class="bullet">      -</span><span class="string">bash</span>  <span class="comment"># 没有添加shebang机制</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="kill"><a href="#kill" class="headerlink" title="kill"></a>kill</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">kill命令:</span> </span><br><span class="line">   <span class="string">向进程发送控制信号，以实现对进程管理,每个信号对应一个数字，信号名称以SIG开头（可省略），不区分大小写</span></span><br><span class="line"></span><br><span class="line">   <span class="string">显示当前系统可用信号:</span> <span class="string">kill</span> <span class="string">–l，trap</span> <span class="bullet">-l</span></span><br><span class="line">   <span class="string">常用信号：man</span> <span class="number">7</span> <span class="string">signal</span></span><br><span class="line">      <span class="number">1</span><span class="string">)</span> <span class="attr">SIGHUP:</span> <span class="string">无须关闭进程而让其重读配置文件</span></span><br><span class="line">      <span class="number">2</span><span class="string">)</span> <span class="attr">SIGINT:</span> <span class="string">中止正在运行的进程，相当于Ctrl+c</span></span><br><span class="line">      <span class="number">3</span><span class="string">)</span> <span class="attr">SIGQUIT:</span> <span class="string">相当于ctrl+\</span> <span class="string">相当于quit</span></span><br><span class="line">      <span class="number">9</span><span class="string">)</span> <span class="attr">SIGKILL:</span> <span class="string">强制杀死正在运行的进程</span></span><br><span class="line">      <span class="number">15</span><span class="string">)</span> <span class="attr">SIGTERM:</span> <span class="string">终止正在运行的进程默认的信号（有些进程终止不了）</span></span><br><span class="line">      <span class="number">18</span><span class="string">)</span> <span class="attr">SIGCONT:</span> <span class="string">继续运行</span></span><br><span class="line">      <span class="number">19</span><span class="string">)</span> <span class="attr">SIGSTOP:</span> <span class="string">后台休眠</span></span><br><span class="line">   <span class="string">注:</span> <span class="string">kill</span> <span class="bullet">-0</span> <span class="string">PID</span>  <span class="comment"># 不发任何信号，判断当前进程是否正常运行</span></span><br><span class="line">      <span class="string">正常运行</span> <span class="string">echo</span> <span class="string">$?</span>  <span class="bullet">--&gt;</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">   <span class="string">指定信号的方法:</span></span><br><span class="line">      <span class="string">(1)</span> <span class="string">信号的数字标识:</span> <span class="number">1</span><span class="string">，2，9</span></span><br><span class="line">      <span class="string">(2)</span> <span class="string">信号完整名称:</span> <span class="string">SIGHUP</span></span><br><span class="line">      <span class="string">(3)</span> <span class="string">信号的简写名称:</span> <span class="string">HUP</span></span><br><span class="line">      <span class="comment"># 在传输信息的时候，上面的三种方式都可以表示出来</span></span><br><span class="line"></span><br><span class="line">   <span class="string">按PID:</span></span><br><span class="line">      <span class="string">kill</span> <span class="string">[-SIGNAL]</span>  <span class="string">pid</span> <span class="string">...</span></span><br><span class="line">      <span class="string">kill</span> <span class="string">–n</span> <span class="string">SIGNAL</span> <span class="string">pid</span></span><br><span class="line">      <span class="string">kill</span> <span class="string">–s</span> <span class="string">SIGNAL</span> <span class="string">pid</span></span><br><span class="line">      <span class="comment"># 其中-s 9 制定了传递给进程的信号是９，即强制、尽快终止进程</span></span><br><span class="line"></span><br><span class="line">   <span class="string">按名称:</span></span><br><span class="line">   <span class="string">killall</span> <span class="string">[-SIGNAL]</span>  <span class="string">commond</span> <span class="string">...</span></span><br><span class="line">      <span class="string">例:</span> <span class="string">killall</span> <span class="bullet">-0</span> <span class="string">httpd</span>  <span class="string">&amp;&gt;</span> <span class="string">/dev/nul</span> <span class="string">||</span> <span class="string">service</span> <span class="string">httpd</span> <span class="string">restart</span></span><br><span class="line">      <span class="comment"># -0 信号检查该进程是否启动</span></span><br><span class="line"></span><br><span class="line">      <span class="string">killall命令用于杀死指定名字的进程（kill</span> <span class="string">processes</span> <span class="string">by</span> <span class="string">name）我们可以使用kill命令杀死指定进程PID的进程，</span></span><br><span class="line">        <span class="string">如果要找到我们需要杀死的进程，我们还需要在之前使用ps等命令再配合grep来查找进程，而killall把这两个过程合二为一</span></span><br><span class="line">   <span class="string">killall</span>  <span class="string">信号</span>  <span class="string">commond</span></span><br><span class="line"></span><br><span class="line">   <span class="string">按模式:</span></span><br><span class="line">      <span class="string">pkill</span> <span class="string">[options]</span> <span class="string">pattern</span> </span><br><span class="line"><span class="bullet">         -</span><span class="string">SIGNAL</span> <span class="bullet">-u</span> <span class="attr">uid:</span> <span class="string">effective</span> <span class="string">user，生效者</span> </span><br><span class="line"><span class="bullet">         -</span><span class="string">U</span> <span class="attr">uid:</span> <span class="string">real</span> <span class="string">user，真正发起运行命令者</span> </span><br><span class="line"><span class="bullet">         -</span><span class="string">t</span> <span class="attr">terminal:</span> <span class="string">与指定终端相关的进程</span> </span><br><span class="line"><span class="attr">         -l:</span> <span class="string">显示进程名（pgrep可用）</span> </span><br><span class="line"><span class="attr">         -a:</span> <span class="string">显示完整格式的进程名（pgrep可用）</span> </span><br><span class="line"><span class="bullet">         -</span><span class="string">P</span> <span class="attr">pid:</span> <span class="string">显示指定进程的子进程</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="uptime"><a href="#uptime" class="headerlink" title="uptime"></a>uptime</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">uptime</span><br><span class="line">   显示当前时间，系统已启动的时间、当前上线人数，系统平均负载（1、5、10分钟的平均负载，一般不会超过1）</span><br><span class="line"></span><br><span class="line">系统平均负载:</span><br><span class="line">   指在特定时间间隔内运行队列中的平均进程数</span><br><span class="line"></span><br><span class="line">通常每个CPU内核的当前活动进程数不大于3，那么系统的性能良好。如果每个CPU内核的任务数大于5，那么此主机的性能有严重问题</span><br><span class="line"><span class="meta">#</span><span class="bash"> 3是指当前系统用户有3个任务在排队</span></span><br><span class="line"></span><br><span class="line">如果linux主机是1个双核CPU，当Load Average 为6的时候说明机器已经被充分使用</span><br><span class="line"><span class="meta">#</span><span class="bash"> 忙不指定到底谁忙（网络，cpu，等等）不能确切的指定</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="top"><a href="#top" class="headerlink" title="top"></a>top</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">top: 有许多内置命令</span><br><span class="line">   排序:（进入命令后）</span><br><span class="line">      P: 以占据的CPU百分比，%CPU</span><br><span class="line">      M: 占据内存百分比，%MEM</span><br><span class="line">      T: 累积占据CPU时长，TIME+</span><br><span class="line">   首部信息显示:（进入命令后）显示或隐藏</span><br><span class="line">      uptime信息: l命令</span><br><span class="line">      tasks及cpu信息: t命令</span><br><span class="line">      cpu分别显示: 1（数字）显示总的，还是单个显示（多核）</span><br><span class="line">      memory信息: m命令</span><br><span class="line">   退出命令: q（下面都在命令当中修改刷新间隔）</span><br><span class="line">   修改刷新时间间隔: s  输入s  再指定PID</span><br><span class="line">   终止指定进程: k</span><br><span class="line">   保存文件: W</span><br><span class="line"></span><br><span class="line">栏位信息简介（CPU）</span><br><span class="line">   us: 用户空间</span><br><span class="line">   sy: 内核空间</span><br><span class="line">   ni: 调整nice时间</span><br><span class="line">   id: 空闲</span><br><span class="line">   wa: 等待IO时间</span><br><span class="line">   hi: 硬中断</span><br><span class="line">   si: 软中断（模式切换）</span><br><span class="line">   st: 虚拟机偷走的时间</span><br><span class="line"></span><br><span class="line">在命令输入之前就指定相关参数</span><br><span class="line">   选项:</span><br><span class="line">      -d #: 指定刷新时间间隔，默认为3秒</span><br><span class="line">      -b: 全部显示所有进程</span><br><span class="line">      -n #: 刷新多少次后退出</span><br><span class="line"></span><br><span class="line">PID — 进程id</span><br><span class="line">USER — 进程所有者</span><br><span class="line">PR — 进程优先级</span><br><span class="line">NI — nice值。负值表示高优先级，正值表示低优先级</span><br><span class="line">VIRT — 进程使用的虚拟内存总量，单位kb。<span class="attribute">VIRT</span>=SWAP+RES</span><br><span class="line">RES — 进程使用的、未被换出的物理内存大小，单位kb。<span class="attribute">RES</span>=CODE+DATA</span><br><span class="line">SHR — 共享内存大小，单位kb</span><br><span class="line">S — 进程状态。<span class="attribute">D</span>=不可中断的睡眠状态 <span class="attribute">R</span>=运行 <span class="attribute">S</span>=睡眠 <span class="attribute">T</span>=跟踪/停止 <span class="attribute">Z</span>=僵尸进程</span><br><span class="line">%CPU — 上次更新到现在的CPU时间占用百分比</span><br><span class="line">%MEM — 进程使用的物理内存百分比</span><br><span class="line">TIME+ — 进程使用的CPU时间总计，单位1/100秒</span><br><span class="line">COMMAND — 进程名称（命令名/命令行）</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="vmstat"><a href="#vmstat" class="headerlink" title="vmstat"></a>vmstat</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">vmstat</span> <span class="string">[options]</span> <span class="string">[delay</span> <span class="string">[count]]</span></span><br><span class="line"><span class="string">vmstat</span> <span class="number">2</span> <span class="number">5</span>  <span class="comment"># 显示内存信息，刷新间隔2s，刷新5次结束</span></span><br><span class="line"></span><br><span class="line"><span class="string">选项:</span></span><br><span class="line"><span class="attr">   -a:</span> <span class="string">显示活动内页</span></span><br><span class="line"><span class="attr">   -f:</span> <span class="string">显示启动后创建的进程总数</span></span><br><span class="line"><span class="attr">   -m:</span> <span class="string">显示slab信息</span></span><br><span class="line"><span class="attr">   -n:</span> <span class="string">头信息仅显示一次</span></span><br><span class="line"><span class="attr">   -s:</span> <span class="string">以表格方式显示事件计数器和内存状态</span></span><br><span class="line"><span class="attr">   -d:</span> <span class="string">报告磁盘状态</span></span><br><span class="line"></span><br><span class="line"><span class="attr">procs:</span></span><br><span class="line"><span class="attr">   r:</span> <span class="string">可运行（正运行或等待运行）进程的个数，和核心数有关</span></span><br><span class="line"><span class="attr">   b:</span> <span class="string">处于不可中断睡眠态的进程个数（被阻塞的队列的长度）</span></span><br><span class="line"></span><br><span class="line"><span class="attr">memory:</span></span><br><span class="line"><span class="attr">   swpd:</span> <span class="string">交换内存的使用总量</span></span><br><span class="line"><span class="attr">   free:</span> <span class="string">空闲物理内存总量</span></span><br><span class="line"><span class="attr">   buffer:</span> <span class="string">用于buffer的内存总量</span></span><br><span class="line"><span class="attr">   cache:</span> <span class="string">用于cache的内存总量</span></span><br><span class="line"></span><br><span class="line"><span class="attr">swap:</span></span><br><span class="line"><span class="attr">   si:</span> <span class="string">从磁盘交换进内存的数据速率(kb/s)</span></span><br><span class="line"><span class="attr">   so:</span> <span class="string">从内存交换至磁盘的数据速率(kb/s)</span></span><br><span class="line">   <span class="comment"># 相对于内存来说</span></span><br><span class="line"><span class="attr">   io:</span></span><br><span class="line"><span class="attr">      bi:</span> <span class="string">从块设备读入数据到系统的速率(kb/s)</span></span><br><span class="line"><span class="attr">      bo:</span> <span class="string">保存数据至块设备的速率</span></span><br><span class="line">      <span class="comment"># 相对于内存来说</span></span><br><span class="line"></span><br><span class="line"><span class="attr">system:</span></span><br><span class="line"><span class="attr">   in:</span> <span class="string">inter</span> <span class="string">rupts</span> <span class="string">中断速率，包括时钟</span></span><br><span class="line"><span class="attr">   cs:</span> <span class="string">context</span> <span class="string">switch</span> <span class="string">进程切换速率</span></span><br><span class="line"></span><br><span class="line"><span class="attr">cpu:</span></span><br><span class="line"><span class="attr">   us:</span> <span class="string">Time</span> <span class="string">spent</span> <span class="string">running</span> <span class="string">non-kernel</span> <span class="string">code</span></span><br><span class="line"><span class="attr">   sy:</span> <span class="string">Time</span> <span class="string">spent</span> <span class="string">running</span> <span class="string">kernel</span> <span class="string">code</span></span><br><span class="line"><span class="attr">   id:</span> <span class="string">Time</span> <span class="string">spent</span> <span class="string">idle.</span> <span class="string">Linux</span> <span class="number">2.5</span><span class="number">.41</span><span class="string">前，包括IO-wait</span> <span class="string">time.</span></span><br><span class="line"><span class="attr">   wa:</span> <span class="string">Time</span> <span class="string">spent</span> <span class="string">waiting</span> <span class="string">for</span> <span class="string">IO.</span>  <span class="number">2.5</span><span class="number">.41</span><span class="string">前，包括in</span> <span class="string">idle.</span></span><br><span class="line"><span class="attr">   st:</span> <span class="string">Time</span> <span class="string">stolen</span> <span class="string">from</span> <span class="string">a</span> <span class="string">virtual</span> <span class="string">machine.</span>  <span class="number">2.6</span><span class="number">.11</span><span class="string">前，unknown.</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="其它相关工具（iostat、pmap、glances、dstat）"><a href="#其它相关工具（iostat、pmap、glances、dstat）" class="headerlink" title="其它相关工具（iostat、pmap、glances、dstat）"></a>其它相关工具（iostat、pmap、glances、dstat）</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">iostat: 统计CPU和设备IO信息</span><br><span class="line">   示例: iostat 1 10  # 刷新间隔1s，刷新10次结束</span><br><span class="line">字段:</span><br><span class="line">   Device:    tps   Blk_read/s   Blk_wrtn/s   Blk_read   Blk_wrtn</span><br><span class="line">      每秒钟的事务   读速度        写速度       总量读    总量写</span><br><span class="line"></span><br><span class="line">pmap命令: 进程对应的内存映射（显示进程使用哪块内存空间）</span><br><span class="line">   pmap [options] pid [...]</span><br><span class="line">      -<span class="ruby"><span class="symbol">x:</span> 显示详细格式的信息</span></span><br><span class="line"><span class="ruby">示例<span class="symbol">:</span></span></span><br><span class="line"><span class="ruby">   pmap -x <span class="number">1</span>  <span class="comment"># 1 --&gt; PID</span></span></span><br><span class="line"><span class="ruby">   或pmap  <span class="number">1</span></span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">另外一种实现<span class="symbol">:</span></span></span><br><span class="line"><span class="ruby">   cat /proc/PID/maps</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">系统监控工具</span></span><br><span class="line"><span class="ruby">   glances命令: EPEL源  <span class="comment"># （两台机器上都需要安装）</span></span></span><br><span class="line"><span class="ruby">      常用选项<span class="symbol">:</span></span></span><br><span class="line"><span class="ruby">         -<span class="symbol">b:</span> 以Byte为单位显示网卡数据速率</span></span><br><span class="line"><span class="ruby">         -<span class="symbol">d:</span> 关闭磁盘I/O模块</span></span><br><span class="line"><span class="ruby">         -f /path/to/<span class="symbol">somefile:</span> 设定输入文件位置</span></span><br><span class="line"><span class="ruby">         -o &#123;HTML<span class="params">|CSV&#125;: 输出格式</span></span></span><br><span class="line"><span class="ruby">         -<span class="symbol">m:</span> 禁用mount模块</span></span><br><span class="line"><span class="ruby">         -<span class="symbol">n:</span> 禁用网络模块</span></span><br><span class="line"><span class="ruby">         -t <span class="comment">#: 延迟时间间隔</span></span></span><br><span class="line"><span class="ruby">         -<span class="number">1</span>: 每个CPU的相关数据单独显示</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">   C/S模式下运行glances命令</span></span><br><span class="line"><span class="ruby">      服务器模式<span class="symbol">:</span></span></span><br><span class="line"><span class="ruby">         glances -s -B IPADDR</span></span><br><span class="line"><span class="ruby">         <span class="symbol">IPADDR:</span> 指明监听的本机哪个地址</span></span><br><span class="line"><span class="ruby">      客户端模式<span class="symbol">:</span></span></span><br><span class="line"><span class="ruby">         glances -c IPADDR</span></span><br><span class="line"><span class="ruby">         <span class="symbol">IPADDR:</span> 要连入的服务器端地址</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">系统监控工具</span></span><br><span class="line"><span class="ruby">   dstat命令: 系统资源统计，代替vmstat,iostat</span></span><br><span class="line"><span class="ruby">      dstat [-afv] [options..] [delay [count]]</span></span><br><span class="line"><span class="ruby">         -<span class="symbol">c:</span> 显示cpu相关信息</span></span><br><span class="line"><span class="ruby">            -C <span class="comment">#,#,...,total</span></span></span><br><span class="line"><span class="ruby">         -<span class="symbol">d:</span> 显示disk相关信息</span></span><br><span class="line"><span class="ruby">            -D total,sda,sdb,...</span></span><br><span class="line"><span class="ruby">         -<span class="symbol">g:</span> 显示page相关统计数据</span></span><br><span class="line"><span class="ruby">         -<span class="symbol">m:</span> 显示memory相关统计数据</span></span><br><span class="line"><span class="ruby">         -<span class="symbol">n:</span> 显示network相关统计数据</span></span><br><span class="line"><span class="ruby">         -<span class="symbol">p:</span> 显示process相关统计数据</span></span><br><span class="line"><span class="ruby">         -<span class="symbol">r:</span> 显示io请求相关的统计数据</span></span><br><span class="line"><span class="ruby">         -<span class="symbol">s:</span> 显示swapped相关的统计数据</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">         --tcp</span></span><br><span class="line"><span class="ruby">         --udp</span></span><br><span class="line"><span class="ruby">         --unix</span></span><br><span class="line"><span class="ruby">         --raw</span></span><br><span class="line"><span class="ruby">         --socket</span></span><br><span class="line"><span class="ruby">         --ipc</span></span><br><span class="line"><span class="ruby">         --top-<span class="symbol">cpu:</span> 显示最占用CPU的进程</span></span><br><span class="line"><span class="ruby">         --top-<span class="symbol">io:</span> 显示最占用io的进程</span></span><br><span class="line"><span class="ruby">         --top-<span class="symbol">mem:</span> 显示最占用内存的进程</span></span><br><span class="line"><span class="ruby">         --top-<span class="symbol">latency:</span> 显示延迟最大的进程</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">   注: ll /proc/<span class="number">1</span>/fd</span></span><br><span class="line"><span class="ruby">      <span class="number">1</span>  PID</span></span><br><span class="line"><span class="ruby">         fd 文件描述符对应的就是打开一个文件</span></span><br><span class="line"><span class="ruby">      等到系统处于稳定的时候，这时候里的文件个数，基本处于稳定状态</span></span><br><span class="line"><span class="ruby">      <span class="comment"># 如果不停的增长，可能发生内存泄露</span></span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/基本命令/" rel="tag"># 基本命令</a>
+          
+            <a href="/tags/进程/" rel="tag"># 进程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/20/question/common question/工作中实用命令/" rel="next" title="工作中实用命令">
+                <i class="fa fa-chevron-left"></i> 工作中实用命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/22/linux/基础/进程和计划任务 -2/" rel="prev" title="计划任务">
+                计划任务 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">93</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程"><span class="nav-number">1.</span> <span class="nav-text">进程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程内存"><span class="nav-number">1.1.</span> <span class="nav-text">进程内存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程状态"><span class="nav-number">1.2.</span> <span class="nav-text">进程状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程分类"><span class="nav-number">1.3.</span> <span class="nav-text">进程分类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ps"><span class="nav-number">2.</span> <span class="nav-text">ps</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#kill"><span class="nav-number">3.</span> <span class="nav-text">kill</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#uptime"><span class="nav-number">4.</span> <span class="nav-text">uptime</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#top"><span class="nav-number">5.</span> <span class="nav-text">top</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vmstat"><span class="nav-number">6.</span> <span class="nav-text">vmstat</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其它相关工具（iostat、pmap、glances、dstat）"><span class="nav-number">7.</span> <span class="nav-text">其它相关工具（iostat、pmap、glances、dstat）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

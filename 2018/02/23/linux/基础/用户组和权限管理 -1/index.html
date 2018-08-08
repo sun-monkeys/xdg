@@ -1,0 +1,863 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic|Iosevka:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="用户管理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="介绍安全3A1234资源分派:   Authentication: 认证   Authorization: 授权   Accouting|Audition: 审计 用户（user）12345678910令牌token，identityLinux用户: Username/UID管理员: root，0普通用户: 1-65535系统用户: 1-499，1-999（CentOS7）   对守护进程获取资源">
+<meta name="keywords" content="用户管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用户组和权限管理 -1">
+<meta property="og:url" content="http://yoursite.com/2018/02/23/linux/基础/用户组和权限管理 -1/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="介绍安全3A1234资源分派:   Authentication: 认证   Authorization: 授权   Accouting|Audition: 审计 用户（user）12345678910令牌token，identityLinux用户: Username/UID管理员: root，0普通用户: 1-65535系统用户: 1-499，1-999（CentOS7）   对守护进程获取资源">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-19T06:23:51.938Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用户组和权限管理 -1">
+<meta name="twitter:description" content="介绍安全3A1234资源分派:   Authentication: 认证   Authorization: 授权   Accouting|Audition: 审计 用户（user）12345678910令牌token，identityLinux用户: Username/UID管理员: root，0普通用户: 1-65535系统用户: 1-499，1-999（CentOS7）   对守护进程获取资源">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/23/linux/基础/用户组和权限管理 -1/"/>
+
+
+
+
+
+  <title> 用户组和权限管理 -1 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home Page
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux1">
+          <a href="/categories/LinuxBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux2">
+          <a href="/categories/LinuxServices" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Services
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python1">
+          <a href="/categories/PythonBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python2">
+          <a href="/categories/PythonCase" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Case
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question1">
+          <a href="/categories/CommonQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Common Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question2">
+          <a href="/categories/InterviewQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Interview Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/23/linux/基础/用户组和权限管理 -1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                用户组和权限管理 -1
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-23T00:00:01+08:00">
+                2018-02-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LinuxBasics/" itemprop="url" rel="index">
+                    <span itemprop="name">LinuxBasics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="介绍安全3A"><a href="#介绍安全3A" class="headerlink" title="介绍安全3A"></a>介绍安全3A</h1><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">资源分派:</span><br><span class="line"><span class="symbol">   Authentication:</span> 认证</span><br><span class="line"><span class="symbol">   Authorization:</span> 授权</span><br><span class="line">   Accouting|Audition: 审计</span><br></pre></td></tr></table></figure>
+<h1 id="用户（user）"><a href="#用户（user）" class="headerlink" title="用户（user）"></a>用户（user）</h1><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">令牌token，identity</span><br><span class="line"><span class="section">Linux用户: Username/UID</span></span><br><span class="line"><span class="section">管理员: root，0</span></span><br><span class="line"><span class="section">普通用户: 1-65535</span></span><br><span class="line"></span><br><span class="line"><span class="section">系统用户: 1-499，1-999（CentOS7）</span></span><br><span class="line">   对守护进程获取资源进行权限分配</span><br><span class="line"></span><br><span class="line"><span class="section">登录用户: 500+，1000+（CentOS7）</span></span><br><span class="line">   交互式登录</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="组（group）"><a href="#组（group）" class="headerlink" title="组（group）"></a>组（group）</h1><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">Linux组: Groupname/GID</span></span><br><span class="line"><span class="section">管理员组: root，0</span></span><br><span class="line"><span class="section">普通组:</span></span><br><span class="line">   系统组: 1-499，1-999（CENTOS7）</span><br><span class="line">   普通组: 500+，1000+（CENTOS7）</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="安全上下文"><a href="#安全上下文" class="headerlink" title="安全上下文"></a>安全上下文</h1><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Linux安全上下文</span><br><span class="line">运行中的程序: 进程（process）</span><br><span class="line">以进程发起者的身份运行:</span><br><span class="line"><span class="symbol">   root:</span> <span class="meta-keyword">/bin/</span>cat</span><br><span class="line"><span class="symbol">   xdg:</span> <span class="meta-keyword">/bin/</span>cat</span><br><span class="line"></span><br><span class="line">进程所能够访问资源的权限取决于进程的运行者的身份</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="组的类别"><a href="#组的类别" class="headerlink" title="组的类别"></a>组的类别</h1><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">用户的主要组（primary <span class="keyword">group</span>）:</span><br><span class="line">   用户必须属于一个且只有一个主组</span><br><span class="line">   组名同用户名，且仅包含一个用户: 私有组</span><br><span class="line">用户的附加组（supplementary <span class="keyword">group</span>）:</span><br><span class="line">   一个用户可以属于零个或多个辅助组</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="用户和组的配置文件"><a href="#用户和组的配置文件" class="headerlink" title="用户和组的配置文件"></a>用户和组的配置文件</h1><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Linux用户和组的主要配置文件:</span><br><span class="line">   <span class="regexp">/etc/</span><span class="string">passwd:</span> 用户及其属性信息（名称、UID、主组ID等）</span><br><span class="line">   <span class="regexp">/etc/</span><span class="string">group:</span> 组及其属性信息</span><br><span class="line">   <span class="regexp">/etc/</span><span class="string">shadow:</span> 用户密码及其相关属性</span><br><span class="line">   <span class="regexp">/etc/</span><span class="string">gshadow:</span> 组密码及其相关属性</span><br></pre></td></tr></table></figure>
+<h2 id="passwd文件格式"><a href="#passwd文件格式" class="headerlink" title="passwd文件格式"></a>passwd文件格式</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">login <span class="string">name:</span> 登录用名（xdg）</span><br><span class="line"><span class="string">passwd:</span> 密码（x）</span><br><span class="line"><span class="string">UID:</span> 用户身份编号（<span class="number">1000</span>）</span><br><span class="line"><span class="string">GID:</span> 登录默认所在组编号（<span class="number">1000</span>）</span><br><span class="line"><span class="string">GECOS:</span> 用户全名或注释</span><br><span class="line">home <span class="string">directory:</span> 用户主目录（<span class="regexp">/home/</span>xdg）</span><br><span class="line"><span class="string">shell:</span> 用户默认使用shell（<span class="regexp">/bin/</span>bash）</span><br></pre></td></tr></table></figure>
+<h2 id="shadow文件格式"><a href="#shadow文件格式" class="headerlink" title="shadow文件格式"></a>shadow文件格式</h2><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">登录用名</span><br><span class="line">用户密码: 一般用sha512加密</span><br><span class="line">从<span class="number">1970年1月1</span>日起到密码最近一次被更改的时间</span><br><span class="line">密码再过几天可以被变更（<span class="number">0</span>表示随时可被变更）</span><br><span class="line">密码再过几天必须被变更（<span class="number">99999</span>表示永不过期）</span><br><span class="line">密码过期前几天系统提醒用户（默认为一周）</span><br><span class="line">密码过期几天后帐号会被锁定</span><br><span class="line">从<span class="number">1970年1月1</span>日算起，多少天后帐号失效</span><br></pre></td></tr></table></figure>
+<h2 id="group文件格式"><a href="#group文件格式" class="headerlink" title="group文件格式"></a>group文件格式</h2><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">群组名称: 就是群组名称</span></span><br><span class="line"><span class="section">群组密码: 通常不需要设定，密码是被记录在/etc/gshadow</span></span><br><span class="line"><span class="section">GID: 就是群组的 ID</span></span><br><span class="line">以当前组为附加组的用户列表（分隔符为逗号）</span><br></pre></td></tr></table></figure>
+<h2 id="gshdow文件格式"><a href="#gshdow文件格式" class="headerlink" title="gshdow文件格式"></a>gshdow文件格式</h2><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">群组名称: 就是群组名称</span></span><br><span class="line"><span class="section">群组密码:</span></span><br><span class="line"><span class="section">组管理员列表: 组管理员的列表，更改组密码和成员</span></span><br><span class="line"><span class="section">以当前组为附加组的用户列表: 分隔符为逗号</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="密码加密"><a href="#密码加密" class="headerlink" title="密码加密"></a>密码加密</h1><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">加密机制:</span><br><span class="line">   加密: 明文 --&gt; 密文</span><br><span class="line">   解密: 密文 --&gt; 明文</span><br><span class="line"></span><br><span class="line">单向加密：哈希算法，原文不同，密文必不同</span><br><span class="line">   相同算法定长输出，获得密文不可逆推出原始数据</span><br><span class="line">   雪崩效应: 初始条件的微小改变，引起结果的巨大改变</span><br><span class="line"><span class="symbol">   md5:</span> message digest，<span class="number">128</span>bits</span><br><span class="line"><span class="symbol">   sha1:</span> secure hash algorithm，<span class="number">160</span>bits</span><br><span class="line"><span class="symbol">   sha224:</span> <span class="number">224</span>bits</span><br><span class="line"><span class="symbol">   sha256:</span> <span class="number">256</span>bits</span><br><span class="line"><span class="symbol">   sha384:</span> <span class="number">384</span>bits</span><br><span class="line"><span class="symbol">   sha512:</span> <span class="number">512</span>bits</span><br><span class="line"></span><br><span class="line">更改加密算法</span><br><span class="line">   [root@node1 xdg]<span class="meta"># authconfig --passalgo=sha256 --update  # --update立即生效</span></span><br></pre></td></tr></table></figure>
+<h2 id="密码的复杂性策略"><a href="#密码的复杂性策略" class="headerlink" title="密码的复杂性策略"></a>密码的复杂性策略</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">使用数字、大写字母、小写字母及特殊字符中至少<span class="number">3</span>种</span><br><span class="line">足够长</span><br><span class="line">使用随机密码</span><br><span class="line">定期更换,不要使用最近曾经使用过的密码</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="用户创建（useradd）"><a href="#用户创建（useradd）" class="headerlink" title="用户创建（useradd）"></a>用户创建（useradd）</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">useradd [options] LOGIN</span><br><span class="line">   -<span class="ruby">u <span class="symbol">UID:</span> [UID_MIN, UID_MAX] 定义在/etc/login.defs</span></span><br><span class="line"><span class="ruby">   -o 配合-u 选项，不检查UID的唯一性</span></span><br><span class="line"><span class="ruby">   -g <span class="symbol">GID:</span> 指明用户所属基本组，可为组名，也可以GID</span></span><br><span class="line"><span class="ruby">   -c <span class="string">"COMMENT"</span>: 用户的注释信息</span></span><br><span class="line"><span class="ruby">   -d <span class="symbol">HOME_DIR:</span> 以指定的路径（不存在）为家目录</span></span><br><span class="line"><span class="ruby">   -s <span class="symbol">SHELL:</span> 指明用户的默认shell程序，可用列表在/etc/shells文件中</span></span><br><span class="line"><span class="ruby">   -G GROUP1[,GROUP2,...]: 为用户指明附加组，组须事先存在</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">N:</span> 不创建私用组做主组，使用users组做主组</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">r:</span> 创建系统用户 CentOS <span class="number">6</span>: ID&lt;<span class="number">500</span>，CentOS <span class="number">7</span>: ID&lt;<span class="number">1000</span></span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">默认值设定: <span class="regexp">/etc/default</span><span class="regexp">/useradd文件中</span></span></span><br><span class="line"><span class="ruby">   [root@node1 xdg]<span class="comment"># cat /etc/default/useradd </span></span></span><br><span class="line"><span class="ruby">   <span class="comment"># useradd defaults file</span></span></span><br><span class="line"><span class="ruby">   GROUP=<span class="number">100</span></span></span><br><span class="line"><span class="ruby">   HOME=<span class="regexp">/home</span></span></span><br><span class="line"><span class="ruby">   INACTIVE=-<span class="number">1</span></span></span><br><span class="line"><span class="ruby">   EXPIRE=</span></span><br><span class="line"><span class="ruby">   SHELL=<span class="regexp">/bin/bash</span></span></span><br><span class="line"><span class="ruby">   SKEL=<span class="regexp">/etc/skel</span></span></span><br><span class="line"><span class="ruby">   CREATE_MAIL_SPOOL=yes</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">显示或更改默认设置 </span></span><br><span class="line"><span class="ruby">   useradd -D  <span class="comment"># 查看所有的默认的配置信息</span></span></span><br><span class="line"><span class="ruby">   useradd –D -s SHELL  <span class="comment"># 修改默认shell</span></span></span><br><span class="line"><span class="ruby">   useradd –D –b BASE_DIR </span></span><br><span class="line"><span class="ruby">   useradd –D –g GROUP</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="新建用户的相关文件和命令"><a href="#新建用户的相关文件和命令" class="headerlink" title="新建用户的相关文件和命令"></a>新建用户的相关文件和命令</h1><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/etc/</span><span class="keyword">default</span>/useradd</span><br><span class="line"><span class="regexp">/etc/</span>skel<span class="comment">/*</span></span><br><span class="line"><span class="comment">/etc/login.defs</span></span><br><span class="line"><span class="comment">newusers passwd: 格式文件，批量创建用户</span></span><br><span class="line"><span class="comment">chpasswd: 批量修改用户口令</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="用户属性修改（usermod）"><a href="#用户属性修改（usermod）" class="headerlink" title="用户属性修改（usermod）"></a>用户属性修改（usermod）</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">usermod [OPTION] login</span><br><span class="line">   -<span class="ruby">u <span class="symbol">UID:</span> 新UID</span></span><br><span class="line"><span class="ruby">   -g <span class="symbol">GID:</span> 新主组</span></span><br><span class="line"><span class="ruby">   -G GROUP1[,GROUP2,...[,GROUPN]]]: 新附加组，原来的附加组将会被覆盖，若保留原有，则要同时使用-a选项</span></span><br><span class="line"><span class="ruby">   -s <span class="symbol">SHELL:</span> 新的默认SHELL</span></span><br><span class="line"><span class="ruby">   -c <span class="string">'COMMENT'</span>: 新的注释信息</span></span><br><span class="line"><span class="ruby">   -d <span class="symbol">HOME:</span> 新家目录不会自动创建，若要创建新家目录并移动原家数据，同时使用-m选项</span></span><br><span class="line"><span class="ruby">   -l <span class="symbol">login_name:</span> 新的名字</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">L:</span> lock指定用户，在/etc/shadow 密码栏的增加 !</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">U:</span> unlock指定用户，将 /etc/shadow 密码栏的 ! 拿掉</span></span><br><span class="line"><span class="ruby">   -e YYYY-MM-<span class="symbol">DD:</span> 指明用户账号过期日期</span></span><br><span class="line"><span class="ruby">   -f <span class="symbol">INACTIVE:</span> 设定非活动期限</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="删除用户（userdel）"><a href="#删除用户（userdel）" class="headerlink" title="删除用户（userdel）"></a>删除用户（userdel）</h1><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">userdel <span class="string">[OPTION]</span>... login</span><br><span class="line">   -r: 删除用户家目录</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="查看用户相关的ID信息"><a href="#查看用户相关的ID信息" class="headerlink" title="查看用户相关的ID信息"></a>查看用户相关的ID信息</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">id [OPTION]... [USER]</span><br><span class="line">   -<span class="ruby"><span class="symbol">u:</span> 显示UID</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">g:</span> 显示GID</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">G:</span> 显示用户所属的组的ID</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">n:</span> 显示名称，需配合ugG使用</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="切换用户或以其他用户身份执行命（su）"><a href="#切换用户或以其他用户身份执行命（su）" class="headerlink" title="切换用户或以其他用户身份执行命（su）"></a>切换用户或以其他用户身份执行命（su）</h1><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">su</span> [options...] [-] [user [<span class="keyword">args</span>...]]</span><br><span class="line">切换用户的方式:</span><br><span class="line">   <span class="keyword">su</span> UserName: 非登录式切换，即不会读取目标用户的配置文件，不改变当前工作目录</span><br><span class="line">   <span class="keyword">su</span> - UserName: 登录式切换，会读取目标用户的配置文件，切换至家目录，完全切换</span><br><span class="line"></span><br><span class="line">root用户: <span class="keyword">su</span>至其他用户无须密码，非root用户切换时需要密码</span><br><span class="line"></span><br><span class="line">换个身份执行命令:</span><br><span class="line">   <span class="keyword">su</span> [-] UserName -c 'COMMAND'</span><br><span class="line"></span><br><span class="line">选项: -<span class="keyword">l</span> --login</span><br><span class="line">   <span class="keyword">su</span> -<span class="keyword">l</span> UserName，相当于 <span class="keyword">su</span> - UserName</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="设置密码（passwd）"><a href="#设置密码（passwd）" class="headerlink" title="设置密码（passwd）"></a>设置密码（passwd）</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">passwd [OPTIONS] UserName: 修改指定用户的密码，仅root用户权限</span><br><span class="line">passwd: 修改自己的密码</span><br><span class="line">常用选项:</span><br><span class="line">   -<span class="ruby"><span class="symbol">l:</span> 锁定指定用户</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">u:</span> 解锁指定用户</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">e:</span> 强制用户下次登录修改密码</span></span><br><span class="line"><span class="ruby">   -n <span class="symbol">mindays:</span> 指定最短使用期限</span></span><br><span class="line"><span class="ruby">   -x <span class="symbol">maxdays:</span> 最大使用期限</span></span><br><span class="line"><span class="ruby">   -w <span class="symbol">warndays:</span> 提前多少天开始警告</span></span><br><span class="line"><span class="ruby">   -i <span class="symbol">inactivedays:</span> 非活动期限</span></span><br><span class="line"><span class="ruby">   --<span class="symbol">stdin:</span> 从标准输入接收用户密码</span></span><br><span class="line"><span class="ruby">      echo <span class="string">"PASSWORD"</span> <span class="params">| passwd --stdin USERNAME</span></span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="修改用户密码策略"><a href="#修改用户密码策略" class="headerlink" title="修改用户密码策略"></a>修改用户密码策略</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">chage [OPTION]... LOGIN</span><br><span class="line">   -<span class="ruby">d LAST_DAY</span></span><br><span class="line"><span class="ruby">   -E --expiredate EXPIRE_DATE</span></span><br><span class="line"><span class="ruby">   -I --inactive INACTIVE</span></span><br><span class="line"><span class="ruby">   -m --mindays MIN_DAYS</span></span><br><span class="line"><span class="ruby">   -M --maxdays MAX_DAYS</span></span><br><span class="line"><span class="ruby">   -W --warndays WARN_DAYS</span></span><br><span class="line"><span class="ruby">   –l 显示密码策略</span></span><br><span class="line"><span class="ruby">chage -d <span class="number">0</span> tom  <span class="comment"># 下一次登录强制重设密码</span></span></span><br><span class="line"><span class="ruby">chage -m <span class="number">0</span> –M <span class="number">42</span> –W <span class="number">14</span> –I <span class="number">7</span> tom</span></span><br><span class="line"><span class="ruby">chage -E <span class="number">2016</span>-09-<span class="number">10</span> tom</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="用户相关的其它命令"><a href="#用户相关的其它命令" class="headerlink" title="用户相关的其它命令"></a>用户相关的其它命令</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">chfn  # 指定个人信息 /etc/passwd（第5个字段信息）</span><br><span class="line">   -<span class="ruby"><span class="symbol">f:</span> 名字</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">o:</span> 办公室房间号码</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">p:</span> 办公室电话</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">h:</span> 家中电话</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">chsh  <span class="comment"># 指定shell</span></span></span><br><span class="line"><span class="ruby">   -<span class="symbol">l:</span> 列出目前系统上面可用的shell</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">s:</span> 设置修改自己的shell</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">finger  <span class="comment"># 查看属性信息</span></span></span><br><span class="line"><span class="ruby">   -<span class="symbol">s:</span> 仅列出用户的账号等信息</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">m:</span> 列出与账号相同者</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="创建组（groupadd）"><a href="#创建组（groupadd）" class="headerlink" title="创建组（groupadd）"></a>创建组（groupadd）</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">groupadd [OPTION]... group_name</span><br><span class="line">   -<span class="ruby">g <span class="symbol">GID:</span> 指明GID号: [GID_MIN, GID_MAX]</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">r:</span> 创建系统组</span></span><br><span class="line"><span class="ruby">CentOS <span class="number">6</span>: ID&lt;<span class="number">500</span></span></span><br><span class="line"><span class="ruby">CentOS <span class="number">7</span>: ID&lt;<span class="number">1000</span></span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="修改和删除组（groupmod，groupdel）"><a href="#修改和删除组（groupmod，groupdel）" class="headerlink" title="修改和删除组（groupmod，groupdel）"></a>修改和删除组（groupmod，groupdel）</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">组属性修改: groupmod</span><br><span class="line">   groupmod [OPTION]<span class="built_in">..</span>. group</span><br><span class="line">      -n group_name: 新名字</span><br><span class="line">      -g GID: 新的GID</span><br><span class="line"></span><br><span class="line">组删除: groupdel</span><br><span class="line">   groupdel GROUP</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="更改组密码（gpasswd）"><a href="#更改组密码（gpasswd）" class="headerlink" title="更改组密码（gpasswd）"></a>更改组密码（gpasswd）</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gpasswd [OPTION] GROUP</span><br><span class="line">   -a user: 将user添加至指定组中</span><br><span class="line">   -d user: 从指定组中移除用户user</span><br><span class="line">   -A user1,user2,<span class="built_in">..</span>.: 设置有管理权限的用户列表</span><br><span class="line"></span><br><span class="line">newgrp命令: 临时切换主组</span><br><span class="line">   如果用户本不属于此组，则需要组密码</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="更改和查看组成员（groupmems）"><a href="#更改和查看组成员（groupmems）" class="headerlink" title="更改和查看组成员（groupmems）"></a>更改和查看组成员（groupmems）</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">groupmems [options] [action] options:</span><br><span class="line">   -<span class="ruby">g, --group groupname  更改为指定组，只有root</span></span><br><span class="line"><span class="ruby">   -a, --add username     指定用户加入组</span></span><br><span class="line"><span class="ruby">   -d, --delete username  从组中删除用户</span></span><br><span class="line"><span class="ruby">   -p, --purge            从组中清除所有成员</span></span><br><span class="line"><span class="ruby">   -l, --list             显示组成员列表</span></span><br><span class="line"><span class="ruby">groups [OPTION].[USERNAME]... 查看用户所属组列表</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/用户管理/" rel="tag"># 用户管理</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/23/question/common question/修改系统字符集和时区/" rel="next" title="修改系统字符集和时区">
+                <i class="fa fa-chevron-left"></i> 修改系统字符集和时区
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/23/linux/基础/用户组和权限管理 -2/" rel="prev" title="用户组和权限管理 -2">
+                用户组和权限管理 -2 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">93</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍安全3A"><span class="nav-number">1.</span> <span class="nav-text">介绍安全3A</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用户（user）"><span class="nav-number">2.</span> <span class="nav-text">用户（user）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#组（group）"><span class="nav-number">3.</span> <span class="nav-text">组（group）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安全上下文"><span class="nav-number">4.</span> <span class="nav-text">安全上下文</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#组的类别"><span class="nav-number">5.</span> <span class="nav-text">组的类别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用户和组的配置文件"><span class="nav-number">6.</span> <span class="nav-text">用户和组的配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#passwd文件格式"><span class="nav-number">6.1.</span> <span class="nav-text">passwd文件格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shadow文件格式"><span class="nav-number">6.2.</span> <span class="nav-text">shadow文件格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#group文件格式"><span class="nav-number">6.3.</span> <span class="nav-text">group文件格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gshdow文件格式"><span class="nav-number">6.4.</span> <span class="nav-text">gshdow文件格式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#密码加密"><span class="nav-number">7.</span> <span class="nav-text">密码加密</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#密码的复杂性策略"><span class="nav-number">7.1.</span> <span class="nav-text">密码的复杂性策略</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用户创建（useradd）"><span class="nav-number">8.</span> <span class="nav-text">用户创建（useradd）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#新建用户的相关文件和命令"><span class="nav-number">9.</span> <span class="nav-text">新建用户的相关文件和命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用户属性修改（usermod）"><span class="nav-number">10.</span> <span class="nav-text">用户属性修改（usermod）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#删除用户（userdel）"><span class="nav-number">11.</span> <span class="nav-text">删除用户（userdel）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#查看用户相关的ID信息"><span class="nav-number">12.</span> <span class="nav-text">查看用户相关的ID信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#切换用户或以其他用户身份执行命（su）"><span class="nav-number">13.</span> <span class="nav-text">切换用户或以其他用户身份执行命（su）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设置密码（passwd）"><span class="nav-number">14.</span> <span class="nav-text">设置密码（passwd）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修改用户密码策略"><span class="nav-number">15.</span> <span class="nav-text">修改用户密码策略</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用户相关的其它命令"><span class="nav-number">16.</span> <span class="nav-text">用户相关的其它命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建组（groupadd）"><span class="nav-number">17.</span> <span class="nav-text">创建组（groupadd）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修改和删除组（groupmod，groupdel）"><span class="nav-number">18.</span> <span class="nav-text">修改和删除组（groupmod，groupdel）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#更改组密码（gpasswd）"><span class="nav-number">19.</span> <span class="nav-text">更改组密码（gpasswd）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#更改和查看组成员（groupmems）"><span class="nav-number">20.</span> <span class="nav-text">更改和查看组成员（groupmems）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,845 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic|Iosevka:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="文件系统,RAID,LVM,quota," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="RAID12345678910111213多个磁盘合成一个&quot;阵列&quot;来提供更好的性能、冗余，或者两者都提供提高IO能力: 磁盘并行读写提高耐用性: 磁盘冗余来实现级别: 多块磁盘组织在一起的工作方式有所不同RAID实现的方式:   外接式磁盘阵列: 通过扩展卡提供适配能力   内接式RAID: 主板集成RAID控制器      安装OS前在BIOS里配置   软件RAID: 通过OS实现 RAID级">
+<meta name="keywords" content="文件系统,RAID,LVM,quota">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高级文件系统管理">
+<meta property="og:url" content="http://yoursite.com/2018/03/08/linux/基础/高级文件系统管理/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="RAID12345678910111213多个磁盘合成一个&quot;阵列&quot;来提供更好的性能、冗余，或者两者都提供提高IO能力: 磁盘并行读写提高耐用性: 磁盘冗余来实现级别: 多块磁盘组织在一起的工作方式有所不同RAID实现的方式:   外接式磁盘阵列: 通过扩展卡提供适配能力   内接式RAID: 主板集成RAID控制器      安装OS前在BIOS里配置   软件RAID: 通过OS实现 RAID级">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-24T06:02:41.044Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高级文件系统管理">
+<meta name="twitter:description" content="RAID12345678910111213多个磁盘合成一个&quot;阵列&quot;来提供更好的性能、冗余，或者两者都提供提高IO能力: 磁盘并行读写提高耐用性: 磁盘冗余来实现级别: 多块磁盘组织在一起的工作方式有所不同RAID实现的方式:   外接式磁盘阵列: 通过扩展卡提供适配能力   内接式RAID: 主板集成RAID控制器      安装OS前在BIOS里配置   软件RAID: 通过OS实现 RAID级">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/08/linux/基础/高级文件系统管理/"/>
+
+
+
+
+
+  <title> 高级文件系统管理 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home Page
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux1">
+          <a href="/categories/LinuxBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux2">
+          <a href="/categories/LinuxServices" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Services
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python1">
+          <a href="/categories/PythonBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python2">
+          <a href="/categories/PythonCase" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Case
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question1">
+          <a href="/categories/CommonQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Common Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question2">
+          <a href="/categories/InterviewQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Interview Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/08/linux/基础/高级文件系统管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                高级文件系统管理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-08T00:00:00+08:00">
+                2018-03-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LinuxBasics/" itemprop="url" rel="index">
+                    <span itemprop="name">LinuxBasics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="RAID"><a href="#RAID" class="headerlink" title="RAID"></a>RAID</h1><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">多个磁盘合成一个<span class="string">"阵列"</span>来提供更好的性能、冗余，或者两者都提供</span><br><span class="line"></span><br><span class="line"><span class="section">提高IO能力: 磁盘并行读写</span></span><br><span class="line"></span><br><span class="line"><span class="section">提高耐用性: 磁盘冗余来实现</span></span><br><span class="line"></span><br><span class="line"><span class="section">级别: 多块磁盘组织在一起的工作方式有所不同</span></span><br><span class="line"></span><br><span class="line"><span class="section">RAID实现的方式:</span></span><br><span class="line">   外接式磁盘阵列: 通过扩展卡提供适配能力</span><br><span class="line">   内接式RAID: 主板集成RAID控制器</span><br><span class="line">      安装OS前在BIOS里配置</span><br><span class="line">   软件RAID: 通过OS实现</span><br></pre></td></tr></table></figure>
+<h2 id="RAID级别"><a href="#RAID级别" class="headerlink" title="RAID级别"></a>RAID级别</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">RAID</span>-<span class="number">0</span>: 条带卷，<span class="keyword">strip</span></span><br><span class="line"><span class="keyword">RAID-1: </span>镜像卷，mirror</span><br><span class="line"><span class="symbol">RAID</span>-<span class="number">2</span></span><br><span class="line"><span class="symbol">...</span></span><br><span class="line"><span class="symbol">RAID</span>-<span class="number">5</span></span><br><span class="line"><span class="symbol">RAID</span>-<span class="number">6</span></span><br><span class="line"><span class="symbol">RAID</span>-<span class="number">10</span></span><br><span class="line"><span class="symbol">RAID</span>-<span class="number">01</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">RAID</span>-<span class="number">0</span>:</span><br><span class="line">   读、写性能提升</span><br><span class="line">   可用空间: N*min(<span class="built_in">S1</span>，<span class="built_in">S2</span>，...)</span><br><span class="line">   无容错能力</span><br><span class="line">   最少磁盘数: <span class="number">2</span>，<span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">RAID</span>-<span class="number">1</span>:</span><br><span class="line">   读性能提升、写性能略有下降</span><br><span class="line">   可用空间: <span class="number">1</span>*min(<span class="built_in">S1</span>，<span class="built_in">S2</span>，...)</span><br><span class="line">   有冗余能力</span><br><span class="line">   最少磁盘数: <span class="number">2</span>，<span class="number">2</span>N</span><br><span class="line"></span><br><span class="line"><span class="symbol">RAID</span>-<span class="number">5</span>:</span><br><span class="line">   读、写性能提升</span><br><span class="line">   可用空间: (N-<span class="number">1</span>)*min(<span class="built_in">S1</span>，<span class="built_in">S2</span>，...)</span><br><span class="line">   有容错能力: 允许最多<span class="number">1</span>块磁盘损坏</span><br><span class="line">   最少磁盘数: <span class="number">3</span>，<span class="number">3</span>+</span><br><span class="line"></span><br><span class="line"><span class="symbol">RAID</span>-<span class="number">10</span>：</span><br><span class="line">   读、写性能提升</span><br><span class="line">   可用空间: N*min(<span class="built_in">S1</span>，<span class="built_in">S2</span>，...)/<span class="number">2</span></span><br><span class="line">   有容错能力: 每组镜像最多只能坏一块</span><br><span class="line">   最少磁盘数: <span class="number">4</span>，<span class="number">4</span>+</span><br><span class="line"></span><br><span class="line"><span class="symbol">JBOD</span>：Just a <span class="keyword">Bunch </span>Of Disks</span><br><span class="line">   功能: 将多块磁盘的空间合并一个大的连续空间使用</span><br><span class="line">   可用空间: sum(<span class="built_in">S1</span>，<span class="built_in">S2</span>，...)</span><br></pre></td></tr></table></figure>
+<h2 id="软RAID"><a href="#软RAID" class="headerlink" title="软RAID"></a>软RAID</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">mdadm:</span> 为软RAID提供管理界面</span><br><span class="line">为空余磁盘添加冗余</span><br><span class="line">结合内核中的md（multi devices）</span><br><span class="line">RAID设备可命名为<span class="meta-keyword">/dev/</span>md0、<span class="meta-keyword">/dev/</span>md1、<span class="meta-keyword">/dev/</span>md2、<span class="meta-keyword">/dev/</span>md3等</span><br></pre></td></tr></table></figure>
+<h2 id="软件RAID的实现"><a href="#软件RAID的实现" class="headerlink" title="软件RAID的实现"></a>软件RAID的实现</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">mdadm:</span> 模式化的工具</span><br><span class="line">命令的语法格式:</span><br><span class="line">   mdadm [mode] <span class="params">&lt;raiddevice&gt;</span> [options] <span class="params">&lt;component-devices&gt;</span></span><br><span class="line">支持的RAID级别:</span><br><span class="line">   LINEAR，RAID0，RAID1，RAID4，RAID5，RAID6，RAID10</span><br><span class="line">模式:</span><br><span class="line">   创建: -C</span><br><span class="line">      -n <span class="meta">#: 使用#个块设备来创建此RAID</span></span><br><span class="line">      -l <span class="meta">#: 指明要创建的RAID的级别</span></span><br><span class="line">      -<span class="class">a </span>&#123;yes|no&#125;: 自动创建目标RAID设备的设备文件</span><br><span class="line">      -c CHUNK_SIZE: 指明块大小</span><br><span class="line">      -x <span class="meta">#: 指明空闲盘的个数</span></span><br><span class="line">   装配: -A</span><br><span class="line">   监控: -F</span><br><span class="line">   管理: -f，-r，-a</span><br><span class="line">      -f: 标记指定磁盘为损坏</span><br><span class="line">      -a: 添加磁盘</span><br><span class="line">      -r: 移除磁盘</span><br><span class="line">   -D: 显示raid的详细信息 </span><br><span class="line">      mdadm -D <span class="meta-keyword">/dev/</span>md<span class="meta">#</span></span><br><span class="line"></span><br><span class="line">使用mdadm创建并定义RAID设备</span><br><span class="line">   mdadm -C <span class="meta-keyword">/dev/</span>md0 -a yes -l <span class="number">5</span> -n <span class="number">3</span> -x <span class="number">1</span> <span class="meta-keyword">/dev/</span>sdb1 <span class="meta-keyword">/dev/</span>sdc1 <span class="meta-keyword">/dev/</span>sdd1 <span class="meta-keyword">/dev/</span>sde1</span><br><span class="line">   用文件系统对每个RAID设备进行格式化</span><br><span class="line">      mke2fs -j <span class="meta-keyword">/dev/</span>md0</span><br><span class="line"></span><br><span class="line">   测试RAID设备</span><br><span class="line">   使用mdadm检查RAID设备的状况</span><br><span class="line">      mdadm --detail | -D <span class="meta-keyword">/dev/</span>md0</span><br><span class="line"></span><br><span class="line">   增加新的成员</span><br><span class="line">      mdadm –G <span class="meta-keyword">/dev/</span>md0 –n4 -a <span class="meta-keyword">/dev/</span>sdf1</span><br><span class="line">      <span class="meta"># 不写G 默认为备用的</span></span><br><span class="line"></span><br><span class="line">生成配置文件: mdadm –D –s &gt;&gt; <span class="meta-keyword">/etc/</span>mdadm.conf</span><br><span class="line"></span><br><span class="line">停止设备: mdadm –S <span class="meta-keyword">/dev/</span>md0</span><br><span class="line">   <span class="meta"># 停止该设备，/dev/md# 下没有显示了</span></span><br><span class="line"></span><br><span class="line">激活设备: mdadm –A  <span class="meta-keyword">/dev/</span>md0  <span class="meta"># 激活</span></span><br><span class="line">   <span class="meta"># 激活的时候要有配置文件才能激活成功</span></span><br><span class="line"></span><br><span class="line">强制启动: mdadm –R <span class="meta-keyword">/dev/</span>md0</span><br><span class="line">   <span class="meta"># 强制启动，没有配置文件也可以</span></span><br><span class="line"></span><br><span class="line">删除raid信息: mdadm --zero-superblock <span class="meta-keyword">/dev/</span>sdb1</span><br><span class="line"></span><br><span class="line">增加新的成员: mdadm –G <span class="meta-keyword">/dev/</span>md0 –n4 -a <span class="meta-keyword">/dev/</span>sdf1</span><br><span class="line"></span><br><span class="line">模拟磁盘故障: mdadm <span class="meta-keyword">/dev/</span>md0 -f <span class="meta-keyword">/dev/</span>sda1</span><br><span class="line"></span><br><span class="line">移除磁盘: mdadm <span class="meta-keyword">/dev/</span>md0 –r <span class="meta-keyword">/dev/</span>sda1</span><br><span class="line"></span><br><span class="line">从软件RAID磁盘修复磁盘故障</span><br><span class="line">   替换出故障的磁盘然后开机</span><br><span class="line">   在备用驱动器上重建分区</span><br><span class="line">   mdadm <span class="meta-keyword">/dev/</span>md0 -a <span class="meta-keyword">/dev/</span>sda1</span><br><span class="line"></span><br><span class="line">观察md的状态: cat <span class="meta-keyword">/proc/</span>mdstat</span><br><span class="line">   mdadm、<span class="meta-keyword">/proc/</span>mdstat及系统日志信息</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="逻辑卷管理器（LVM）"><a href="#逻辑卷管理器（LVM）" class="headerlink" title="逻辑卷管理器（LVM）"></a>逻辑卷管理器（LVM）</h1><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">LVM:</span> Logical Volume Manager，Version: <span class="number">2</span> </span><br><span class="line">允许对卷进行方便操作的抽象层，包括重新设定文件系统的大小</span><br><span class="line">允许在多个物理设备间重新组织文件系统</span><br><span class="line">   将设备指定为物理卷</span><br><span class="line">   用一个或者多个物理卷来创建一个卷组</span><br><span class="line">   物理卷是用固定大小的物理区域（Physical Extent，PE）来定义的</span><br><span class="line">   在物理卷上创建的逻辑卷是由物理区域（PE）组成</span><br><span class="line">   可以在逻辑卷上创建文件系统</span><br><span class="line"></span><br><span class="line"><span class="symbol">dm:</span> device mapper: 将一个或多个底层块设备组织成一个逻辑设备的模块 </span><br><span class="line">   设备名: <span class="meta-keyword">/dev/</span>dm-<span class="meta">#  实际指向的设备</span></span><br><span class="line">   软链接: （pv --&gt; vg --&gt; lv）</span><br><span class="line">      <span class="meta-keyword">/dev/</span>mapper/VG_NAME-LV_NAME（系统自动存放的位置之一）</span><br><span class="line">         <span class="meta-keyword">/dev/</span>mapper/vol0-root </span><br><span class="line">      <span class="meta-keyword">/dev/</span>VG_NAME/LV_NAME（用户创建的逻辑卷存放的位置之一）</span><br><span class="line">         <span class="meta-keyword">/dev/</span>vol0/root</span><br></pre></td></tr></table></figure>
+<h2 id="LVM更改文件系统的容量"><a href="#LVM更改文件系统的容量" class="headerlink" title="LVM更改文件系统的容量"></a>LVM更改文件系统的容量</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">通过交换PE来进行资料的转换，将原来<span class="keyword">LV</span>内的PE转移到其他的设备中以降低<span class="keyword">LV</span>的容量，或将其他设备中的PE加到<span class="keyword">LV</span>中以加大容量</span><br><span class="line"># xfs文件系统，创建LVM的时候，只能增加，不能减少，系统特性</span><br></pre></td></tr></table></figure>
+<h2 id="pv管理工具"><a href="#pv管理工具" class="headerlink" title="pv管理工具"></a>pv管理工具</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">显示pv信息</span><br><span class="line"><span class="symbol">   pvs:</span> 简要pv信息显示</span><br><span class="line">   pvdisplay</span><br><span class="line"></span><br><span class="line">创建pv</span><br><span class="line">   pvcreate <span class="meta-keyword">/dev/</span>DEVICE</span><br><span class="line">   例: pvcreate <span class="meta-keyword">/dev/</span>sda3</span><br></pre></td></tr></table></figure>
+<h2 id="vg管理工具"><a href="#vg管理工具" class="headerlink" title="vg管理工具"></a>vg管理工具</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">显示卷组</span><br><span class="line">   vgs</span><br><span class="line">   vgdisplay</span><br><span class="line"></span><br><span class="line">创建卷组</span><br><span class="line">   vgcreate [-s <span class="comment">#[kKmMgGtTpPeE]] VolumeGroupName  PhysicalDevicePath [PhysicalDevicePath...]</span></span><br><span class="line">   例: vgcreate vg0 <span class="string">/dev/sda</span>&#123;2,3&#125;</span><br><span class="line"></span><br><span class="line">管理卷组</span><br><span class="line">   vgextend  VolumeGroupName  PhysicalDevicePath [PhysicalDevicePath.<span class="string">..</span>]</span><br><span class="line">   vgreduce  VolumeGroupName  PhysicalDevicePath [PhysicalDevicePath.<span class="string">..</span>]</span><br><span class="line">   例: vgextend  vg0  <span class="string">/dev/sda5</span>（vg0: 已有vg0  <span class="string">/dev/sda5</span>要新加的卷组的磁盘）</span><br><span class="line"></span><br><span class="line">删除卷组</span><br><span class="line">   先做pvmove，再做vgremove</span><br></pre></td></tr></table></figure>
+<h2 id="lv管理工具"><a href="#lv管理工具" class="headerlink" title="lv管理工具"></a>lv管理工具</h2><figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">显示逻辑卷</span><br><span class="line">   lvs</span><br><span class="line">   <span class="symbol">Lvdisplay</span></span><br><span class="line"></span><br><span class="line">创建逻辑卷</span><br><span class="line">   lvcreate -<span class="symbol">L</span> #[mMgGtT] -n <span class="symbol">NAME</span> <span class="symbol">VolumeGroup</span></span><br><span class="line"></span><br><span class="line">   lvcreate -l <span class="number">60</span><span class="comment">%VG -n mylv testvg</span></span><br><span class="line">      -l: 是按百分比来分，<span class="number">60</span><span class="comment">%vg   vg: 是表示用vg的60%</span></span><br><span class="line"></span><br><span class="line">   lvcreate -l <span class="number">100</span><span class="comment">%FREE  -n yourlv testvg</span></span><br><span class="line">      -l: 是按百分比来分，<span class="number">100</span><span class="comment">%free   free: 当前空闲容量的百分比</span></span><br><span class="line">   例: lvcreate  -<span class="symbol">L</span>  <span class="number">256</span><span class="symbol">M</span>  -n data  vg0</span><br><span class="line">   # 生成出来的设备在/dev/vg0/lv0</span><br><span class="line">   # 但里的不会真实的文件，而是快捷方式</span><br><span class="line"></span><br><span class="line">删除逻辑卷</span><br><span class="line">   lvremove /dev/<span class="symbol">VG_NAME</span>/<span class="symbol">LV_NAME</span></span><br><span class="line"></span><br><span class="line">重设文件系统大小</span><br><span class="line">   fsadm [options] resize device [new_size[<span class="symbol">BKMGTEP</span>]]</span><br><span class="line">   resize2fs [-f] [-<span class="symbol">F</span>] [-<span class="symbol">M</span>] [-<span class="symbol">P</span>] [-p] device [new_size]</span><br></pre></td></tr></table></figure>
+<h2 id="逻辑卷管理器快照"><a href="#逻辑卷管理器快照" class="headerlink" title="逻辑卷管理器快照"></a>逻辑卷管理器快照</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">快照是特殊的逻辑卷，它是在生成快照时存在的逻辑卷的准确拷贝</span><br><span class="line"></span><br><span class="line">对于需要备份或者复制的现有数据集临时拷贝以及其它操作来说，快照是最合适的选择，快照只有在它们和原来的逻辑卷不同时才会消耗空间</span><br><span class="line">  </span><br><span class="line">在生成快照时会分配给它一定的空间，但只有在原来的逻辑卷或者快照有所改变才会使用这些空间，当原来的逻辑卷中有所改变时，会将旧的数据复制到快照中，</span><br><span class="line">  快照中只含有原来的逻辑卷中更改的数据或者自生成快照后的快照中更改的数据，建立快照的卷大小只需要原始逻辑卷的<span class="number">15</span>%～<span class="number">20</span>%就够了，也可以使用lvextend放大快照</span><br><span class="line"></span><br><span class="line">快照就是将当时的系统信息记录下来，就好像照相一般，若将来有任何数据改动了，则原始数据会被移动到快照区，没有改动的区域则由快照区和文件系统共享</span><br><span class="line">  由于快照区与原本的LV共用很多PE的区块，因此快照去与被快照的LV必须在同一个VG，系统恢复的时候的文件数量不能高于快照区的实际容量</span><br></pre></td></tr></table></figure>
+<h2 id="使用LVM快照"><a href="#使用LVM快照" class="headerlink" title="使用LVM快照"></a>使用LVM快照</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">为现有逻辑卷创建快照</span><br><span class="line">   lvcreate -l <span class="number">64</span> -s -n snap-<span class="class"><span class="keyword">data</span> -p r /dev/vg0/<span class="keyword">data</span></span></span><br><span class="line"></span><br><span class="line">挂载快照</span><br><span class="line">   mkdir -p  /mnt/snap</span><br><span class="line">   mount -o ro /dev/vg0/snap-<span class="class"><span class="keyword">data</span>  /mnt/snap</span></span><br><span class="line"></span><br><span class="line">恢复快照</span><br><span class="line">   umount /dev/vg0/snap-<span class="class"><span class="keyword">data</span></span></span><br><span class="line">   umount /dev/vg0/<span class="class"><span class="keyword">data</span></span></span><br><span class="line">   lvconvert <span class="comment">--merge /dev/vg0/snap-data</span></span><br><span class="line"></span><br><span class="line">删除快照</span><br><span class="line">   umount /mnt/databackup</span><br><span class="line">   lvremove /dev/vg0/databackup</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="配置配额系统"><a href="#配置配额系统" class="headerlink" title="配置配额系统"></a>配置配额系统</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">配置配额系统（设定文件系统配额，只能对文件系统配额，不能对目录）（具体配置如下）</span><br><span class="line">   在内核中执行</span><br><span class="line">   以文件系统为单位启用</span><br><span class="line">   对不同组或者用户的策略不同根据块或者节点进行限制</span><br><span class="line">   执行软限制（soft <span class="built_in">limit</span>） </span><br><span class="line">   硬限制（hard <span class="built_in">limit</span>）</span><br></pre></td></tr></table></figure>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">分区挂载选项: usrquota、grpquota（用户，用户组的管理）</span><br><span class="line">   # 如果要启用磁盘配额功能的话，要启用文件系统特性，在/etc/fstab里的指定（defaultsg一栏中）</span><br><span class="line">   指定为usrquota,grpquota哪一个，或者都需要（重新挂载mount -o remount）</span><br><span class="line">   mount 信息如: /dev/sda6 on /home<span class="built_in"> type </span>ext4 (rw,usrquota,grpquota)</span><br></pre></td></tr></table></figure>
+<h2 id="初始化数据库-quotacheck（二进制数据库）配置的相关信息"><a href="#初始化数据库-quotacheck（二进制数据库）配置的相关信息" class="headerlink" title="初始化数据库: quotacheck（二进制数据库）配置的相关信息"></a>初始化数据库: quotacheck（二进制数据库）配置的相关信息</h2><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">quotacheck -cug  /home（指home分区上）</span><br><span class="line">   -<span class="ruby">c create创建</span></span><br><span class="line"><span class="ruby">   -u 为usr创建数据库</span></span><br><span class="line"><span class="ruby">   -g 为grp创建数据库</span></span><br><span class="line"><span class="ruby"><span class="comment"># 创建数据库必须要与指定的开启的（usrquota，grpquota）一致，有哪一个就创建哪一个，两都有，那么两个都必须创建</span></span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">创建完之后在/home的根目录下会出现两个文件 aquota.group，aquota.user（两个都是二进制文件）</span></span><br></pre></td></tr></table></figure>
+<h2 id="执行"><a href="#执行" class="headerlink" title="执行"></a>执行</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">开启或者取消配额:</span><br><span class="line">   quotaon、quotaoff</span><br><span class="line">   如: quotaon /home 启用</span><br><span class="line">      查看 quotaon -p /home</span><br><span class="line">      [root@centos6 home]#quotaon -p /home</span><br><span class="line">     <span class="built_in"> group </span>quota on /home (/dev/sda6) is on</span><br><span class="line">     <span class="built_in"> user </span>quota on /home (/dev/sda6) is on</span><br><span class="line"></span><br><span class="line">直接编辑配额:（vim编辑器）</span><br><span class="line">   edquota  username </span><br><span class="line">   如: edquota xdg</span><br><span class="line">   Disk quotas <span class="keyword">for</span><span class="built_in"> user </span>xdg (uid 500):</span><br><span class="line">   Filesystem          blocks       soft       hard     inodes     soft     hard</span><br><span class="line">   /dev/sda6           416          0          0         98        0        0</span><br><span class="line"></span><br><span class="line">   blocks: 以K为单位</span><br><span class="line">   soft: 软的，超过警告，还能用（常用）</span><br><span class="line">   hard: 硬的，超过警告，不能用（常用）</span><br><span class="line">   inodes: 文件个数</span><br><span class="line">   soft: 0（代表不控制）</span><br><span class="line">   hard:</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配额的usrquota是以按照用户在分区当，所有文件为所有者的大小容量为准（如果root修改了，则不算在容量中）配额的grpquota是以组的所有用户创建的全部大小容量为准（并不是单个用户）</span></span><br><span class="line"></span><br><span class="line">在shell中直接编辑:</span><br><span class="line">   setquota  usename   4096   5120   40   50  /foo（对分区）</span><br><span class="line">      设定的是两个sotf和hard</span><br><span class="line"></span><br><span class="line">   定义原始标准用户</span><br><span class="line">      edquota  -p  user1  user2</span><br><span class="line">      例: edquota -p  xdg  wang  # 引用xdg的配额给wang一样的配额</span><br></pre></td></tr></table></figure>
+<h2 id="报告配额状态"><a href="#报告配额状态" class="headerlink" title="报告配额状态"></a>报告配额状态</h2><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">用户调查:</span></span><br><span class="line">   quota  username  <span class="comment"># 查看某一个用户的配额情况</span></span><br><span class="line"></span><br><span class="line"><span class="section">配额概述:</span></span><br><span class="line">   repquota  /mountpoint  <span class="comment"># 例出当前所有用户，并显示具有配额的概况</span></span><br><span class="line"></span><br><span class="line"><span class="section">其它工具: warnquota</span></span><br></pre></td></tr></table></figure>
+<h2 id="创建一个磁盘配额的流程"><a href="#创建一个磁盘配额的流程" class="headerlink" title="创建一个磁盘配额的流程"></a>创建一个磁盘配额的流程</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1. </span>创建一个新分区，指定其文件系统，磁盘配额必须在文件系统上，单个分区</span><br><span class="line"></span><br><span class="line"><span class="bullet">2. </span>在/etc/fstab里启用usrquota,grpquota功能 重新挂载</span><br><span class="line"></span><br><span class="line"><span class="bullet">3. </span>创建数据库  quotacheck -cug  /home</span><br><span class="line"></span><br><span class="line"><span class="bullet">4. </span>quotaon /home  --&gt;查看 quotaon -p /home</span><br><span class="line"></span><br><span class="line"><span class="bullet">5. </span>edquota username进入vim编辑 或 setquota直接设置</span><br><span class="line"></span><br><span class="line">例: 迁移home到新的分区上面去</span><br><span class="line"><span class="bullet">1. </span>创建一个新分区，指定其文件系统</span><br><span class="line"><span class="bullet">2. </span>把该分区暂时挂载到系统的一个挂载点上</span><br><span class="line"><span class="bullet">3. </span>把/home里面的目录数据拷贝到新分区上</span><br><span class="line"><span class="bullet">4. </span>编辑/etc/fstab里的文件，设置新分区开机自启动</span><br><span class="line"><span class="bullet">5. </span>删除原/home里的数据信息</span><br><span class="line"><span class="bullet">6. </span>mount -a (把新分区挂载到/home下)，把原来临时的挂载点给取消</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/文件系统/" rel="tag"># 文件系统</a>
+          
+            <a href="/tags/RAID/" rel="tag"># RAID</a>
+          
+            <a href="/tags/LVM/" rel="tag"># LVM</a>
+          
+            <a href="/tags/quota/" rel="tag"># quota</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/07/linux/基础/磁盘管理/" rel="next" title="磁盘管理">
+                <i class="fa fa-chevron-left"></i> 磁盘管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/09/linux/基础/RAID与LVM/" rel="prev" title="RAID与LVM实验">
+                RAID与LVM实验 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">93</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RAID"><span class="nav-number">1.</span> <span class="nav-text">RAID</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID级别"><span class="nav-number">1.1.</span> <span class="nav-text">RAID级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#软RAID"><span class="nav-number">1.2.</span> <span class="nav-text">软RAID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#软件RAID的实现"><span class="nav-number">1.3.</span> <span class="nav-text">软件RAID的实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#逻辑卷管理器（LVM）"><span class="nav-number">2.</span> <span class="nav-text">逻辑卷管理器（LVM）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LVM更改文件系统的容量"><span class="nav-number">2.1.</span> <span class="nav-text">LVM更改文件系统的容量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pv管理工具"><span class="nav-number">2.2.</span> <span class="nav-text">pv管理工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vg管理工具"><span class="nav-number">2.3.</span> <span class="nav-text">vg管理工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lv管理工具"><span class="nav-number">2.4.</span> <span class="nav-text">lv管理工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑卷管理器快照"><span class="nav-number">2.5.</span> <span class="nav-text">逻辑卷管理器快照</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用LVM快照"><span class="nav-number">2.6.</span> <span class="nav-text">使用LVM快照</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置配额系统"><span class="nav-number">3.</span> <span class="nav-text">配置配额系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化"><span class="nav-number">3.1.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化数据库-quotacheck（二进制数据库）配置的相关信息"><span class="nav-number">3.2.</span> <span class="nav-text">初始化数据库: quotacheck（二进制数据库）配置的相关信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行"><span class="nav-number">3.3.</span> <span class="nav-text">执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#报告配额状态"><span class="nav-number">3.4.</span> <span class="nav-text">报告配额状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建一个磁盘配额的流程"><span class="nav-number">3.5.</span> <span class="nav-text">创建一个磁盘配额的流程</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

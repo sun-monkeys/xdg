@@ -1,0 +1,861 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic|Iosevka:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="文件管理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="文件系统12345678910文件和目录被组织成一个单根倒置树结构文件系统从根目录下开始，用&quot;/&quot;表示根文件系统(rootfs): root filesystem文件名称区分大小写以 . 开头的文件为隐藏文件路径分隔表示: /文件有两类数据   元数据: metadata   数据: data文件系统分层结构: LSB（Linux Standard Base）  文件名规则123456789文件名">
+<meta name="keywords" content="文件管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件管理">
+<meta property="og:url" content="http://yoursite.com/2018/02/11/linux/基础/文件管理/index.html">
+<meta property="og:site_name" content="Zookeeper">
+<meta property="og:description" content="文件系统12345678910文件和目录被组织成一个单根倒置树结构文件系统从根目录下开始，用&quot;/&quot;表示根文件系统(rootfs): root filesystem文件名称区分大小写以 . 开头的文件为隐藏文件路径分隔表示: /文件有两类数据   元数据: metadata   数据: data文件系统分层结构: LSB（Linux Standard Base）  文件名规则123456789文件名">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-19T01:51:35.127Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="文件管理">
+<meta name="twitter:description" content="文件系统12345678910文件和目录被组织成一个单根倒置树结构文件系统从根目录下开始，用&quot;/&quot;表示根文件系统(rootfs): root filesystem文件名称区分大小写以 . 开头的文件为隐藏文件路径分隔表示: /文件有两类数据   元数据: metadata   数据: data文件系统分层结构: LSB（Linux Standard Base）  文件名规则123456789文件名">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/11/linux/基础/文件管理/"/>
+
+
+
+
+
+  <title> 文件管理 | Zookeeper </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?822bf9a08ff5afbcfcc481a56a6ad577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zookeeper</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Still see you as the whole of my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home Page
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux1">
+          <a href="/categories/LinuxBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux2">
+          <a href="/categories/LinuxServices" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
+            
+            Linux Services
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python1">
+          <a href="/categories/PythonBasics" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Basics
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python2">
+          <a href="/categories/PythonCase" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rub"></i> <br />
+            
+            Python Case
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question1">
+          <a href="/categories/CommonQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Common Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-question2">
+          <a href="/categories/InterviewQuestion" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
+            
+            Interview Question
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/11/linux/基础/文件管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XDG">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zookeeper">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                文件管理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-11T00:00:00+08:00">
+                2018-02-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LinuxBasics/" itemprop="url" rel="index">
+                    <span itemprop="name">LinuxBasics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h1><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">文件和目录被组织成一个单根倒置树结构</span><br><span class="line">文件系统从根目录下开始，用<span class="string">"/"</span>表示</span><br><span class="line"><span class="section">根文件系统(rootfs): root filesystem</span></span><br><span class="line">文件名称区分大小写</span><br><span class="line">以 . 开头的文件为隐藏文件</span><br><span class="line"><span class="section">路径分隔表示: /</span></span><br><span class="line">文件有两类数据</span><br><span class="line">   元数据: metadata</span><br><span class="line">   数据: data</span><br><span class="line"><span class="section">文件系统分层结构: LSB（Linux Standard Base）</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="文件名规则"><a href="#文件名规则" class="headerlink" title="文件名规则"></a>文件名规则</h1><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">文件名最长<span class="number">255</span>个字节</span><br><span class="line">包括路径在内文件名称最长<span class="number">4095</span>个字节</span><br><span class="line">蓝色 <span class="comment">--&gt; 目录</span></span><br><span class="line">绿色 <span class="comment">--&gt; 可执行文件</span></span><br><span class="line">红色 <span class="comment">--&gt; 压缩文件</span></span><br><span class="line">浅蓝色 <span class="comment">--&gt; 链接文件</span></span><br><span class="line">灰色 <span class="comment">--&gt; 其他文件</span></span><br><span class="line">除了斜杠和NUL，所有字符都有效，但使用特殊字符的目录名和文件不推荐使用，有些字符需要用引号来引用它们</span><br><span class="line">标准Linux文件系统（如: ext4），文件名称大小写敏感（如: MAIL，Mail，mail，mAiL）</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="文件系统结构"><a href="#文件系统结构" class="headerlink" title="文件系统结构"></a>文件系统结构</h1><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">/boot  <span class="comment"># 引导文件存放目录，内核文件(vmlinuz)、引导加载器（bootloader，grub）都存放于此目录</span></span><br><span class="line">/bin  <span class="comment"># 供所有用户使用的基本命令，不能关联至独立分区，OS启动即会用到的程序</span></span><br><span class="line">/sbin  <span class="comment"># 管理类的基本命令；不能关联至独立分区，OS启动会用到的程序</span></span><br><span class="line">/<span class="class"><span class="keyword">lib</span>  <span class="comment"># 启动时程序依赖的基本共享库文件以及内核模块文件（/lib/modules）</span></span></span><br><span class="line">/lib64  <span class="comment"># 专用于x86_64系统上的辅助共享库文件存放位置</span></span><br><span class="line">/etc  <span class="comment"># 配置文件目录</span></span><br><span class="line">/home/USERNAME  <span class="comment"># 普通用户家目录</span></span><br><span class="line">/root  <span class="comment"># 管理员的家目录</span></span><br><span class="line">/media  <span class="comment"># 便携式移动设备挂载点</span></span><br><span class="line">/mnt  <span class="comment"># 临时文件系统挂载点</span></span><br><span class="line">/dev  <span class="comment"># 设备文件及特殊文件存储位置</span></span><br><span class="line">   <span class="symbol">b:</span> block device  <span class="comment"># 随机访问</span></span><br><span class="line">   <span class="symbol">c:</span> character device  <span class="comment"># 线性访问</span></span><br><span class="line">/opt  <span class="comment"># 第三方应用程序的安装位置</span></span><br><span class="line">/srv  <span class="comment"># 系统上运行的服务用到的数据</span></span><br><span class="line">/tmp  <span class="comment"># 临时文件存储位置</span></span><br><span class="line">/<span class="symbol">usr:</span> universal shared，read-only data</span><br><span class="line">   bin  <span class="comment"># 保证系统拥有完整功能而提供的应用程序</span></span><br><span class="line">   sbin</span><br><span class="line">   <span class="class"><span class="keyword">lib</span>  <span class="comment"># 32位使用</span></span></span><br><span class="line">   lib64  <span class="comment"># 只存在64位系统</span></span><br><span class="line">   <span class="keyword">include</span>  <span class="comment"># C程序的头文件（header files）</span></span><br><span class="line">   share  <span class="comment"># 结构化独立的数据，例如doc，man等</span></span><br><span class="line">   local  <span class="comment"># 第三方应用程序的安装位置 bin，sbin，lib，lib64，etc，share</span></span><br><span class="line">/<span class="symbol">var:</span> variable data files</span><br><span class="line">   cache  <span class="comment"># 应用程序缓存数据目录</span></span><br><span class="line">   <span class="class"><span class="keyword">lib</span>  <span class="comment"># 应用程序状态信息数据</span></span></span><br><span class="line">   local  <span class="comment"># 专用于为/usr/local下的应用程序存储可变数据</span></span><br><span class="line">   lock  <span class="comment"># 锁文件</span></span><br><span class="line">   log  <span class="comment"># 日志目录及文件</span></span><br><span class="line">   opt  <span class="comment"># 专用于为/opt下的应用程序存储可变数据</span></span><br><span class="line">   run  <span class="comment"># 运行中的进程相关数据，通常用于存储进程pid文件</span></span><br><span class="line">   spool  <span class="comment"># 应用程序数据池</span></span><br><span class="line">   tmp  <span class="comment"># 保存系统两次重启之间产生的临时数据</span></span><br><span class="line">/proc  <span class="comment"># 用于输出内核与进程信息相关的虚拟文件系统</span></span><br><span class="line">/sys  <span class="comment"># 用于输出当前系统上硬件设备相关信息虚拟文件系统</span></span><br><span class="line">/selinux  <span class="comment"># security enhanced Linux，selinux相关的安全策略等信息的存储位置</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Linux上的应用程序的组成部分"><a href="#Linux上的应用程序的组成部分" class="headerlink" title="Linux上的应用程序的组成部分"></a>Linux上的应用程序的组成部分</h1><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">二进制程序: <span class="regexp">/bin，/</span>sbin，<span class="regexp">/usr/</span>bin，<span class="regexp">/usr/</span>sbin，<span class="regexp">/usr/</span>local<span class="regexp">/bin，/u</span>sr<span class="regexp">/local/</span>sbin</span><br><span class="line">库文件: <span class="regexp">/lib，/</span>lib64，<span class="regexp">/usr/</span>lib，<span class="regexp">/usr/</span>lib64，<span class="regexp">/usr/</span>local<span class="regexp">/lib，/u</span>sr<span class="regexp">/local/</span>lib64</span><br><span class="line">配置文件: <span class="regexp">/etc，/</span>etc<span class="regexp">/DIRECTORY，/u</span>sr<span class="regexp">/local/</span>etc</span><br><span class="line">帮助文件: <span class="regexp">/usr/</span>share<span class="regexp">/man，/u</span>sr<span class="regexp">/share/</span>doc，<span class="regexp">/usr/</span>local<span class="regexp">/share/m</span>an，<span class="regexp">/usr/</span>local<span class="regexp">/share/</span>doc</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Linux下的文件类型"><a href="#Linux下的文件类型" class="headerlink" title="Linux下的文件类型"></a>Linux下的文件类型</h1><figure class="highlight ldif"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">-: 普通文件</span></span><br><span class="line"><span class="attribute">d</span>: 目录文件</span><br><span class="line"><span class="attribute">b</span>: 块设备</span><br><span class="line"><span class="attribute">c</span>: 字符设备</span><br><span class="line"><span class="attribute">l</span>: 符号链接文件</span><br><span class="line"><span class="attribute">p</span>: 管道文件pipe</span><br><span class="line"><span class="attribute">s</span>: 套接字文件socket</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="绝对和相对路径"><a href="#绝对和相对路径" class="headerlink" title="绝对和相对路径"></a>绝对和相对路径</h1><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">每个<span class="keyword">shell</span><span class="bash">和系统进程都有一个当前的工作目录</span></span><br><span class="line"><span class="bash">CWD: current work directory</span></span><br><span class="line"><span class="bash">显示当前shell CWD的绝对路径</span></span><br><span class="line"><span class="bash"><span class="built_in">pwd</span>: printing working directory</span></span><br><span class="line"><span class="bash">   -P: 显示真实物理路径</span></span><br><span class="line"><span class="bash">   -L: 显示链接路径（默认）</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">[root@node1 lock]<span class="comment">#pwd -P</span></span></span><br><span class="line"><span class="bash">/run/lock</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">[root@node1 lock]<span class="comment">#pwd -L</span></span></span><br><span class="line"><span class="bash">/var/lock</span></span><br></pre></td></tr></table></figure>
+<h2 id="绝对路径"><a href="#绝对路径" class="headerlink" title="绝对路径"></a>绝对路径</h2><p>以正斜杠开始，完整的文件的位置路径，可用于任何想指定一个文件名的时候</p>
+<h2 id="相对路径名"><a href="#相对路径名" class="headerlink" title="相对路径名"></a>相对路径名</h2><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">不以斜线开始，指定相对于当前工作目录或某目录的位置，可以作为一个简短的形式指定一个文件名</span><br><span class="line">基名: basename</span><br><span class="line">目录名: dirname</span><br><span class="line"></span><br><span class="line">[root<span class="symbol">@node1</span> ~]<span class="meta">#cd /etc/sysconfig/network-scripts/</span></span><br><span class="line"></span><br><span class="line">[root<span class="symbol">@node1</span> network-scripts]<span class="meta">#basename /etc/sysconfig/network-scripts/</span></span><br><span class="line">network-scripts  <span class="meta"># 最后一个目录或文件的名字</span></span><br><span class="line"></span><br><span class="line">[root<span class="symbol">@node1</span> network-scripts]<span class="meta">#dirname /etc/sysconfig/network-scripts/</span></span><br><span class="line">/etc/sysconfig   <span class="meta"># 最后一个目录或文件之前的目录名</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="更改目录"><a href="#更改目录" class="headerlink" title="更改目录"></a>更改目录</h1><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">改变目录（<span class="keyword">cd</span>）使用绝对或相对路径</span><br><span class="line">   <span class="keyword">cd</span> <span class="string">/home/xdg/</span></span><br><span class="line">   <span class="keyword">cd</span> home/xdg</span><br><span class="line"></span><br><span class="line">切换至父目录: <span class="keyword">cd</span> <span class="string">..</span></span><br><span class="line">切换至当前用户主目录: <span class="keyword">cd</span></span><br><span class="line">切换至以前的工作目录: <span class="keyword">cd</span> -</span><br><span class="line">相关的环境变量</span><br><span class="line">   PWD: 当前目录路径</span><br><span class="line">   OLDPWD: 上一次目录路径</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="文件通配符"><a href="#文件通配符" class="headerlink" title="文件通配符"></a>文件通配符</h1><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">*  <span class="meta"># 匹配零个或多个字符</span></span><br><span class="line">?  <span class="meta"># 匹配任何单个字符</span></span><br><span class="line">~  <span class="meta"># 当前用户家目录</span></span><br><span class="line">~xdg  <span class="meta"># 用户xdg家目录</span></span><br><span class="line">~+  <span class="meta"># 当前工作目录</span></span><br><span class="line">~-  <span class="meta"># 前一个工作目录</span></span><br><span class="line">[<span class="meta">0-9</span>]  <span class="meta"># 匹配数字范围</span></span><br><span class="line">[<span class="meta">a-z</span>]  <span class="meta"># 小写字母</span></span><br><span class="line">[<span class="meta">A-Z</span>]  <span class="meta"># 大写字母</span></span><br><span class="line">[<span class="meta">xdg</span>]  <span class="meta"># 匹配列表中的任何的一个字符</span></span><br><span class="line">[<span class="meta">^xdg</span>]  <span class="meta"># 匹配列表中的所有字符以外的字符</span></span><br><span class="line"></span><br><span class="line">预定义的字符类: <span class="meta"># man 7 glob</span></span><br><span class="line">[<span class="meta">:digit:</span>]  <span class="meta"># 任意数字，相当于0-9</span></span><br><span class="line">[<span class="meta">:lower:</span>]  <span class="meta"># 任意小写字母</span></span><br><span class="line">[<span class="meta">:upper:</span>]  <span class="meta"># 任意大写字母</span></span><br><span class="line">[<span class="meta">:alpha:</span>]  <span class="meta"># 任意大小写字母</span></span><br><span class="line">[<span class="meta">:alnum:</span>]  <span class="meta"># 任意数字或字母</span></span><br><span class="line">[<span class="meta">:blank:</span>]  <span class="meta"># 水平空白字符</span></span><br><span class="line">[<span class="meta">:space:</span>]  <span class="meta"># 水平或垂直空白字符</span></span><br><span class="line">[<span class="meta">:punct:</span>]  <span class="meta"># 标点符号</span></span><br><span class="line">[<span class="meta">:print:</span>]  <span class="meta"># 可打印字符</span></span><br><span class="line">[<span class="meta">:cntrl:</span>]  <span class="meta"># 控制（非打印）字符</span></span><br><span class="line">[<span class="meta">:graph:</span>]  <span class="meta"># 图形字符</span></span><br><span class="line">[<span class="meta">:xdigit:</span>]  <span class="meta"># 十六进制字符</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="索引节点"><a href="#索引节点" class="headerlink" title="索引节点"></a>索引节点</h1><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">inode（index <span class="keyword">node</span><span class="title">）表中包含文件系统所有文件列表</span></span><br><span class="line"><span class="title">一个节点（索引节点）是在一个表项，包含有关文件的信息（元数据），包括如下:</span></span><br><span class="line"><span class="title">   文件类型，权限，UID</span>，GID</span><br><span class="line">   链接数（指向这个文件名路径名称个数）</span><br><span class="line">   该文件的大小和不同的时间戳</span><br><span class="line">   指向磁盘上文件的数据块指针</span><br><span class="line">   有关文件的其他数据</span><br></pre></td></tr></table></figure>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">文件引用一个是inode号</span><br><span class="line">访问是通过文件名来引用一个文件</span><br><span class="line">一个目录是目录下的文件名和文件inode号之间的映射</span><br></pre></td></tr></table></figure>
+<h2 id="cp和inode"><a href="#cp和inode" class="headerlink" title="cp和inode"></a>cp和inode</h2><p>在cp的命令: 分配一个空间的inode号，在inode表中生成新条目在目录中创建一个目录项，将名称与inode编号关联拷贝数据重新的文件</p>
+<h2 id="rm和inode"><a href="#rm和inode" class="headerlink" title="rm和inode"></a>rm和inode</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">链接数递减，从而释放的inode号可以被重用</span><br><span class="line">把数据块放在空闲列表中</span><br><span class="line">删除目录项</span><br><span class="line">数据实际上不会马上被删除，但当另一个文件使用数据块时将被覆盖</span><br></pre></td></tr></table></figure>
+<h2 id="mv和inode"><a href="#mv和inode" class="headerlink" title="mv和inode"></a>mv和inode</h2><figure class="highlight cos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">如果<span class="keyword">mv</span>命令的目标和源在相同的文件系统，作为<span class="keyword">mv</span>命令</span><br><span class="line">   用新的文件名创建对应新的目录项</span><br><span class="line">   删除旧目录条目对应的旧的文件名</span><br><span class="line">   不影响inode表（除时间戳）或磁盘上的数据位置: 没有数据被移动</span><br><span class="line">如果目录和源在一个不同的文件系统，<span class="keyword">mv</span>相当于cp和rm</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="硬链接"><a href="#硬链接" class="headerlink" title="硬链接"></a>硬链接</h1><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">创建硬链接会增加额外的记录项以引用文件</span><br><span class="line">对应于同一个文件系统上一个物理文件</span><br><span class="line">每个目录引用相同的inode号</span><br><span class="line">创建时链接数递增</span><br><span class="line"><span class="section">删除文件时:</span></span><br><span class="line">   rm命令递减计数的链接</span><br><span class="line">   文件要存在，至少有一个链接数</span><br><span class="line">   当链接数为零时，该文件被删除</span><br><span class="line">不能跨越驱动器或分区</span><br><span class="line"></span><br><span class="line"><span class="section">语法:</span></span><br><span class="line">   ln filename [linkname]</span><br></pre></td></tr></table></figure>
+<h1 id="符号（或软）链接"><a href="#符号（或软）链接" class="headerlink" title="符号（或软）链接"></a>符号（或软）链接</h1><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">一个符号链接指向另一个文件</span><br><span class="line"><span class="keyword">ls</span> -<span class="keyword">l</span>的显示链接和名称和引用的文件</span><br><span class="line">一个符号链接的内容是它引用文件和名称</span><br><span class="line">可以对目录进行</span><br><span class="line">可以跨分区</span><br><span class="line">指向的是另一个文件的路径，其大小为指向的路径字符串的长度，不增加或减少目标文件inode的引用计数</span><br><span class="line"></span><br><span class="line">语法:</span><br><span class="line">   <span class="keyword">ln</span> -s filename [linkname]</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><h2 id="1、显示-var目录下所有以l开头，以一个小写字母结尾，且中间出现至少一位数字的文件或目录"><a href="#1、显示-var目录下所有以l开头，以一个小写字母结尾，且中间出现至少一位数字的文件或目录" class="headerlink" title="1、显示/var目录下所有以l开头，以一个小写字母结尾，且中间出现至少一位数字的文件或目录"></a>1、显示/var目录下所有以l开头，以一个小写字母结尾，且中间出现至少一位数字的文件或目录</h2><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ll l*<span class="string">[[:digit:]]</span>*<span class="string">[[:lower:]]</span></span><br></pre></td></tr></table></figure>
+<h2 id="2、显示-etc目录下以任意一位数字开头，且以非数字结尾的文件或目录"><a href="#2、显示-etc目录下以任意一位数字开头，且以非数字结尾的文件或目录" class="headerlink" title="2、显示/etc目录下以任意一位数字开头，且以非数字结尾的文件或目录"></a>2、显示/etc目录下以任意一位数字开头，且以非数字结尾的文件或目录</h2><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -d /etc/ <span class="string">[[:digit:]]</span>*[^[:digit:]]</span><br></pre></td></tr></table></figure>
+<h2 id="3、显示-etc-目录下以非字母开头，后面跟了一个字母及其它任意长度任意字符的文件或目录"><a href="#3、显示-etc-目录下以非字母开头，后面跟了一个字母及其它任意长度任意字符的文件或目录" class="headerlink" title="3、显示/etc/目录下以非字母开头，后面跟了一个字母及其它任意长度任意字符的文件或目录"></a>3、显示/etc/目录下以非字母开头，后面跟了一个字母及其它任意长度任意字符的文件或目录</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -d /etc/[<span class="string">^[:alpha:</span>]][[:alpha:]]*</span><br></pre></td></tr></table></figure>
+<h2 id="4、显示-etc-目录下所有以rc开头，并后面是0-6之间的数字，其它为任意字符的文件或目录"><a href="#4、显示-etc-目录下所有以rc开头，并后面是0-6之间的数字，其它为任意字符的文件或目录" class="headerlink" title="4、显示/etc/目录下所有以rc开头，并后面是0-6之间的数字，其它为任意字符的文件或目录"></a>4、显示/etc/目录下所有以rc开头，并后面是0-6之间的数字，其它为任意字符的文件或目录</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ls</span> -d <span class="string">/etc/rc</span>[0-6]*</span><br></pre></td></tr></table></figure>
+<h2 id="5、显示-etc目录下，所有以-d结尾的文件或目录"><a href="#5、显示-etc目录下，所有以-d结尾的文件或目录" class="headerlink" title="5、显示/etc目录下，所有以.d结尾的文件或目录"></a>5、显示/etc目录下，所有以.d结尾的文件或目录</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ls</span> -d <span class="string">/etc/</span>*<span class="string">.d</span></span><br></pre></td></tr></table></figure>
+<h2 id="6、显示-etc目录下，所有-conf结尾，且以m，n，r，p开头的文件或目录"><a href="#6、显示-etc目录下，所有-conf结尾，且以m，n，r，p开头的文件或目录" class="headerlink" title="6、显示/etc目录下，所有.conf结尾，且以m，n，r，p开头的文件或目录"></a>6、显示/etc目录下，所有.conf结尾，且以m，n，r，p开头的文件或目录</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ls</span> -d <span class="string">/etc/</span>[m,n,r,p]*<span class="string">.conf</span></span><br></pre></td></tr></table></figure>
+<h2 id="7、只显示-root下的隐藏文件和目录"><a href="#7、只显示-root下的隐藏文件和目录" class="headerlink" title="7、只显示/root下的隐藏文件和目录"></a>7、只显示/root下的隐藏文件和目录</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ls</span> -d <span class="string">/root/.</span>*  <span class="comment"># 不太准确,包含了 .和.. 这两个</span></span><br><span class="line"><span class="keyword">ls</span> -d <span class="string">/root/.</span>[^.]*</span><br></pre></td></tr></table></figure>
+<h2 id="8、只显示-etc下的非隐藏目录"><a href="#8、只显示-etc下的非隐藏目录" class="headerlink" title="8、只显示/etc下的非隐藏目录"></a>8、只显示/etc下的非隐藏目录</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ls</span> -d <span class="string">/etc/</span>[^.]*</span><br></pre></td></tr></table></figure>
+<h2 id="9、定义别名命令baketc，每天将-etc-目录下所有文件，备份到-testdir独立的子目录下，并要求子目录格式为-backupYYYY-mm-dd，备份过程可见"><a href="#9、定义别名命令baketc，每天将-etc-目录下所有文件，备份到-testdir独立的子目录下，并要求子目录格式为-backupYYYY-mm-dd，备份过程可见" class="headerlink" title="9、定义别名命令baketc，每天将/etc/目录下所有文件，备份到/testdir独立的子目录下，并要求子目录格式为 backupYYYY-mm-dd，备份过程可见"></a>9、定义别名命令baketc，每天将/etc/目录下所有文件，备份到/testdir独立的子目录下，并要求子目录格式为 backupYYYY-mm-dd，备份过程可见</h2><figure class="highlight monkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alias</span> <span class="title">backtc</span>=<span class="string">"cp -av /etc/ /testdir/backup`date +%F`"</span>  </span><br><span class="line"><span class="meta"># 注：在命令中想再引用命令必须使用反引号</span></span><br></pre></td></tr></table></figure>
+<h2 id="10、创建-testdir-rootdir目录，并复制-root下所有文件到该目录内，要求保留原有权限"><a href="#10、创建-testdir-rootdir目录，并复制-root下所有文件到该目录内，要求保留原有权限" class="headerlink" title="10、创建/testdir/rootdir目录，并复制/root下所有文件到该目录内，要求保留原有权限"></a>10、创建/testdir/rootdir目录，并复制/root下所有文件到该目录内，要求保留原有权限</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir <span class="string">/testdir/rootdir</span></span><br><span class="line">cp -a <span class="string">/root</span> <span class="string">/testdir/rootdir</span></span><br></pre></td></tr></table></figure>
+<p>(1) 如何创建/testdir/dir1/x, /testdir/dir1/y, /testdir/dir1/x/a, /testdir/dir1/x/b, /testdir/dir1/y/a, /testdir/dir1/y/b<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mkdir</span> -p /testdir/dir1/&#123;<span class="keyword">x</span>/&#123;a,b&#125;,<span class="keyword">y</span>/&#123;a,b&#125;&#125;</span><br><span class="line"><span class="keyword">mkdir</span> -p /testdir/dir1/&#123;<span class="keyword">x</span>,<span class="keyword">y</span>&#125;/&#123;a,b&#125;</span><br></pre></td></tr></table></figure></p>
+<p>(2) 如何创建/testdir/dir2/x, /testdir/dir2/y, /testdir/dir2/x/a, /testdir/dir2/x/b<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -<span class="selector-tag">p</span> /testdir/dir2/&#123;x/&#123;<span class="selector-tag">a</span>,b&#125;,y&#125;</span><br></pre></td></tr></table></figure></p>
+<p>(3) 如何创建/testdir/dir3, /testdir/dir4, /testdir/dir5, /testdir/dir5/dir6, /testdir/dir5/dir7<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /testdir/dir&#123;<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>/dir&#123;<span class="number">6</span>,<span class="number">7</span>&#125;&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/文件管理/" rel="tag"># 文件管理</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/10/linux/基础/bash的基本使用/" rel="next" title="Bash的基本使用">
+                <i class="fa fa-chevron-left"></i> Bash的基本使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/12/linux/基础/基础命令/" rel="prev" title="基础命令">
+                基础命令 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="XDG" />
+          <p class="site-author-name" itemprop="name">XDG</p>
+           
+              <p class="site-description motion-element" itemprop="description">Personal Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">93</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sun-monkeys/xdg/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/xddggg" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文件系统"><span class="nav-number">1.</span> <span class="nav-text">文件系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文件名规则"><span class="nav-number">2.</span> <span class="nav-text">文件名规则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文件系统结构"><span class="nav-number">3.</span> <span class="nav-text">文件系统结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux上的应用程序的组成部分"><span class="nav-number">4.</span> <span class="nav-text">Linux上的应用程序的组成部分</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux下的文件类型"><span class="nav-number">5.</span> <span class="nav-text">Linux下的文件类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#绝对和相对路径"><span class="nav-number">6.</span> <span class="nav-text">绝对和相对路径</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#绝对路径"><span class="nav-number">6.1.</span> <span class="nav-text">绝对路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相对路径名"><span class="nav-number">6.2.</span> <span class="nav-text">相对路径名</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#更改目录"><span class="nav-number">7.</span> <span class="nav-text">更改目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文件通配符"><span class="nav-number">8.</span> <span class="nav-text">文件通配符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#索引节点"><span class="nav-number">9.</span> <span class="nav-text">索引节点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">9.1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cp和inode"><span class="nav-number">9.2.</span> <span class="nav-text">cp和inode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rm和inode"><span class="nav-number">9.3.</span> <span class="nav-text">rm和inode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mv和inode"><span class="nav-number">9.4.</span> <span class="nav-text">mv和inode</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#硬链接"><span class="nav-number">10.</span> <span class="nav-text">硬链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#符号（或软）链接"><span class="nav-number">11.</span> <span class="nav-text">符号（或软）链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例"><span class="nav-number">12.</span> <span class="nav-text">示例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、显示-var目录下所有以l开头，以一个小写字母结尾，且中间出现至少一位数字的文件或目录"><span class="nav-number">12.1.</span> <span class="nav-text">1、显示/var目录下所有以l开头，以一个小写字母结尾，且中间出现至少一位数字的文件或目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、显示-etc目录下以任意一位数字开头，且以非数字结尾的文件或目录"><span class="nav-number">12.2.</span> <span class="nav-text">2、显示/etc目录下以任意一位数字开头，且以非数字结尾的文件或目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、显示-etc-目录下以非字母开头，后面跟了一个字母及其它任意长度任意字符的文件或目录"><span class="nav-number">12.3.</span> <span class="nav-text">3、显示/etc/目录下以非字母开头，后面跟了一个字母及其它任意长度任意字符的文件或目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、显示-etc-目录下所有以rc开头，并后面是0-6之间的数字，其它为任意字符的文件或目录"><span class="nav-number">12.4.</span> <span class="nav-text">4、显示/etc/目录下所有以rc开头，并后面是0-6之间的数字，其它为任意字符的文件或目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、显示-etc目录下，所有以-d结尾的文件或目录"><span class="nav-number">12.5.</span> <span class="nav-text">5、显示/etc目录下，所有以.d结尾的文件或目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、显示-etc目录下，所有-conf结尾，且以m，n，r，p开头的文件或目录"><span class="nav-number">12.6.</span> <span class="nav-text">6、显示/etc目录下，所有.conf结尾，且以m，n，r，p开头的文件或目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7、只显示-root下的隐藏文件和目录"><span class="nav-number">12.7.</span> <span class="nav-text">7、只显示/root下的隐藏文件和目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8、只显示-etc下的非隐藏目录"><span class="nav-number">12.8.</span> <span class="nav-text">8、只显示/etc下的非隐藏目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9、定义别名命令baketc，每天将-etc-目录下所有文件，备份到-testdir独立的子目录下，并要求子目录格式为-backupYYYY-mm-dd，备份过程可见"><span class="nav-number">12.9.</span> <span class="nav-text">9、定义别名命令baketc，每天将/etc/目录下所有文件，备份到/testdir独立的子目录下，并要求子目录格式为 backupYYYY-mm-dd，备份过程可见</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10、创建-testdir-rootdir目录，并复制-root下所有文件到该目录内，要求保留原有权限"><span class="nav-number">12.10.</span> <span class="nav-text">10、创建/testdir/rootdir目录，并复制/root下所有文件到该目录内，要求保留原有权限</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XDG</span>
+</div>
+
+
+<div class="powered-by">
+   心有猛虎
+</div>
+
+<div class="theme-info">
+  细嗅蔷薇
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
