@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="http,curl,ab," />
+  <meta name="keywords" content="http," />
 
 
 
@@ -105,18 +105,18 @@
 
 
 
-<meta name="description" content="curlcurl是基于URL语法在命令行方式下工作的文件传输工具，它支持FTP, FTPS, HTTP, HTTPS, GOPHER, TELNET, DICT, FILE及LDAP等协议。curl支持HTTPS认证，并且支持HTTP的POST、PUT等方法，FTP上传，kerberos认证，HTTP上传，代理服务器，cookies，用户名/密码认证，下载文件断点续传，上载文件断点续传, http">
-<meta name="keywords" content="http,curl,ab">
+<meta name="description" content="curlcurl是基于URL语法在命令行方式下工作的文件传输工具，它支持FTP，FTPS，HTTP，HTTPS，GOPHER，TELNET，DICT，FILE及LDAP等协议。curl支持HTTPS认证，并且支持HTTP的POST、PUT等方法，FTP上传，kerberos认证，HTTP上传，代理服务器，cookies，用户名/密码认证，下载文件断点续传，上载文件断点续传，http代理服务器管道（">
+<meta name="keywords" content="http">
 <meta property="og:type" content="article">
 <meta property="og:title" content="curl、ab命令">
 <meta property="og:url" content="http://yoursite.com/2018/04/13/linux/服务/http/curl、ab命令/index.html">
 <meta property="og:site_name" content="Zookeeper">
-<meta property="og:description" content="curlcurl是基于URL语法在命令行方式下工作的文件传输工具，它支持FTP, FTPS, HTTP, HTTPS, GOPHER, TELNET, DICT, FILE及LDAP等协议。curl支持HTTPS认证，并且支持HTTP的POST、PUT等方法，FTP上传，kerberos认证，HTTP上传，代理服务器，cookies，用户名/密码认证，下载文件断点续传，上载文件断点续传, http">
+<meta property="og:description" content="curlcurl是基于URL语法在命令行方式下工作的文件传输工具，它支持FTP，FTPS，HTTP，HTTPS，GOPHER，TELNET，DICT，FILE及LDAP等协议。curl支持HTTPS认证，并且支持HTTP的POST、PUT等方法，FTP上传，kerberos认证，HTTP上传，代理服务器，cookies，用户名/密码认证，下载文件断点续传，上载文件断点续传，http代理服务器管道（">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-23T06:16:38.058Z">
+<meta property="og:updated_time" content="2018-08-08T07:09:13.932Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="curl、ab命令">
-<meta name="twitter:description" content="curlcurl是基于URL语法在命令行方式下工作的文件传输工具，它支持FTP, FTPS, HTTP, HTTPS, GOPHER, TELNET, DICT, FILE及LDAP等协议。curl支持HTTPS认证，并且支持HTTP的POST、PUT等方法，FTP上传，kerberos认证，HTTP上传，代理服务器，cookies，用户名/密码认证，下载文件断点续传，上载文件断点续传, http">
+<meta name="twitter:description" content="curlcurl是基于URL语法在命令行方式下工作的文件传输工具，它支持FTP，FTPS，HTTP，HTTPS，GOPHER，TELNET，DICT，FILE及LDAP等协议。curl支持HTTPS认证，并且支持HTTP的POST、PUT等方法，FTP上传，kerberos认证，HTTP上传，代理服务器，cookies，用户名/密码认证，下载文件断点续传，上载文件断点续传，http代理服务器管道（">
 
 
 
@@ -375,7 +375,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-13T00:00:00+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-13T00:00:20+08:00">
                 2018-04-13
               </time>
             
@@ -398,8 +398,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
+                  <a href="/categories/LinuxServices/" itemprop="url" rel="index">
+                    <span itemprop="name">LinuxServices</span>
                   </a>
                 </span>
 
@@ -433,7 +433,7 @@
       
 
       
-        <h1 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h1><p>curl是基于URL语法在命令行方式下工作的文件传输工具，它支持FTP, FTPS, HTTP, HTTPS, GOPHER, TELNET, DICT, FILE及LDAP等协议。curl支持HTTPS认证，并且支持HTTP的POST、PUT等方法，FTP上传，kerberos认证，HTTP上传，代理服务器，cookies，用户名/密码认证，下载文件断点续传，上载文件断点续传, http代理服务器管道（ proxy tunneling），还支持IPv6，socks5代理服务器，通过http代理服务器上传文件到FTP服务器等，功能十分强大<br><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">curl  [options]  [URL...]</span><br><span class="line">   -<span class="ruby">A/--user-agent &lt;string&gt;  <span class="comment"># 设置用户代理发送给服务器</span></span></span><br><span class="line"><span class="ruby">   -e/--referer &lt;URL&gt;  <span class="comment"># 来源网址</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># curl -e www.baidu.com http://www.xdg.com 这样就伪造成了baidu在访问</span></span></span><br><span class="line"><span class="ruby">   --cacert &lt;file&gt; CA证书 (SSL)</span></span><br><span class="line"><span class="ruby">   -k/--insecure  <span class="comment"># 允许忽略证书进行 SSL 连接</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># https访问的时候，会要求安装证书</span></span></span><br><span class="line"><span class="ruby">   --compressed  <span class="comment"># 要求返回是压缩的格式</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># 用压缩的格式来访问，首要目标服务器要支持，否则无法使用</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># curl --compressed  http://www.xdg.com</span></span></span><br><span class="line"><span class="ruby">   -H/--header &lt;line&gt;自定义首部信息传递给服务器</span></span><br><span class="line"><span class="ruby">   -i  <span class="comment"># 显示页面内容，包括报文首部信息</span></span></span><br><span class="line"><span class="ruby">   -I/--head  <span class="comment"># 只显示响应报文首部信息</span></span></span><br><span class="line"><span class="ruby">   -D/--dump-header &lt;file&gt;  <span class="comment"># 将url的header信息存放在指定文件中</span></span></span><br><span class="line"><span class="ruby">   --limit-rate &lt;rate&gt;  <span class="comment"># 设置传输速度</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># curl --limit-rate 1024 http://www.xdg.com 默认单位 kb</span></span></span><br><span class="line"><span class="ruby">   --basic  <span class="comment"># 使用HTTP基本认证</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># -u/--user &lt;user[:password]&gt;设置服务器的用户和密码</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># curl --basic -u hehe:centso http://www.xdg.com</span></span></span><br><span class="line"><span class="ruby">   -o &lt;file&gt;  <span class="comment"># 将网络文件保存为指定的文件中</span></span></span><br><span class="line"><span class="ruby">   -O  <span class="comment"># 使用URL中默认的文件名保存文件到本地</span></span></span><br><span class="line"><span class="ruby">   -<span class="number">0</span>/--http1.<span class="number">0</span>  <span class="comment"># 使用HTTP 1.0</span></span></span><br><span class="line"><span class="ruby">   -L  <span class="comment"># 选项进行强制重定向 (3**响应码)</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># curl www.360buy.com  # 显示的是重定向的信息页面，并不会跳转到重定向后的页面</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># 而在浏览器当中会自动请求两次，自动跳转到重定向后的页面上去</span></span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">   -C  <span class="comment"># 选项可对文件使用断点续传功能</span></span></span><br><span class="line"><span class="ruby">   -c/--cookie-jar &lt;file name&gt;  <span class="comment"># 将url中cookie存放在指定文件中</span></span></span><br><span class="line"><span class="ruby">   -x/--proxy &lt;proxyhost[<span class="symbol">:port</span>]&gt;  <span class="comment"># 指定代理服务器地址</span></span></span><br><span class="line"><span class="ruby">   -U/--proxy-user &lt;<span class="symbol">user:</span>password&gt;  <span class="comment"># 代理服务器用户和密码</span></span></span><br><span class="line"><span class="ruby">   -T  <span class="comment"># 选项可将指定的本地文件上传到FTP服务器上</span></span></span><br><span class="line"><span class="ruby">   --data/-d  <span class="comment"># 方式指定使用POST方式传递数据</span></span></span><br></pre></td></tr></table></figure></p>
+        <h1 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h1><p>curl是基于URL语法在命令行方式下工作的文件传输工具，它支持FTP，FTPS，HTTP，HTTPS，GOPHER，TELNET，DICT，FILE及LDAP等协议。curl支持HTTPS认证，并且支持HTTP的POST、PUT等方法，FTP上传，kerberos认证，HTTP上传，代理服务器，cookies，用户名/密码认证，下载文件断点续传，上载文件断点续传，http代理服务器管道（ proxy tunneling），还支持IPv6，socks5代理服务器，通过http代理服务器上传文件到FTP服务器等，功能十分强大<br><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">curl  [options]  [URL...]</span><br><span class="line">   -<span class="ruby">A/--user-agent &lt;string&gt;  <span class="comment"># 设置用户代理发送给服务器</span></span></span><br><span class="line"><span class="ruby">   -e/--referer &lt;URL&gt;  <span class="comment"># 来源网址</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># curl -e www.baidu.com http://www.xdg.com 这样就伪造成了baidu在访问</span></span></span><br><span class="line"><span class="ruby">   --cacert &lt;file&gt; CA证书 (SSL)</span></span><br><span class="line"><span class="ruby">   -k/--insecure  <span class="comment"># 允许忽略证书进行 SSL 连接</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># https访问的时候，会要求安装证书</span></span></span><br><span class="line"><span class="ruby">   --compressed  <span class="comment"># 要求返回是压缩的格式</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># 用压缩的格式来访问，首要目标服务器要支持，否则无法使用</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># curl --compressed  http://www.xdg.com</span></span></span><br><span class="line"><span class="ruby">   -H/--header &lt;line&gt;自定义首部信息传递给服务器</span></span><br><span class="line"><span class="ruby">   -i  <span class="comment"># 显示页面内容，包括报文首部信息</span></span></span><br><span class="line"><span class="ruby">   -I/--head  <span class="comment"># 只显示响应报文首部信息</span></span></span><br><span class="line"><span class="ruby">   -D/--dump-header &lt;file&gt;  <span class="comment"># 将url的header信息存放在指定文件中</span></span></span><br><span class="line"><span class="ruby">   --limit-rate &lt;rate&gt;  <span class="comment"># 设置传输速度</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># curl --limit-rate 1024 http://www.xdg.com 默认单位 kb</span></span></span><br><span class="line"><span class="ruby">   --basic  <span class="comment"># 使用HTTP基本认证</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># -u/--user &lt;user[:password]&gt;设置服务器的用户和密码</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># curl --basic -u hehe:centso http://www.xdg.com</span></span></span><br><span class="line"><span class="ruby">   -o &lt;file&gt;  <span class="comment"># 将网络文件保存为指定的文件中</span></span></span><br><span class="line"><span class="ruby">   -O  <span class="comment"># 使用URL中默认的文件名保存文件到本地</span></span></span><br><span class="line"><span class="ruby">   -<span class="number">0</span>/--http1.<span class="number">0</span>  <span class="comment"># 使用HTTP 1.0</span></span></span><br><span class="line"><span class="ruby">   -L  <span class="comment"># 选项进行强制重定向 (3**响应码)</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># curl www.360buy.com  # 显示的是重定向的信息页面，并不会跳转到重定向后的页面</span></span></span><br><span class="line"><span class="ruby">      <span class="comment"># 而在浏览器当中会自动请求两次，自动跳转到重定向后的页面上去</span></span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">   -C  <span class="comment"># 选项可对文件使用断点续传功能</span></span></span><br><span class="line"><span class="ruby">   -c/--cookie-jar &lt;file name&gt;  <span class="comment"># 将url中cookie存放在指定文件中</span></span></span><br><span class="line"><span class="ruby">   -x/--proxy &lt;proxyhost[<span class="symbol">:port</span>]&gt;  <span class="comment"># 指定代理服务器地址</span></span></span><br><span class="line"><span class="ruby">   -U/--proxy-user &lt;<span class="symbol">user:</span>password&gt;  <span class="comment"># 代理服务器用户和密码</span></span></span><br><span class="line"><span class="ruby">   -T  <span class="comment"># 选项可将指定的本地文件上传到FTP服务器上</span></span></span><br><span class="line"><span class="ruby">   --data/-d  <span class="comment"># 方式指定使用POST方式传递数据</span></span></span><br></pre></td></tr></table></figure></p>
 <h1 id="elinks"><a href="#elinks" class="headerlink" title="elinks"></a>elinks</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">elinks [OPTION]... [URL]...</span><br><span class="line">   -<span class="ruby">dump  <span class="comment"># 不进入交互式模式，而直接将URL的内容输出至标准输出</span></span></span><br><span class="line"><span class="ruby">   -source  <span class="comment"># 打印源码</span></span></span><br></pre></td></tr></table></figure>
 <h1 id="ab"><a href="#ab" class="headerlink" title="ab"></a>ab</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ab  [OPTIONS]  URL  # httpd-tools包</span><br><span class="line">   -<span class="ruby"><span class="symbol">n:</span> 总请求数</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">c:</span> 模拟的并行数</span></span><br><span class="line"><span class="ruby">   -<span class="symbol">k:</span> 以持久连接模式测试</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">ulimit –n  <span class="comment"># 调整能打开的文件数</span></span></span><br><span class="line"><span class="ruby">例<span class="symbol">:</span></span></span><br><span class="line"><span class="ruby">   ab -c <span class="number">10</span> -n <span class="number">1000</span> <span class="symbol">http:</span>/<span class="regexp">/172.18.48.100/</span></span></span><br></pre></td></tr></table></figure>
       
@@ -466,10 +466,6 @@
           
             <a href="/tags/http/" rel="tag"># http</a>
           
-            <a href="/tags/curl/" rel="tag"># curl</a>
-          
-            <a href="/tags/ab/" rel="tag"># ab</a>
-          
         </div>
       
 
@@ -481,8 +477,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/11/linux/服务/dns/DNS相关特性/" rel="next" title="DNS相关特性">
-                <i class="fa fa-chevron-left"></i> DNS相关特性
+              <a href="/2018/04/13/linux/服务/http/http基础理论/" rel="next" title="http基础理论">
+                <i class="fa fa-chevron-left"></i> http基础理论
               </a>
             
           </div>
@@ -491,8 +487,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/04/13/linux/服务/http/http基础理论/" rel="prev" title="http基础理论">
-                http基础理论 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/04/14/linux/服务/http/http2.2常见配置/" rel="prev" title="http2.2常见配置">
+                http2.2常见配置 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -576,7 +572,7 @@
             
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">分类</span>
               
             </div>
@@ -587,7 +583,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">93</span>
+                <span class="site-state-item-count">74</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
